@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+provider = "prisma-client-js"
+}
+datasource db {
+provider = "postgresql"
+url = env("DATABASE_URL") // Defina no seu .env
+}
+model User {
+id String @id @default(uuid())
+email String @unique
+name String
+password String // Armazenaremos um hash
+phone String?
+birthDate DateTime?
+bloodType String?
+weight Float?
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+donations Donation[]
+quizAttempts UserQuizAttempt[]
+}
+model Donation {
+id String @id @default(uuid())
+userId String
+user User @relation(fields: [userId], references: [id])
+locationId String
+location Location @relation(fields: [locationId], references: [id])
+donationDate DateTime
+status String @default("pending") // 'pending', 'confirmed', 'rejected'
+pointsEarned Int @default(0)
+validatedByQR Boolean @default(false)
+createdAt DateTime @default(now())
+}
+model Location {
+id String @id @default(uuid())
+name String
+address String
+latitude Float?
+longitude Float?
+operatingHours String
+type String // 'fixed', 'event'
+eventStartDate DateTime?
+eventEndDate DateTime?
+donations Donation[]
+}
+// Modelos para o Quiz
+model Quiz {
+id String @id @default(uuid())
+title String
+questions Question[]
+attempts UserQuizAttempt[]
+}
+model Question {
+id String @id @default(uuid())
+quizId String
+quiz Quiz @relation(fields: [quizId], references: [id])
+text String
+answers Answer[]
+}
+model Answer {
+id String @id @default(uuid())
+questionId String
+question Question @relation(fields: [questionId], references: [id])
+text String
+isCorrect Boolean
+explanation String?
+}
+model UserQuizAttempt {
+id String @id @default(uuid())
+userId String
+user User @relation(fields: [userId], references: [id])
+quizId String
+quiz Quiz @relation(fields: [quizId], references: [id])
+score Int
+completedAt DateTime @default(now())
+}
