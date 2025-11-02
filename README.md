@@ -1,16 +1,46 @@
-# React + Vite
+# 🩸 DoaCIn
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Funcionalidades Principais
 
-Currently, two official plugins are available:
+* **Painel do Doador:** Visualização do saldo de Capibas e acompanhamento do período para a próxima doação.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Histórico de Doações:** Exibe todas as doações com status( confirmada, pendente) e local.
 
-## React Compiler
+* **Campanhas:** Exibe locais de doação fixos ou itenerários próximos ao doador.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **Quiz:** Um quiz educativo e desafiador para testar as mentes curiosas.
 
-## Expanding the ESLint configuration
+* **Regras para Doação de Sangue:** Exibe os requisitos básicos, impedimentos temporários e impedimentos definitivos.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🏛️ Estrutura do Projeto
+
+O projeto segue uma arquitetura unificada, onde o frontend (React) e o backend (Express) coexistem no mesmo diretório raiz.
+
+### Frontend (`src/`)
+
+O frontend é uma aplicação de página única (SPA) construída com **React** e **Vite**. A estrutura de pastas é:
+
+* `src/pages/`: Contém os componentes de nível superior que são mapeados para as rotas. Cada arquivo aqui representa uma "tela" da aplicação (ex: `HomePage.jsx`, `DonationsPage.jsx`).
+* `src/components/`: Armazena componentes React reutilizáveis que são usados em múltiplas páginas (ex: `StatCard.jsx`, `DonationHistoryItem.jsx`).
+* `src/layout/`: Componentes responsáveis pela estrutura visual da aplicação, como `MainLayout.jsx`, que renderiza a navegação lateral e utiliza o `<Outlet />` do React Router para exibir a página ativa.
+* `src/services/`: Camada de abstração da API. Centraliza a lógica de comunicação (`fetch`) com o backend (ex: `authService.js`, `donationsService.js`).
+* `src/App.jsx`: Ponto de entrada do React onde o `BrowserRouter` e as rotas da aplicação são configurados.
+
+### Backend (Pastas `routes/` e `server.js`)
+
+O backend é uma API RESTful construída com **Node.js** e **Express**. A arquitetura segue o padrão de Route-Controller.
+
+* `server.js`: Ponto de entrada do servidor Express. Ele inicializa a instância do Express, aplica middlewares globais (como `cors()` e `express.json()`) e monta os módulos de rotas principais (ex: `/api/auth`, `/api/dashboard`).
+* `routes/`: Contém os arquivos que definem os endpoints (URLs) da API.
+    * `routes/auth.js`: Define as rotas públicas de autenticação, como `POST /api/auth/login` e `POST /api/auth/register`.
+    * `routes/dashboard.js`: Define as rotas relacionadas aos dados do painel, como `GET /api/dashboard`.
+    * `routes/donations.js`: Define as rotas para o histórico de doações.
+* `routes/controllers/`: Contém a lógica de negócio (handler functions) desacoplada das definições de rota.
+    * `authController.js`: Contém as funções `login` e `register` que lidam com a lógica de autenticação.
+    * `dashboardController.js`: Contém a função `getDashboardStats` que busca os dados no banco (atualmente mockado).
+* `routes/controllers/middleware/`: Contém funções de middleware que processam requisições antes de chegarem aos controladores.
+    * `auth.js`: Este é o **middleware de autenticação JWT**. Ele é injetado nas rotas protegidas (como em `dashboard.js`) para verificar o `Authorization` header, validar o token e anexar os dados do usuário (`req.userData`) à requisição, ou retornar um erro 401 se a autenticação falhar.
+
+### Banco de Dados (`prisma/`)
+
+* `prisma/schema.prisma`: Arquivo de definição do **Prisma ORM**. Descreve os modelos de dados (tabelas) como `User`, `Donation` e `Location`, suas colunas e os relacionamentos entre eles.
