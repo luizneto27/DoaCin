@@ -3,10 +3,11 @@ import React from 'react';
 
 function StatCard({ title, value, unit }) {
   return (
-    <div className="stat-card" style={{ border: '1px solid gray', padding: '16px', margin: '8px', borderRadius: '8px' }}>
+    <div className="stat-card">
       <h3>{title}</h3>
       <p style={{ fontSize: '24px', fontWeight: 'bold' }}>
-        {value} <span style={{ fontSize: '16px', fontWeight: 'normal' }}>{unit}</span>
+        {value} 
+        <span style={{ fontSize: '16px', fontWeight: 'normal' }}>{unit}</span>
       </p>
     </div>
   );
