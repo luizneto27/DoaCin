@@ -8,8 +8,6 @@
 // ○ Terá uma função de "Sair" (logout) que limpa o AuthContext e o localStorage
 
 
-// Conteúdo para: src/layout/MainLayout.jsx
-
 import React from 'react';
 // Importe o Outlet e o Link (para navegação)
 import { Outlet, Link } from 'react-router-dom'; 

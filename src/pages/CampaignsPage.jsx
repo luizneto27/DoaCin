@@ -9,8 +9,6 @@
 // ○ (Opcional) Fazer o mapa interagir com a lista (clicar na lista centraliza o mapa, clicar
 // no marcador destaca o item da lista).
 
-// Conteúdo para: src/pages/CampaignsPage.jsx
-
 import React from 'react';
 
 function CampaignsPage() {

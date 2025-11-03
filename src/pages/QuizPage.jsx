@@ -6,7 +6,6 @@
 // ○ Gerenciar o estado da pergunta atual, respostas selecionadas.
 // ○ Ao finalizar, POST /api/quiz/submit e exibir uma tela de resultados
 
-// Conteúdo para: src/pages/QuizPage.jsx
 
 import React from 'react';
 

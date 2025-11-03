@@ -1,5 +1,3 @@
-// Conteúdo para: routes/controllers/dashboardController.js
-
 // 1. COMENTE A IMPORTAÇÃO DO PRISMA
 // import { PrismaClient } from '../../src/generated/prisma/index.js';
 // const prisma = new PrismaClient();
@@ -17,7 +15,6 @@ export const getDashboardStats = async (req, res) => {
   });
 
   /*
-  // O CÓDIGO DO PRISMA FICA COMENTADO:
   try {
     const { _sum } = await prisma.donation.aggregate({
       _sum: { pointsEarned: true },

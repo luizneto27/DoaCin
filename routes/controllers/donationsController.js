@@ -1,5 +1,3 @@
-// Conteúdo para: routes/controllers/donationsController.js
-
 // 1. COMENTE A IMPORTAÇÃO DO PRISMA
 // import { PrismaClient } from '../../src/generated/prisma/index.js';
 // const prisma = new PrismaClient();
@@ -13,7 +11,6 @@ export const getDonationHistory = async (req, res) => {
   res.status(200).json([]);
 
   /*
-  // O CÓDIGO DO PRISMA FICA COMENTADO:
   try {
     const donations = await prisma.donation.findMany({
       where: { userId: userId },

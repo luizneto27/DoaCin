@@ -1,9 +1,7 @@
-// Conteúdo para: src/pages/HomePage.jsx
-
 import React, { useState, useEffect } from 'react';
-import StatCard from '../components/StatCard'; // Importa o novo componente
+import StatCard from '../components/StatCard'; 
 
-// --- DADOS FALSOS (MOCK DATA) ---
+// MOCK DATA
 const mockDashboardData = {
   capibasBalance: 120, // Saldo de Capibas
   lastDonationDate: '2025-10-01T10:00:00Z' // Data da última doação

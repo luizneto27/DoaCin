@@ -1,5 +1,3 @@
-// Conteúdo para: src/pages/LoginPage.jsx
-
 import React from 'react';
 
 function LoginPage() {

@@ -4,7 +4,6 @@
 // ● Os dados podem estar "hardcoded" no componente React ou virem de um JSON
 // estático.
 
-// Conteúdo para: src/pages/RulesPage.jsx
 
 import React from 'react';
 

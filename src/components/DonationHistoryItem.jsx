@@ -1,5 +1,3 @@
-// Conteúdo para: src/components/DonationHistoryItem.jsx
-
 import React from 'react';
 
 const statusStyles = {

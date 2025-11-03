@@ -1,5 +1,3 @@
-// Conteúdo para: routes/donations.js
-
 import express from 'express';
 import authMiddleware from './controllers/middleware/auth.js';
 import { getDonationHistory } from './controllers/donationsController.js';

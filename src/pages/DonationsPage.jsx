@@ -1,9 +1,7 @@
-// Conteúdo para: src/pages/DonationsPage.jsx
-
 import React, { useState, useEffect } from 'react';
-import DonationHistoryItem from '../components/DonationHistoryItem'; // Importa o novo componente
+import DonationHistoryItem from '../components/DonationHistoryItem'; 
 
-// --- DADOS FALSOS (MOCK DATA) ---
+// MOCK DATA
 const mockDonations = [
   {
     id: '1',
@@ -27,7 +25,6 @@ const mockDonations = [
     pointsEarned: 0
   }
 ];
-// ---------------------------------
 
 function DonationsPage() {
   // Inicializa o estado com os dados falsos

@@ -5,7 +5,6 @@
 // ○ Os campos "Nome" e "E-mail" podem ser definidos como readOnly se forem
 // gerenciados por um provedor de identidade.
 
-// Conteúdo para: src/pages/ProfilePage.jsx
 
 import React from 'react';
 
