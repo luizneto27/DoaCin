@@ -8,6 +8,6 @@ export default (req, res, next) => {
     req.userData = { userId: decodedToken.userId };
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Autenticação falhou' });
+    res.status(401).json({ message: 'Autenticação falhou', error });
   }
 };

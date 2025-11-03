@@ -6,7 +6,7 @@ import StatCard from '../components/StatCard'; // Importa o novo componente
 // --- DADOS FALSOS (MOCK DATA) ---
 const mockDashboardData = {
   capibasBalance: 120, // Saldo de Capibas
-  lastDonationDate: '2023-10-01T10:00:00Z' // Data da última doação
+  lastDonationDate: '2025-10-01T10:00:00Z' // Data da última doação
 };
 // ---------------------------------
 
