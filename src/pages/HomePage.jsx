@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import StatCard from '../components/StatCard'; 
+import QRCode from '../components/QRCode';
 
 // MOCK DATA
 const mockDashboardData = {
@@ -40,9 +41,7 @@ function HomePage() {
   }
 
   const nextDonationDate = getNextDonationDate(dashboardData.lastDonationDate);
-  const lastDonationDate = dashboardData.lastDonationDate 
-    ? new Date(dashboardData.lastDonationDate).toLocaleDateString('pt-BR') 
-    : null;
+  const lastDonationDate = dashboardData.lastDonationDate ? new Date(dashboardData.lastDonationDate).toLocaleDateString('pt-BR') : null;
 
   return (
     <div>
@@ -53,6 +52,11 @@ function HomePage() {
         title="Meu Saldo"
         value={dashboardData.capibasBalance}
         unit="Capibas"
+      />
+
+      {/* Critério 2: Botão para Confirmar o QR Code */}
+      <QRCode qrCodeUrl="https://example.com/my-qrcode" 
+
       />
       
       {/* Critério 3: Data da última/próxima doação */}
