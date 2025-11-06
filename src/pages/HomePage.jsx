@@ -1,37 +1,47 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import StatCard from "../components/StatCard";
 import QRCode from "../components/QRCode";
 import { useDashboard } from "../context/DashboardContext";
+import { authFetch } from "../../services/api";
 
-// Função para calcular próxima doação (Ex: 60 dias)
+//calcular tempo parqa a prox doacao
 function getNextDonationDate(dateString) {
   if (!dateString) return null;
   const lastDate = new Date(dateString);
-  lastDate.setDate(lastDate.getDate() + 60); // Adiciona 60 dias
-  return lastDate.toLocaleDateString("pt-BR"); // Formato BR
+  lastDate.setDate(lastDate.getDate() + 60); //adiciona 60 dias
+  return lastDate.toLocaleDateString("pt-BR");
 }
 
 function HomePage() {
-  const { dashboardData } = useDashboard();
+  const { dashboardData, setDashboardData } = useDashboard();
+  const [loading, setLoading] = useState(true);
 
-  /*
-  // O useEffect e o fetch ficarão comentados até o backend estar pronto
   useEffect(() => {
     setLoading(true);
-    fetch('/api/dashboard') // Chamada real
+    authFetch('/api/dashboard') //requer token
+
     .then(res => res.json())
+
     .then(data => {
       setDashboardData(data);
       setLoading(false);
     })
-    .catch(err => setLoading(false));
-  }, []);
-  */
+
+    .catch(err => {
+      console.error("Erro ao buscar dashboard:", err);
+      setLoading(false);
+    });
+  }, [setDashboardData]);
+
 
   const nextDonationDate = getNextDonationDate(dashboardData.lastDonationDate);
   const lastDonationDate = dashboardData.lastDonationDate
     ? new Date(dashboardData.lastDonationDate).toLocaleDateString("pt-BR")
     : null;
+
+  if (loading && dashboardData.lastDonationDate === null) { //indicador de loading
+     return <div>Carregando painel...</div>
+  }
 
   return (
     <div>

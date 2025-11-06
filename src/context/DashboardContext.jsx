@@ -4,8 +4,8 @@ const DashboardContext = createContext();
 
 export function DashboardProvider({ children }) {
   const [dashboardData, setDashboardData] = useState({
-    capibasBalance: 20,
-    lastDonationDate: "2025-10-01T10:00:00Z",
+    capibasBalance: 0, //inicia zerado
+    lastDonationDate: null, //inicia nulo
   });
 
   const addCapibas = (amount) => {
@@ -17,7 +17,7 @@ export function DashboardProvider({ children }) {
   };
 
   return (
-    <DashboardContext.Provider value={{ dashboardData, addCapibas }}>
+    <DashboardContext.Provider value={{ dashboardData, addCapibas, setDashboardData }}>
       {children}
     </DashboardContext.Provider>
   );
