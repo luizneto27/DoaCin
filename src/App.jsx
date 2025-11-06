@@ -7,7 +7,6 @@ import QuizPage from "./pages/QuizPage";
 import RulesPage from "./pages/RulesPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
-import ValidarQRCode from "./pages/ValidarQRCode";
 import { DashboardProvider } from "./context/DashboardContext";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
@@ -29,7 +28,10 @@ function App() {
               <Route path="/quiz" element={<QuizPage />} />
               <Route path="/regras" element={<RulesPage />} />
               <Route path="/perfil" element={<ProfilePage />} />
+<<<<<<< Updated upstream
               <Route path="/validar-qrcode" element={<ValidarQRCode />} />
+=======
+>>>>>>> Stashed changes
             </Route>
           </Routes>
         </BrowserRouter>
