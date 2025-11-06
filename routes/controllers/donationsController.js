@@ -9,19 +9,26 @@ export const getDonationHistory = async (req, res) => {
       where: { userId: userId },
       orderBy: { donationDate: 'desc' },
       include: {
-        pontoColeta: { select: { name: true } }
+        pontoColeta: { select: { nome: true } }
       }
     });
 
     //mapeando os dados para corresponder ao que o frontend espera (location.name)
-    const formattedDonations = donations.map(d => ({
-      ...d,
-      location: { name: d.pontoColeta.nome } 
-    }));
+    const formattedDonations = donations.map(donation => {
+      return {
+        id: donation.id,
+        donationDate: donation.donationDate,
+        status: donation.status,
+        pointsEarned: donation.pointsEarned,
+        // Crie a propriedade 'location' que o frontend espera
+        location: {
+          name: donation.pontoColeta ? donation.pontoColeta.nome : 'Local não informado'
+        }
+      };
+    });
 
     res.status(200).json(formattedDonations);
     
-    res.status(200).json(donations);
   } catch (error) {
     res.status(500).json({ message: "Erro ao buscar histórico de doações", error: error.message });
   }
