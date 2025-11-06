@@ -1,49 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import DonationHistoryItem from '../components/DonationHistoryItem'; 
-
-// MOCK DATA
-const mockDonations = [
-  {
-    id: '1',
-    donationDate: '2023-10-01T10:00:00Z',
-    location: { name: 'Hemope Recife' },
-    status: 'confirmed',
-    pointsEarned: 100
-  },
-  {
-    id: '2',
-    donationDate: '2023-08-15T14:30:00Z',
-    location: { name: 'Praça do Derby (Evento)' },
-    status: 'confirmed',
-    pointsEarned: 20
-  },
-  {
-    id: '3',
-    donationDate: '2023-11-01T09:00:00Z',
-    location: { name: 'Hospital das Clínicas' },
-    status: 'pending',
-    pointsEarned: 0
-  }
-];
+import { authFetch } from '../../services/api';
 
 function DonationsPage() {
-  // Inicializa o estado com os dados falsos
-  const [donations, setDonations] = useState(mockDonations);
-  const [loading, setLoading] = useState(false); // Não precisamos carregar
+  //inicializa com estado vazio
+  const [donations, setDonations] = useState([]);
+  const [loading, setLoading] = useState(true); 
 
-  /*
-  // O useEffect e o fetch ficarão comentados
   useEffect(() => {
     setLoading(true);
-    fetch('/api/donations') // Chamada real
-    .then(res => res.json())
+    authFetch('/api/donations') //// A autenticação deve lidar com o token
+
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Falha na autenticação ou erro no servidor');
+      }
+      return res.json()
+    })
+
     .then(data => {
       setDonations(data);
       setLoading(false);
     })
-    .catch(err => setLoading(false));
+
+    .catch(err => {
+      console.error("Erro ao buscar doações:", err);
+      setLoading(false);
+    });
   }, []);
-  */
 
   if (loading) {
     return <div>Carregando histórico...</div>;

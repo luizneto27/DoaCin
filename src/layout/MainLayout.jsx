@@ -9,13 +9,22 @@
 
 
 import React from 'react';
-// Importe o Outlet e o Link (para navegação)
-import { Outlet, Link } from 'react-router-dom'; 
+import { Outlet, Link, useNavigate } from 'react-router-dom'; 
+import { useAuth} from '../context/AuthContext';
+
 
 function MainLayout() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = (e) => {
+    e.preventDefault(); //impede a navegação padrao do link
+    logout();
+    navigate('/login'); //redireciona para o login
+  };
+
   return (
     <div style={{ display: 'flex' }}>
-      {/* 1. UMA BARRA LATERAL (SIDEBAR) SIMPLES PARA NAVEGAÇÃO */}
       <nav style={{ 
         width: '200px', 
         borderRight: '1px solid #ccc', 
@@ -43,12 +52,11 @@ function MainLayout() {
             <Link to="/perfil">Perfil</Link>
           </li>
           <li style={{ margin: '8px 0' }}>
-            <Link to="/login">Sair (Login)</Link>
+            <Link to="/login" onClick={handleLogout}>Sair</Link>
           </li>
         </ul>
       </nav>
-
-      {/* 2. A ÁREA DE CONTEÚDO PRINCIPAL */}
+      
       <main style={{ flex: 1, padding: '16px' }}>
         {/* O <Outlet /> renderiza o componente da rota atual aqui */}
         {/* (Ex: HomePage, DonationsPage, etc.) */}
