@@ -1,5 +1,14 @@
 # 🩸 DoaCIn
 
+##pra rodar( por enquanto) 
+
+* `docker-compose up -d`
+* `npm install`
+* `npx prisma migrate deploy`
+* `npx prisma generate`
+* `npm run dev`
+* Pra usar o prisma studio, split o terminal e rode `npx prisma studio` 
+
 ## Funcionalidades Principais
 
 * **Painel do Doador:** Visualização do saldo de Capibas e acompanhamento do período para a próxima doação.
