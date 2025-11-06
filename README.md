@@ -2,6 +2,7 @@
 
 ##pra rodar( por enquanto) 
 
+*execute o dockerdesktop no seu pc( baixe, se for preciso)
 * `docker-compose up -d`
 * `npm install`
 * `npx prisma migrate deploy`
