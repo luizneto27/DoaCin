@@ -28,10 +28,6 @@ function App() {
               <Route path="/quiz" element={<QuizPage />} />
               <Route path="/regras" element={<RulesPage />} />
               <Route path="/perfil" element={<ProfilePage />} />
-<<<<<<< Updated upstream
-              <Route path="/validar-qrcode" element={<ValidarQRCode />} />
-=======
->>>>>>> Stashed changes
             </Route>
           </Routes>
         </BrowserRouter>
