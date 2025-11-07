@@ -47,7 +47,7 @@ O backend é uma API RESTful construída com **Node.js** e **Express**. A arquit
     * `routes/donations.js`: Define as rotas para o histórico de doações.
 * `routes/controllers/`: Contém a lógica de negócio (handler functions) desacoplada das definições de rota.
     * `authController.js`: Contém as funções `login` e `register` que lidam com a lógica de autenticação.
-    * `dashboardController.js`: Contém a função `getDashboardStats` que busca os dados no banco (atualmente mockado).
+    * `dashboardController.js`: Contém a função `getDashboardStats` que busca os dados no banco.
 * `routes/controllers/middleware/`: Contém funções de middleware que processam requisições antes de chegarem aos controladores.
     * `auth.js`: Este é o **middleware de autenticação JWT**. Ele é injetado nas rotas protegidas (como em `dashboard.js`) para verificar o `Authorization` header, validar o token e anexar os dados do usuário (`req.userData`) à requisição, ou retornar um erro 401 se a autenticação falhar.
 
