@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import StatCard from "../components/StatCard";
 import QRCode from "../components/QRCode";
 import { useDashboard } from "../context/DashboardContext";
@@ -17,30 +17,52 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    authFetch('/api/dashboard') //requer token
-
-    .then(res => res.json())
-
-    .then(data => {
-      setDashboardData(data);
-      setLoading(false);
-    })
-
-    .catch(err => {
-      console.error("Erro ao buscar dashboard:", err);
-      setLoading(false);
-    });
+    const saved = localStorage.getItem("dashboardData");
+    if (saved) {
+      try {
+        setDashboardData(JSON.parse(saved));
+        setLoading(false);
+      } catch (err) {
+        // se parse falhar, buscar do backend
+        console.warn(
+          "Falha ao parsear dashboardData salvo, buscando da API",
+          err
+        );
+        setLoading(true);
+        authFetch("/api/dashboard")
+          .then((res) => res.json())
+          .then((data) => {
+            setDashboardData(data);
+            setLoading(false);
+          })
+          .catch((err2) => {
+            console.error("Erro ao buscar dashboard:", err2);
+            setLoading(false);
+          });
+      }
+    } else {
+      setLoading(true);
+      authFetch("/api/dashboard") //requer token
+        .then((res) => res.json())
+        .then((data) => {
+          setDashboardData(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Erro ao buscar dashboard:", err);
+          setLoading(false);
+        });
+    }
   }, [setDashboardData]);
-
 
   const nextDonationDate = getNextDonationDate(dashboardData.lastDonationDate);
   const lastDonationDate = dashboardData.lastDonationDate
     ? new Date(dashboardData.lastDonationDate).toLocaleDateString("pt-BR")
     : null;
 
-  if (loading && dashboardData.lastDonationDate === null) { //indicador de loading
-     return <div>Carregando painel...</div>
+  if (loading && dashboardData.lastDonationDate === null) {
+    //indicador de loading
+    return <div>Carregando painel...</div>;
   }
 
   return (
