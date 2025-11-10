@@ -63,7 +63,18 @@ export const createLocalCampaign = async (req, res) => {
       },
     });
 
-    return res.status(201).json({ data: created });
+    const normalized = {
+      id: created.id,
+      name: created.nome,
+      address: created.endereco,
+      hours:
+        created.horarioAbertura && created.horarioFechamento
+          ? `${created.horarioAbertura} - ${created.horarioFechamento}`
+          : created.horarioAbertura || created.horarioFechamento || "",
+      contact: created.telefone || null,
+      type: created.tipo || "fixed",
+    };
+    return res.status(201).json({ data: normalized });
   } catch (error) {
     return res.status(500).json({
       message: "Erro ao criar local da campanha",
