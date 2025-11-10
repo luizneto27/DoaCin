@@ -11,7 +11,7 @@
 
 import React, { useEffect, useState } from "react";
 import LocalCard from "../components/LocalCard";
-import { authFetch } from "../../services/api";
+import { authFetch } from "../../services/api.js";
 
 function CampaignsPage() {
   const [locals, setLocals] = useState([]);
