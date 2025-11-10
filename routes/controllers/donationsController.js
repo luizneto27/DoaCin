@@ -20,7 +20,7 @@ export const getDonationHistory = async (req, res) => {
         donationDate: donation.donationDate,
         status: donation.status,
         pointsEarned: donation.pointsEarned,
-        // Crie a propriedade 'location' que o frontend espera
+        //propriedade 'location' que o frontend espera
         location: {
           name: donation.pontoColeta ? donation.pontoColeta.nome : 'Local não informado'
         }

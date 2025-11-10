@@ -29,7 +29,7 @@ function HomePage() {
           err
         );
         setLoading(true);
-        authFetch("/api/dashboard")
+        authFetch("/api/dashboard", { method: "GET" }) 
           .then((res) => res.json())
           .then((data) => {
             setDashboardData(data);
