@@ -2,7 +2,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path"; // Necessário para rotas
 
 dotenv.config(); // Carrega as variáveis do arquivo .env
 const app = express();
