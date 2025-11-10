@@ -43,7 +43,7 @@ export const getLocalsCampaign = async (req, res) => {
 };
 
 export const createLocalCampaign = async (req, res) => {
-  // Expects body: { name, address, hours, contact, campaignId }
+  // Expects body: { name, address, hours, contact }
   const { name, address, hours, contact } = req.body;
 
   if (!name || !address) {
