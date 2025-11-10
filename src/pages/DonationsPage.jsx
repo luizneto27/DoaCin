@@ -9,7 +9,8 @@ function DonationsPage() {
 
   useEffect(() => {
     setLoading(true);
-    authFetch('/api/donations') //// A autenticação deve lidar com o token
+    // 
+    authFetch('/api/donations', { method: 'GET' }) //a autenticação deve lidar com o token
 
     .then(res => {
       if (!res.ok) {
