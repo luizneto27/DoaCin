@@ -13,11 +13,11 @@ function getInitialDashboardData() {
     capibasBalance: 0,
     lastDonationDate: null,
     genero: null, 
-    donationCountLastYear: 0,
     birthDate: null,
     weight: null,
     email: null,
-    nome: null
+    nome: null,
+    donationCountLastYear: 0,
   };
 }
 
