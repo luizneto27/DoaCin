@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Helper para adicionar dias a uma data
+// O CSS para 'cooldown-card-new' está em HomePage.css
+
+// --- Funções Helpers (movidas para o topo) ---
+
 function addDays(date, days) {
   const result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
 }
 
-// Helper para calcular idade
 function getAge(birthDateString) {
   if (!birthDateString) return 0;
   const today = new Date();
@@ -21,7 +23,35 @@ function getAge(birthDateString) {
   return age;
 }
 
+function daysBetween(date1, date2) {
+  const oneDay = 1000 * 60 * 60 * 24;
+  const diffInMs = date1.getTime() - date2.getTime();
+  return Math.ceil(diffInMs / oneDay);
+}
+
+
+// --- Card de Detalhes Estático (reutilizável) ---
+
+const CooldownDetails = ({ interval, reward }) => (
+  <div className="cooldown-details">
+    <div className="detail-item">
+      <h4>Intervalo</h4>
+      <p>{interval} dias</p>
+    </div>
+    <div className="detail-item">
+      <h4>Duração</h4>
+      <p>15-30 min</p>
+    </div>
+    <div className="detail-item">
+      <h4>Recompensa</h4>
+      <p>{reward} Capibas</p>
+    </div>
+  </div>
+);
+
+
 // --- Componente Principal ---
+
 function DonationCooldown({ 
   lastDonationDate, 
   genero, 
@@ -31,81 +61,87 @@ function DonationCooldown({
 }) {
   
   // 0. Verifica se o perfil está completo
-  const age = getAge(birthDate);
   const isWeightOk = weight != null && weight >= 50;
   const isGenderSet = genero === 'M' || genero === 'F';
+  const isAgeSet = birthDate != null;
 
-  if (!isWeightOk || !birthDate || !isGenderSet) {
+  if (!isWeightOk || !isAgeSet || !isGenderSet) {
     return (
-       <div style={styles.card}>
+       <div className="cooldown-card-new complete-profile">
         <h3>Complete seu Perfil</h3>
-        <p style={styles.messageWarning}>
-          Para calcular sua elegibilidade para doação, precisamos que você
-          complete seu perfil com <strong>data de nascimento, peso e gênero</strong>.
+        <p className="cooldown-message warning">
+          Para calcular sua elegibilidade, precisamos que você
+          complete seu perfil com data de nascimento, peso e gênero.
         </p>
-        <Link to="/perfil" style={styles.button}>
+        <div className="cooldown-details">
+          <div className="detail-item"><h4>Idade</h4><p>{isAgeSet ? 'OK' : 'Pendente'}</p></div>
+          <div className="detail-item"><h4>Peso</h4><p>{isWeightOk ? 'OK' : 'Pendente'}</p></div>
+          <div className="detail-item"><h4>Gênero</h4><p>{isGenderSet ? 'OK' : 'Pendente'}</p></div>
+        </div>
+        <Link to="/perfil" className="cooldown-button">
           Atualizar Perfil
         </Link>
       </div>
-    )
+    );
   }
 
-  // 1. Verifica regras de elegibilidade (idade, peso)
+  // 1. Verifica regras de elegibilidade (idade)
+  const age = getAge(birthDate);
   const isMale = (genero === 'M');
-  const minAge = isMale ? 18 : 16;
-
+  const minAge = 16; // Geral
+  
   if (age < minAge || age > 69) {
      return (
-       <div style={styles.card}>
+       <div className="cooldown-card-new complete-profile">
         <h3>Elegibilidade</h3>
-        <p style={styles.messageWarning}>
-          A idade para doação é de <strong>{minAge} a 69 anos</strong>.
+        <p className="cooldown-message warning">
+          A idade para doação é de <strong>16 a 69 anos</strong>.
           Atualmente, você está fora dessa faixa etária.
         </p>
       </div>
     );
   }
   
-  // 2. Caso: Sem doações (Novo usuário elegível)
+  // 2. Define as regras de intervalo
+  const intervalDays = isMale ? 60 : 90;
+  const maxDonationsPerYear = isMale ? 4 : 3;
+  const rewardPoints = 100;
+  const today = new Date();
+
+  // 3. Caso: Sem doações (Novo usuário elegível)
   if (!lastDonationDate) {
     return (
-      <div style={styles.card}>
-        <h3>Bem-vindo(a), Doador(a)!</h3>
-        <p style={styles.message}>
-          Você já pode fazer sua primeira doação! Encontre o hemocentro mais próximo.
+      <div className="cooldown-card-new ready">
+        <h3>Tudo pronto para doar!</h3>
+        <p className="cooldown-message">
+          Você já pode fazer sua primeira doação e salvar até 4 vidas!
         </p>
-        <Link to="/campanhas" style={styles.button}>
+        <CooldownDetails interval={intervalDays} reward={rewardPoints} />
+        <Link to="/campanhas" className="cooldown-button">
           Ver locais de doação
         </Link>
       </div>
     );
   }
 
-  // 3. Define as regras de intervalo para quem já doou
-  const intervalDays = isMale ? 60 : 90;
-  const maxDonationsPerYear = isMale ? 4 : 3;
-  const today = new Date();
+  // 4. Lógica para quem já doou
   const lastDonation = new Date(lastDonationDate);
-
-  // 4. Calcula a próxima data de doação (baseada no intervalo)
   const nextDonationByInterval = addDays(lastDonation, intervalDays);
-
-  // 5. Verifica as condições
   const isAnnualLimitReached = donationCountLastYear >= maxDonationsPerYear;
   const isIntervalMet = today >= nextDonationByInterval;
 
-  // 6. Renderiza a lógica
-  const lastDonationString = lastDonation.toLocaleDateString('pt-BR');
-
   if (isAnnualLimitReached) {
     return (
-      <div style={styles.card}>
-        <h3>Acompanhe sua Doação</h3>
-        <p>Última doação: {lastDonationString}</p>
-        <p style={styles.messageWarning}>
+      <div className="cooldown-card-new">
+        <h3>Limite Anual Atingido</h3>
+        <p className="cooldown-message warning">
           Parabéns! Você atingiu o limite de {maxDonationsPerYear} doações anuais.
-          Você poderá doar novamente quando sua primeira doação deste ciclo completar um ano.
+          Você poderá doar novamente 1 ano após sua primeira doação deste ciclo.
         </p>
+        <CooldownDetails interval={intervalDays} reward={rewardPoints} />
+        <button className="cooldown-button" disabled>
+          Aguarde o período
+        </button>
       </div>
     );
   }
@@ -113,66 +149,35 @@ function DonationCooldown({
   if (isIntervalMet) {
     // Pode doar
     return (
-      <div style={styles.card}>
+      <div className="cooldown-card-new ready">
         <h3>Pronto para Doar Novamente!</h3>
-        <p>Sua última doação foi em: {lastDonationString}.</p>
-        <p style={styles.message}>
+        <p className="cooldown-message">
           O intervalo de {intervalDays} dias já passou. Você já pode salvar vidas de novo!
         </p>
-        <Link to="/campanhas" style={styles.button}>
+        <CooldownDetails interval={intervalDays} reward={rewardPoints} />
+        <Link to="/campanhas" className="cooldown-button">
           Agendar nova doação
         </Link>
       </div>
     );
-  } else {
-    // Ainda em cooldown
-    const nextDonationString = nextDonationByInterval.toLocaleDateString('pt-BR');
-    return (
-      <div style={styles.card}>
-        <h3>Acompanhe sua Doação</h3>
-        <p>Última doação: {lastDonationString}</p>
-        <p style={styles.messageWarning}>
-          Obrigado por doar! O intervalo para {isMale ? 'homens' : 'mulheres'} é de {intervalDays} dias.
-        </p>
-        <p>
-          <strong>
-            Você pode doar novamente a partir de: {nextDonationString}
-          </strong>
-        </p>
-      </div>
-    );
-  }
-}
+  } 
+  
+  // 5. Caso: Em Cooldown (Estado da imagem)
+  const daysRemaining = daysBetween(nextDonationByInterval, today);
+  const daysText = daysRemaining === 1 ? '1 dia' : `${daysRemaining} dias`;
 
-// Estilos simples para o card (seguindo o padrão dos outros componentes)
-const styles = {
-  card: {
-    marginTop: '20px',
-    textAlign: 'left',
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    padding: '16px',
-    backgroundColor: '#f9f9f9',
-  },
-  message: {
-    color: '#16a34a', // verde
-    fontWeight: 'bold',
-    fontSize: '1.1em',
-  },
-  messageWarning: {
-    color: '#d97706', // ambar
-    fontWeight: 'bold',
-  },
-  button: {
-    display: 'inline-block',
-    marginTop: '10px',
-    padding: '10px 15px',
-    backgroundColor: 'rgba(235, 14, 14, 0.87)',
-    color: 'white',
-    textDecoration: 'none',
-    borderRadius: '5px',
-    fontWeight: 'bold',
-  }
-};
+  return (
+    <div className="cooldown-card-new">
+      <h3>Aguarde um Pouquinho</h3>
+      <p className="cooldown-message">
+        Você poderá doar novamente em <strong>{daysText}</strong>.
+      </p>
+      <CooldownDetails interval={intervalDays} reward={rewardPoints} />
+      <button className="cooldown-button" disabled>
+        Aguarde o período de intervalo
+      </button>
+    </div>
+  );
+}
 
 export default DonationCooldown;

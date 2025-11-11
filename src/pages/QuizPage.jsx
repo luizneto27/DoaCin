@@ -1,11 +1,4 @@
-// ● Tela Inicial (Screenshot 6): Página estática com as regras do quiz. O botão "Começar
-// Quiz" navegaria para a primeira pergunta (ex: /quiz/1).
-// ● Lógica do Quiz (Não mostrado, mas inferido):
-// ○ Você precisará de uma nova rota, ex: /quiz/play.
-// ○ GET /api/quiz/:id para buscar as perguntas.
-// ○ Gerenciar o estado da pergunta atual, respostas selecionadas.
-// ○ Ao finalizar, POST /api/quiz/submit e exibir uma tela de resultados
-
+// src/pages/QuizPage.jsx
 
 import React, { useState } from 'react';
 
@@ -126,8 +119,8 @@ function QuizPage() {
       <div style={{ padding: 40, display: 'flex', justifyContent: 'center' }}>
         <style>{`
           .intro-card {
-            width: 680px;
-            max-width: calc(100% - 32px);
+            width: 100%;
+            max-width: 840px;
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 8px 20px rgba(16,24,40,0.08);
@@ -157,7 +150,11 @@ function QuizPage() {
           }
           .rules-list { padding:0; margin:0; list-style:none; }
           .rules-list li { display:flex; gap:12px; align-items:flex-start; margin:12px 0; color:#0f172a; }
-          .rules-list li .bullet { color:#16a34a; font-weight:700; flex:0 0 22px; }
+          .rules-list li .bullet { 
+            color: #ef4444; /* MUDANÇA AQUI: Era verde (#16a34a) */
+            font-weight:700; 
+            flex:0 0 22px; 
+          }
           .start-btn {
             width:100%;
             background: linear-gradient(180deg,#ef3b36,#d9302b);
@@ -206,8 +203,8 @@ function QuizPage() {
     <div className="quiz-page" style={{ padding: 40, display: 'flex', justifyContent: 'center' }}>
       <style>{`
         .quiz-container {
-          width: 680px;
-          max-width: calc(100% - 32px);
+          width: 100%;
+          max-width: 840px;
           background: #ffffff;
           border-radius: 12px;
           padding: 36px;
@@ -270,9 +267,10 @@ function QuizPage() {
         .quiz-btn.disabled { pointer-events: none; opacity: 0.98; }
         .quiz-btn.correct { background: #e6f4ea; border: 2px solid #2e7d32; }
         .quiz-btn.incorrect { background: #fdecea; border: 2px solid #c62828; }
+        
         .info-box {
-          background: #eaf6ff;
-          border: 1px solid #cfe8ff;
+          background: #fff6f6;
+          border: 1px solid #fee2e2;
           padding: 14px 16px;
           border-radius: 8px;
           color: #0f172a;
@@ -292,7 +290,6 @@ function QuizPage() {
           font-size: 16px;
         }
 
-        /* New final result modal styles to match the provided design */
         .result-modal {
           position: fixed;
           inset: 0;
