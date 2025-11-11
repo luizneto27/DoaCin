@@ -11,7 +11,12 @@ export const getDashboardStats = async (req, res) => {
       select: { genero: true, birthDate: true, weight: true }
     });
 
-    // 2. Buscar dados de agregação de doação (pontos)
+    // 2. Checar se o usuário existe
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado." });
+    }
+
+    // 3. Buscar dados de agregação de doação (pontos)
     const { _sum } = await prisma.donation.aggregate({
       _sum: { pointsEarned: true },
       where: { userId: userId, status: 'confirmed' },
@@ -19,13 +24,13 @@ export const getDashboardStats = async (req, res) => {
 
     const capibasBalance = _sum.pointsEarned || 0;
 
-    // 3. Buscar última doação confirmada
+    // 4. Buscar última doação confirmada
     const lastDonation = await prisma.donation.findFirst({
       where: { userId: userId, status: 'confirmed' },
       orderBy: { donationDate: 'desc' },
     });
 
-    // 4. Contar doações confirmadas no último ano
+    // 5. Contar doações confirmadas no último ano
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
@@ -39,7 +44,7 @@ export const getDashboardStats = async (req, res) => {
       },
     });
 
-    // 5. Retornar todos os dados para o frontend
+    // 6. Retornar todos os dados para o frontend
     res.status(200).json({
       capibasBalance: capibasBalance,
       lastDonationDate: lastDonation ? lastDonation.donationDate : null,

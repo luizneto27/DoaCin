@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import StatCard from "../components/StatCard.jsx";
 import QRCode from "../components/QRCode.jsx";
 import { useDashboard } from "../context/DashboardContext.jsx";
-import { authFetch } from "../../services/api.js";
+import { authFetch } from "../../services/api";
 import DonationCooldown from "../components/DonationCooldown.jsx"; // 1. Importar
 
-//calcular tempo parqa a prox doacao (FUNÇÃO REMOVIDA, pois a lógica agora está no DonationCooldown)
+//calcular tempo para a prox doacao (FUNÇÃO REMOVIDA, pois a lógica agora está no DonationCooldown)
 // function getNextDonationDate(dateString) {
 // ...
 // }
@@ -23,7 +23,7 @@ function HomePage() {
         parsedData = JSON.parse(saved);
         setDashboardData(parsedData);
         // Considera carregado se tiver os dados, mas revalida se estiverem incompletos
-        if (parsedData.genero !== null && parsedData.weight !== null && parsedData.birthDate !== null) {
+        if (parsedData.genero != null && parsedData.weight != null && parsedData.birthDate != null) {
           setLoading(false);
         } else {
           // Força a busca se os dados essenciais para o cooldown estiverem faltando
@@ -63,7 +63,7 @@ function HomePage() {
 
   // 4. Indicador de loading ATUALIZADO
   // Espera até que tenhamos os dados buscados (ou do cache) para carregar
-  if (loading && dashboardData.genero === null) { // Verifica um dado que vem da API
+  if (loading && dashboardData.genero == null) { // Verifica um dado que vem da API
     //indicador de loading
     return <div>Carregando painel...</div>;
   }

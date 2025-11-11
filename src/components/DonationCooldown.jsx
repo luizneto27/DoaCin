@@ -32,7 +32,7 @@ function DonationCooldown({
   
   // 0. Verifica se o perfil está completo
   const age = getAge(birthDate);
-  const isWeightOk = weight && weight >= 50;
+  const isWeightOk = weight != null && weight >= 50;
   const isGenderSet = genero === 'M' || genero === 'F';
 
   if (!isWeightOk || !birthDate || !isGenderSet) {
@@ -63,7 +63,7 @@ function DonationCooldown({
           Atualmente, você está fora dessa faixa etária.
         </p>
       </div>
-    )
+    );
   }
   
   // 2. Caso: Sem doações (Novo usuário elegível)
