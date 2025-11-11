@@ -10,8 +10,12 @@ function getInitialDashboardData() {
     void err; // ignore parse errors and satisfy linter
   }
   return {
-    capibasBalance: 0, //inicia zerado
-    lastDonationDate: null, //inicia nulo
+    capibasBalance: 0,
+    lastDonationDate: null,
+    genero: null, // Adicionado
+    donationCountLastYear: 0, // Adicionado
+    birthDate: null, // Adicionado
+    weight: null, // Adicionado
   };
 }
 
@@ -28,6 +32,7 @@ export function DashboardProvider({ children }) {
   }, [dashboardData]);
 
   const addCapibas = (amount) => {
+    // Preserva os outros dados (genero, count, etc.) ao simular
     setDashboardData((prev) => ({
       ...prev,
       capibasBalance: prev.capibasBalance + amount,

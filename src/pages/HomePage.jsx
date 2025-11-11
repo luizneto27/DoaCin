@@ -1,51 +1,50 @@
 import React, { useEffect, useState } from "react";
-import StatCard from "../components/StatCard";
-import QRCode from "../components/QRCode";
-import { useDashboard } from "../context/DashboardContext";
+import StatCard from "../components/StatCard.jsx";
+import QRCode from "../components/QRCode.jsx";
+import { useDashboard } from "../context/DashboardContext.jsx";
 import { authFetch } from "../../services/api";
+import DonationCooldown from "../components/DonationCooldown.jsx"; // 1. Importar
 
-//calcular tempo parqa a prox doacao
-function getNextDonationDate(dateString) {
-  if (!dateString) return null;
-  const lastDate = new Date(dateString);
-  lastDate.setDate(lastDate.getDate() + 60); //adiciona 60 dias
-  return lastDate.toLocaleDateString("pt-BR");
-}
+//calcular tempo para a prox doacao (FUNÇÃO REMOVIDA, pois a lógica agora está no DonationCooldown)
+// function getNextDonationDate(dateString) {
+// ...
+// }
 
 function HomePage() {
   const { dashboardData, setDashboardData } = useDashboard();
   const [loading, setLoading] = useState(true);
 
+  // 2. useEffect ATUALIZADO para buscar os novos dados
   useEffect(() => {
     const saved = localStorage.getItem("dashboardData");
+    let parsedData = null;
     if (saved) {
       try {
-        setDashboardData(JSON.parse(saved));
-        setLoading(false);
+        parsedData = JSON.parse(saved);
+        setDashboardData(parsedData);
+        // Considera carregado se tiver os dados, mas revalida se estiverem incompletos
+        if (parsedData.genero != null && parsedData.weight != null && parsedData.birthDate != null) {
+          setLoading(false);
+        } else {
+          // Força a busca se os dados essenciais para o cooldown estiverem faltando
+          parsedData = null; 
+        }
       } catch (err) {
-        // se parse falhar, buscar do backend
         console.warn(
           "Falha ao parsear dashboardData salvo, buscando da API",
           err
         );
-        setLoading(true);
-        authFetch("/api/dashboard", { method: "GET" }) 
-          .then((res) => res.json())
-          .then((data) => {
-            setDashboardData(data);
-            setLoading(false);
-          })
-          .catch((err2) => {
-            console.error("Erro ao buscar dashboard:", err2);
-            setLoading(false);
-          });
+        parsedData = null; // Força a busca
       }
-    } else {
+    }
+    
+    // Se não tinha dados salvos OU se os dados estão incompletos
+    if (!parsedData) {
       setLoading(true);
       authFetch("/api/dashboard") //requer token
         .then((res) => res.json())
         .then((data) => {
-          setDashboardData(data);
+          setDashboardData(data); // 'data' agora inclui genero, weight, birthDate, etc.
           setLoading(false);
         })
         .catch((err) => {
@@ -53,14 +52,18 @@ function HomePage() {
           setLoading(false);
         });
     }
-  }, [setDashboardData]);
+  }, [setDashboardData]); // Dependência está correta
 
-  const nextDonationDate = getNextDonationDate(dashboardData.lastDonationDate);
-  const lastDonationDate = dashboardData.lastDonationDate
-    ? new Date(dashboardData.lastDonationDate).toLocaleDateString("pt-BR")
-    : null;
+  
+  // 3. Lógica de data antiga REMOVIDA
+  // const nextDonationDate = getNextDonationDate(dashboardData.lastDonationDate);
+  // const lastDonationDate = dashboardData.lastDonationDate
+  //   ? new Date(dashboardData.lastDonationDate).toLocaleDateString("pt-BR")
+  //   : null;
 
-  if (loading && dashboardData.lastDonationDate === null) {
+  // 4. Indicador de loading ATUALIZADO
+  // Espera até que tenhamos os dados buscados (ou do cache) para carregar
+  if (loading && dashboardData.genero == null) { // Verifica um dado que vem da API
     //indicador de loading
     return <div>Carregando painel...</div>;
   }
@@ -83,36 +86,28 @@ function HomePage() {
           borderRadius: "8px",
         }}
       >
-        {/* Critério 1: Saldo de Capibas visível */}
+        {/* Critério 1: Saldo de Capibas visível (Isto foi mantido) */}
         <StatCard
           title="Meu Saldo"
           value={dashboardData.capibasBalance}
           unit=" Capibas"
         />
 
-        {/* Critério 2: Botão para Visualizar a página com o QR Code */}
+        {/* Critério 2: Botão para Visualizar a página com o QR Code (Isto foi mantido) */}
         <QRCode />
       </div>
 
-      {/* Critério 3: Data da última/próxima doação */}
-      <div
-        className="cooldown-info"
-        style={{ marginTop: "20px", textAlign: "left" }}
-      >
-        <h3>Acompanhe sua Doação</h3>
-        {lastDonationDate ? (
-          <>
-            <p>Última doação confirmada: {lastDonationDate}</p>
-            <p>
-              <strong>
-                Você pode doar novamente a partir de: {nextDonationDate}
-              </strong>
-            </p>
-          </>
-        ) : (
-          <p>Você ainda não tem doações confirmadas.</p>
-        )}
-      </div>
+      {/* 5. Seção de Cooldown SUBSTITUÍDA */}
+      {/* Esta seção substitui o 'div.cooldown-info' antigo */}
+      {!loading && (
+        <DonationCooldown
+          lastDonationDate={dashboardData.lastDonationDate}
+          genero={dashboardData.genero}
+          donationCountLastYear={dashboardData.donationCountLastYear}
+          birthDate={dashboardData.birthDate}
+          weight={dashboardData.weight}
+        />
+      )}
     </div>
   );
 }
