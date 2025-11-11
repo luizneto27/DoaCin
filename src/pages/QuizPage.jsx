@@ -183,7 +183,6 @@ function QuizPage() {
               <ul className="rules-list">
                 <li><span className="bullet">🏁</span><div><strong>Como Funciona</strong></div></li>
                 <li><span className="bullet">✅</span><div><strong>{totalQuestions} perguntas</strong> sobre doação de sangue</div></li>
-                <li><span className="bullet">✅</span><div>Ganhe <strong>10 Capibas</strong> por cada resposta correta</div></li>
                 <li><span className="bullet">✅</span><div>Aprenda informações importantes sobre doação</div></li>
                 <li><span className="bullet">✅</span><div>Cada pergunta tem apenas uma resposta correta</div></li>
               </ul>
