@@ -8,8 +8,8 @@ import './MainLayout.css'; // Importar o novo CSS
 // --- Ícones (Definidos inline para simplicidade) ---
 // Você pode substituí-los por 'react-icons' ou arquivos SVG se preferir
 const IconBloodDrop = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
-    <path d="M12 21.35l-1.45-1.45C5.4 15.35 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.85-8.55 11.4L12 21.35z"/>
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white">
+    <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
   </svg>
 );
 

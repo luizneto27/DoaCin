@@ -58,7 +58,8 @@ export const getDashboardStats = async (req, res) => {
       weight: user ? user.weight : null,
       donationCountLastYear: donationCountLastYear,
       nome: user ? user.nome : null,
-      email: user ? user.email : null
+      email: user ? user.email : null,
+      bloodType: user ? user.bloodType : null
     });
     
   } catch (error) {
