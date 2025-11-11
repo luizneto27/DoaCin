@@ -8,7 +8,12 @@ export const getDashboardStats = async (req, res) => {
     // 1. Buscar dados do usuário (gênero, peso, data de nascimento)
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { genero: true, birthDate: true, weight: true }
+      select: { genero: true, 
+        birthDate: true, 
+        weight: true,
+        nome: true,
+        email: true
+      }
     });
 
     // 2. Checar se o usuário existe
@@ -52,6 +57,8 @@ export const getDashboardStats = async (req, res) => {
       birthDate: user ? user.birthDate : null,
       weight: user ? user.weight : null,
       donationCountLastYear: donationCountLastYear,
+      nome: user ? user.nome : null,
+      email: user ? user.email : null
     });
     
   } catch (error) {
