@@ -142,13 +142,13 @@ const styles = {
   header: {
     fontSize: '2.25rem', // 36px
     fontWeight: '700',
-    color: '#1f2937', // Cinza bem escuro
+    color: '#ef4444', // Vermelho
     textAlign: 'left',
     marginBottom: '8px',
   },
   subHeader: {
     fontSize: '1.125rem', // 18px
-    color: '#6b7280', // Cinza médio
+    color: '#374151', 
     textAlign: 'left',
     marginBottom: '32px',
   },
