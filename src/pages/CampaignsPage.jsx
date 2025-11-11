@@ -101,46 +101,7 @@ function CampaignsPage() {
         )}
       </section>
 
-      <section style={{ marginTop: 24 }}>
-        <h2>Cadastrar novo local</h2>
-        <form onSubmit={handleCreate} style={{ maxWidth: 480 }}>
-          <div>
-            <label>Nome</label>
-            <input
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Endereço</label>
-            <input
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Horário</label>
-            <input name="hours" value={form.hours} onChange={handleChange} />
-          </div>
-          <div>
-            <label>Contato</label>
-            <input
-              name="contact"
-              value={form.contact}
-              onChange={handleChange}
-            />
-          </div>
-          <div style={{ marginTop: 12 }}>
-            <button type="submit" disabled={creating}>
-              {creating ? "Criando..." : "Criar local"}
-            </button>
-          </div>
-        </form>
-      </section>
+      
     </div>
   );
 }
