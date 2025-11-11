@@ -15,7 +15,7 @@ function RecentActivity({ latestDonation }) {
         {latestDonation ? (
           <li className="activity-item">
             <div className="location-info">
-              <h4>{latestDonation.location.name}</h4>
+              <h4>{latestDonation.location?.name || 'Local não informado'}</h4>
               <p>{new Date(latestDonation.donationDate).toLocaleDateString('pt-BR')}</p>
             </div>
             <div className="status-info">
