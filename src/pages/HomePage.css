@@ -59,6 +59,19 @@
   gap: 12px;
 }
 
+/* Responsividade para .header-actions em telas pequenas */
+@media (max-width: 600px) {
+  .home-banner-container .header-actions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .home-banner-container .header-actions .button-primary,
+  .home-banner-container .header-actions .button-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
 /* Botão "+ Nova Doação" (Branco) */
 .home-banner-container .header-actions .button-primary {
   display: inline-flex;
