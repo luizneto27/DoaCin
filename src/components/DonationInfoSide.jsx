@@ -28,7 +28,7 @@ function DonationInfoSide() {
 
       <div className="info-item">
         <h4>Tipo Sanguíneo</h4>
-        <p>{bloodType}</p>
+        <p className="blood-type">{bloodType}</p>
       </div>
 
       <div className="info-item">
