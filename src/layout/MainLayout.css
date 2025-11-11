@@ -1,0 +1,214 @@
+/* Remove o padding padrão que está vindo do App.css */
+#root {
+  padding: 0;
+  max-width: none;
+}
+
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9fafb; /* Fundo cinza claro para o conteúdo */
+}
+
+.sidebar {
+  width: 260px; /* Mais espaço, como na imagem */
+  min-height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box; /* Garante que o padding não aumente a largura */
+}
+
+/* 1. Cabeçalho (Logo) */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.sidebar-logo {
+  width: 48px;
+  height: 48px;
+  background-color: #ef4444; /* Vermelho */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sidebar-logo img {
+  width: 28px; /* Tamanho do ícone de gota */
+  height: 28px;
+  color : white;
+}
+.sidebar-title h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+.sidebar-title p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* 2. Saldo Capibas */
+.capibas-saldo {
+  background-color: #fef2f2; /* Vermelho claro */
+  border: 1px solid #fee2e2;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.capibas-saldo p {
+  color: #991b1b; /* Vermelho escuro (texto) */
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+.capibas-saldo .saldo {
+  color: #b91c1c; /* Vermelho escuro (número) */
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* 3. Navegação */
+.sidebar-nav {
+  flex-grow: 1; /* Empurra o footer para baixo */
+}
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin: 4px 0;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151; /* Cinza escuro */
+  transition: background-color 0.2s, color 0.2s;
+}
+.nav-link svg {
+  width: 20px;
+  height: 20px;
+  color: #6b7280; /* Cinza médio */
+}
+.nav-link:hover {
+  background-color: #f3f4f6; /* Cinza claro no hover */
+}
+/* Estilo do link ATIVO (como na imagem) */
+.nav-link.active {
+  background-color: #fef2f2; /* Vermelho claro */
+  color: #ef4444; /* Vermelho */
+}
+.nav-link.active svg {
+  color: #ef4444; /* Vermelho */
+}
+
+/* 4. Conquistas */
+.conquistas-card {
+  background-color: #ef4444; /* Vermelho */
+  color: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+.conquistas-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 8px;
+}
+.conquistas-stats {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+.conquistas-stats div p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+.conquistas-stats div .stat-number {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* 5. Footer (Usuário e Sair) */
+.sidebar-footer {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fee2e2; /* Fundo vermelho claro */
+  color: #ef4444; /* Ícone vermelho */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-avatar svg {
+  width: 24px;
+  height: 24px;
+}
+.user-details h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+.user-details p {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px solid #d1d5db; /* Borda cinza */
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151; /* Texto cinza escuro */
+  cursor: pointer;
+}
+.logout-button:hover {
+  background-color: #f9fafb;
+}
+/* Estilo para o SVG dentro do botão de sair */
+.logout-button svg {
+  width: 20px; /* Reduz o tamanho do ícone de sair */
+  height: 20px;
+  color: #374151; /* Garante a cor cinza escura */
+}
+
+/* Conteúdo Principal */
+.main-content {
+  flex: 1;
+  padding: 32px;
+  box-sizing: border-box;
+}

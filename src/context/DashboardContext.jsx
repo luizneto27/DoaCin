@@ -7,27 +7,29 @@ function getInitialDashboardData() {
     const saved = localStorage.getItem("dashboardData");
     if (saved) return JSON.parse(saved);
   } catch (err) {
-    void err; // ignore parse errors and satisfy linter
+    void err; 
   }
   return {
     capibasBalance: 0,
     lastDonationDate: null,
-    genero: null, // Adicionado
-    donationCountLastYear: 0, // Adicionado
-    birthDate: null, // Adicionado
-    weight: null, // Adicionado
+    genero: null, 
+    donationCountLastYear: 0,
+    birthDate: null,
+    weight: null,
+    email: null,
+    nome: null
   };
 }
 
 export function DashboardProvider({ children }) {
   const [dashboardData, setDashboardData] = useState(getInitialDashboardData);
 
-  // persist to localStorage whenever dashboardData changes
+
   useEffect(() => {
     try {
       localStorage.setItem("dashboardData", JSON.stringify(dashboardData));
     } catch (err) {
-      void err; // ignore storage errors and satisfy linter
+      void err; 
     }
   }, [dashboardData]);
 

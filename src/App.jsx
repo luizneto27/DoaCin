@@ -17,18 +17,23 @@ function App() {
       <DashboardProvider>
         <BrowserRouter>
           <Routes>
+            {/* Rota Pública */}
             <Route path="/login" element={<LoginPage />} />
-            {/* Rotas Privadas dentro do Layout Principal */}
-            <Route element={<MainLayout />}>
-              {" "}
-              {/* <PrivateRoute> <MainLayout /> </PrivateRoute> */}
-              <Route path="/" element={<HomePage />} />
-              <Route path="/doacoes" element={<DonationsPage />} />
-              <Route path="/campanhas" element={<CampaignsPage />} />
-              <Route path="/quiz" element={<QuizPage />} />
-              <Route path="/regras" element={<RulesPage />} />
-              <Route path="/perfil" element={<ProfilePage />} />
+            
+            {/* Rotas Privadas (Corrigido) */}
+            {/* O PrivateRoute verifica se está logado. Se sim, renderiza o <Outlet /> */}
+            <Route element={<PrivateRoute />}>
+              {/* O MainLayout é renderizado e o <Outlet /> dele renderiza as páginas filhas */}
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/doacoes" element={<DonationsPage />} />
+                <Route path="/campanhas" element={<CampaignsPage />} />
+                <Route path="/quiz" element={<QuizPage />} />
+                <Route path="/regras" element={<RulesPage />} />
+                <Route path="/perfil" element={<ProfilePage />} />
+              </Route>
             </Route>
+
           </Routes>
         </BrowserRouter>
       </DashboardProvider>
