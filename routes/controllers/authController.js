@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client'; // Importe o Prisma
-import bcrypt from 'bcryptjs';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs'; // hash de senha
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
@@ -9,17 +9,19 @@ export const register = async (req, res) => {
   const { nome, email, password, cpf } = req.body;
 
   try {
-    //verificar se o usuário já existe (por email ou cpf)
+    //verificar existencia do user por email ou cpf
     const existingUser = await prisma.user.findFirst({
-      where: { OR: [{ email: email }, { cpf: cpf }] }
+      where: { 
+        OR: [{ email: email }, { cpf: cpf }]
+      }
     });
 
-    if (existingUser) {
+    if (existingUser) { // se ja existir, retorna message
       return res.status(400).json({ message: 'Email ou CPF já cadastrado.' });
     }
 
     //criptografar a senha
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12); // aumentar os rounds (cost) torna ataques de força bruta muito mais custosos para o atacante, porque cada tentativa exige mais tempo CPU. Também aumenta o tempo de autenticação/registro no seu servidor. Um cost muito alto pode degradar a experiência do usuário ou permitir DoS (ataques que exauram CPU).
 
     //criar o usuário no banco
     const user = await prisma.user.create({
@@ -67,7 +69,7 @@ export const login = async (req, res) => {
       { expiresIn: '1h' } //duracao do token
     );
 
-    //enviar a resposta
+    //retorna o token e o id do usuário
     res.status(200).json({
       token: token,
       userId: user.id
@@ -77,3 +79,11 @@ export const login = async (req, res) => {
     res.status(500).json({ message: 'Erro ao fazer login', error: error.message });
   }
 };
+
+// melhorias que se aplicam a esse arquivo:
+
+  // 1. Normalizacao de email(lowercase)
+
+  // 2. Tratar Unique Contraint do DB: Adicionar constraints unique no schema.prisma (email e cpf) e tratar erro Prisma P2002 para retornar 409 Conflict com mensagem apropriada.
+
+  // 3. UX do registro: Enviar e-mail de verificação antes de ativar conta; evitar que usuários usem a aplicação sem confirmar e-mail.

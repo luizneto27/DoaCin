@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 export const getDonationHistory = async (req, res) => {
@@ -6,8 +7,8 @@ export const getDonationHistory = async (req, res) => {
 
   try {
     const donations = await prisma.donation.findMany({
-      where: { userId: userId },
-      orderBy: { donationDate: 'desc' },
+      where: { userId: userId }, // 
+      orderBy: { donationDate: 'desc' }, // ordena por data da doação, mais recente primeiro
       include: {
         pontoColeta: { select: { nome: true } }
       }
@@ -34,3 +35,7 @@ export const getDonationHistory = async (req, res) => {
   }
 
 };
+
+// melhorias que se aplicam a esse arquivo:
+  // 1. Paginação: findMany retirna todas as doacoes.  Melhor usar select para limitar o que o banco retorna.
+  // fintragem: Suportar query params para filtrar por status, intervalo de datas, pontoColetaId, e ordenação asc/desc.

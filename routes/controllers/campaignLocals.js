@@ -82,3 +82,11 @@ export const createLocalCampaign = async (req, res) => {
     });
   }
 };
+
+// melhorias que se aplicam a esse arquivo:
+
+  // 1. filtragem por campaignId
+
+  // 2. implementar checagem de role (ex.: apenas admins/gestores podem criar locais) ou um fluxo de aprovação para novos locais.
+
+  // 3. separar horarioAbertura e horarioFechamento no backend para facilitar buscas e filtragens futuras

@@ -66,3 +66,13 @@ export const getDashboardStats = async (req, res) => {
     res.status(500).json({ message: "Erro ao buscar dados do dashboard", error: error.message });
   }
 };
+
+// melhorias que se aplicam a esse arquivo:
+  // 1.findFirst para lastDonation retorna todo o objeto — melhor selecionar apenas donationDate.
+
+  // 2. Normalização e formatação de datas: Converter datas para ISO e/ou especificar timezone (ou adicionar campo lastDonationDateUtc) para evitar ambiguidade no frontend
+
+  // 3. Paralelizar queries independentes: user, aggregate, lastDonation e count podem ser executados em paralelo (Promise.all) para reduzir latência total:
+    // Ex.: fetchUserPromise + fetchAggregatePromise + fetchLastDonationPromise + fetchCountPromise.
+
+  // 4. Revisar quais campos realmente precisam ser enviados (mostrar email/birthDate só quando necessário)

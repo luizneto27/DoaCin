@@ -7,8 +7,8 @@ export default defineConfig({
 
   server: {
     proxy: {
-      // Redireciona qualquer requisição que comece com /api
-      // para o seu backend Express na porta 3000.
+      // redireciona todas as requisiçoes que começam com /api
+      // para http://localhost:3000 (onde o Express está rodando)
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
