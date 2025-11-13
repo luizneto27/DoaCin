@@ -1,17 +1,15 @@
-// 1. Importações (agora usando 'import')
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-dotenv.config(); // Carrega as variáveis do arquivo .env
+dotenv.config(); // carrega as variaveis do arquivo .env
 const app = express();
-const PORT = process.env.PORT || 3000; // Define a porta (pode adicionar PORT=3000 ao .env)
+const PORT = process.env.PORT || 3000; // define a porta
 
-// 3. Middlewares
-app.use(cors()); // Permite requisições de origens diferentes (do seu frontend Vite)
-app.use(express.json()); // Permite que o Express entenda JSON no corpo das requisições
+app.use(cors()); // permite requisiçoes de origens diferentes (do seu frontend Vite)
+app.use(express.json()); // permite que o Express entenda JSON no corpo das requisições
 
-// 4. Importação das Rotas (adicionamos .js no final)
+// importaçao das rotas
 import authRoutes from "./routes/auth.js";
 import dashboardRoutes from "./routes/dashboard.js";
 import donationRoutes from "./routes/donations.js";
@@ -27,7 +25,7 @@ app.use("/api/donations", donationRoutes);
 // Todas as rotas relacionadas a campanhas e locais ficarão sob /api/campaigns
 app.use("/api/campaigns", campaignsRoutes);
 
-// 6. Iniciar o Servidor
+// inicia o server na porta definida
 app.listen(PORT, () => {
   console.log(`Backend Express rodando na porta ${PORT}`);
 });
