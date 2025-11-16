@@ -8,52 +8,81 @@
 
 import React, { useState, useEffect } from 'react';
 import './ProfilePage.css';
+import { authFetch } from '../../services/api'; // (Verifique este caminho)
 
-// Lembre-se, export nomeado!
 function ProfilePage() {
   
-  // --- LÓGICA DE DADOS (Componentes Controlados) ---
-  
-  // Dados que vêm da API (e são readOnly)
+  // --- LÓGICA DE DADOS ---
   const [nome, setNome] = useState('Carregando...');
   const [email, setEmail] = useState('Carregando...');
-  
-  // Dados que o usuário pode editar
   const [telefone, setTelefone] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
-  const [tipoRed, setTipoSanguineo] = useState('');
+  const [tipoRed, setTipoSanguineo] = useState(''); // O estado do React
   const [peso, setPeso] = useState('');
+  
+  const [capibas, setCapibas] = useState(0);
+  const [doacoes, setDoacoes] = useState(0);
 
   // --- LÓGICA DE DADOS (useEffect) ---
-  useEffect(() => {
-    // Aqui você fará o GET /api/user/me
-    // Por enquanto, vamos usar os dados do "Lorem Ipsum" (modelo)
-    
-    // Simula a busca da API
-    setTimeout(() => {
-      setNome('Bruno Maximo da Costa');
-      setEmail('bmc5@cin.ufpe.br');
-      setTelefone('(81) 99999-9999');
-      setDataNascimento('01/01/1990');
-      setTipoSanguineo('O+');
-      setPeso('75');
-    }, 1000); // Simula 1s de loading
+useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await authFetch('/api/dashboard'); 
 
-  }, []); // O array vazio [] faz isso rodar só uma vez
+        if (!response.ok) {
+          throw new Error('Falha ao buscar dados do usuário');
+        }
 
+        const data = await response.json();
+        
+        setNome(data.nome);
+        setEmail(data.email);
+        setTelefone(data.telefone ?? ''); 
+        setTipoSanguineo(data.bloodType ?? ''); 
+        setPeso(data.weight ?? '');             
+        setCapibas(data.capibasBalance ?? 0); 
+        setDoacoes(data.doacoes ?? 0);     
+        
+        // --- CORREÇÃO DA DATA ---
+        // 1. Verificamos se a data existe
+        if (data.birthDate) {
+          // 2. Criamos um objeto Date com ela
+          const dateObj = new Date(data.birthDate);
+          
+          // 3. Pegamos o dia, mês e ano
+          // .padStart(2, '0') garante que '1' vire '01'
+          const day = String(dateObj.getUTCDate()).padStart(2, '0');
+          const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); // Mês começa do 0
+          const year = dateObj.getUTCFullYear();
+
+          // 4. Salvamos no formato bonito
+          setDataNascimento(`${day}/${month}/${year}`);
+        } else {
+          // Se não tiver data, salvamos como vazio
+          setDataNascimento('');
+        }
+      
+
+      } catch (error) {
+        console.error("Erro no useEffect:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
   // --- LÓGICA DE DADOS (handleSubmit) ---
   const handleSubmit = (event) => {
-    event.preventDefault(); // Impede o reload da página
+    event.preventDefault(); 
     
-    // Aqui você fará o PUT /api/user/me
+    // (Este será o Passo 3 - Salvar)
     const dadosParaEnviar = {
       telefone,
-      dataNascimento,
-      tipoRed,
+      dataNascimento, // Vamos precisar converter de volta
+      tipoRed, // Vamos precisar converter de volta
       peso,
     };
     
-    console.log('Enviando dados para a API:', dadosParaEnviar);
+    console.log('Enviando dados para a API (simulação):', dadosParaEnviar);
     alert('Perfil salvo! (Simulação)');
   };
 
@@ -61,37 +90,33 @@ function ProfilePage() {
   return (
     <div className="profile-page">
       
-      {/* Títulos */}
-      <h2 className="profile-title">Meu Perfil</h2>
-      <p className="profile-subtitle">Gerencie suas informações pessoais</p>
+      <div className="profile-header">
+        <h2 className="profile-title">Meu Perfil</h2>
+        <p className="profile-subtitle">Gerencie suas informações pessoais</p>
+      </div>
 
-      {/* Container das Colunas */}
       <div className="profile-container">
 
-        {/* --- Coluna Esquerda (Sidebar Card) --- */}
         <div className="profile-sidebar">
           <div className="profile-card profile-info-card">
             
-            <div className="profile-avatar">
-              {/* Vazio por enquanto, pois não estamos usando react-icons */}
-            </div>
+            <div className="profile-avatar"></div>
 
             <h3 className="profile-user-name">{nome}</h3>
             <p className="profile-user-email">{email}</p>
 
             <div className="stat-block capibas">
               <p className="stat-block-title">Capibas</p>
-              <p className="stat-block-value">0</p>
+              <p className="stat-block-value">{capibas}</p> 
             </div>
 
             <div className="stat-block doacoes">
               <p className="stat-block-title">Doações</p>
-              <p className="stat-block-value">0</p>
+              <p className="stat-block-value">{doacoes}</p>
             </div>
           </div>
         </div>
 
-        {/* --- Coluna Direita (Formulário) --- */}
         <div className="profile-content">
           <div className="profile-card">
             
@@ -135,7 +160,6 @@ function ProfilePage() {
                     placeholder="(99) 99999-9999"
                   />
                 </div>
-
                 <div className="form-group">
                   <label className="form-label" htmlFor="dataNascimento">Data de Nascimento</label>
                   <input
@@ -169,7 +193,6 @@ function ProfilePage() {
                     <option value="O-">O-</option>
                   </select>
                 </div>
-                
                 <div className="form-group">
                   <label className="form-label" htmlFor="peso">Peso (kg)</label>
                   <input
@@ -190,9 +213,9 @@ function ProfilePage() {
 
           </div>
         </div>
-
       </div>
     </div>
   );
 }
+
 export default ProfilePage;

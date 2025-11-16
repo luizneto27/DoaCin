@@ -5,14 +5,17 @@ export const getDashboardStats = async (req, res) => {
   const userId = req.userData.userId; 
 
   try {
-    // 1. Buscar dados do usuário (gênero, peso, data de nascimento)
+    // 1. Buscar dados do usuário
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { genero: true, 
+      select: { 
+        genero: true, 
         birthDate: true, 
         weight: true,
         nome: true,
-        email: true
+        email: true,
+        phone: true,      // <-- CORREÇÃO AQUI (era 'telefone')
+        bloodType: true 
       }
     });
 
@@ -49,7 +52,15 @@ export const getDashboardStats = async (req, res) => {
       },
     });
 
-    // 6. Retornar todos os dados para o frontend
+    // 6. Contar o TOTAL de doações (para o card da sidebar)
+    const totalDonations = await prisma.donation.count({
+      where: {
+        userId: userId,
+        status: 'confirmed',
+      },
+    });
+
+    // 7. Retornar todos os dados para o frontend
     res.status(200).json({
       capibasBalance: capibasBalance,
       lastDonationDate: lastDonation ? lastDonation.donationDate : null,
@@ -59,7 +70,9 @@ export const getDashboardStats = async (req, res) => {
       donationCountLastYear: donationCountLastYear,
       nome: user ? user.nome : null,
       email: user ? user.email : null,
-      bloodType: user ? user.bloodType : null
+      bloodType: user ? user.bloodType : null,
+      telefone: user ? user.phone : null, 
+      doacoes: totalDonations
     });
     
   } catch (error) {
