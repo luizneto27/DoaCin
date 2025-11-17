@@ -1,18 +1,8 @@
-// ● Componentes: Formulário com inputs controlados (React useState).
-// ● Lógica de Dados:
-// ○ useEffect inicial para buscar dados do GET /api/user/me e preencher o formulário.
-// ○ Função handleSubmit que envia os dados do formulário para PUT /api/user/me.
-// ○ Os campos "Nome" e "E-mail" podem ser definidos como readOnly se forem
-// gerenciados por um provedor de identidade.
-
-
 import React, { useState, useEffect } from 'react';
 import './ProfilePage.css';
-import { authFetch } from '../../services/api'; // (Verifique este caminho)
-
+import { authFetch } from '../../services/api'; 
 function ProfilePage() {
-  
-  // --- LÓGICA DE DADOS ---
+
   const [nome, setNome] = useState('Carregando...');
   const [email, setEmail] = useState('Carregando...');
   const [telefone, setTelefone] = useState('');
@@ -23,16 +13,20 @@ function ProfilePage() {
   const [capibas, setCapibas] = useState(0);
   const [doacoes, setDoacoes] = useState(0);
 
+  // 1. ADICIONANDO O ESTADO DE LOADING (com a sintaxe correta)
+  const [isLoading, setIsLoading] = useState(false);
+
+
   // --- LÓGICA DE DADOS (useEffect) ---
-useEffect(() => {
+  useEffect(() => {
+    
+    // 1. A MESMA FUNÇÃO QUE VOCÊ JÁ TINHA
     const fetchUserProfile = async () => {
+      console.log('Buscando dados atualizados do perfil...'); // Para vermos no F12
       try {
         const response = await authFetch('/api/dashboard'); 
-
-        if (!response.ok) {
-          throw new Error('Falha ao buscar dados do usuário');
-        }
-
+        if (!response.ok) throw new Error('Falha ao buscar dados');
+        
         const data = await response.json();
         
         setNome(data.nome);
@@ -43,47 +37,60 @@ useEffect(() => {
         setCapibas(data.capibasBalance ?? 0); 
         setDoacoes(data.doacoes ?? 0);     
         
-        // --- CORREÇÃO DA DATA ---
-        // 1. Verificamos se a data existe
         if (data.birthDate) {
-          // 2. Criamos um objeto Date com ela
           const dateObj = new Date(data.birthDate);
-          
-          // 3. Pegamos o dia, mês e ano
-          // .padStart(2, '0') garante que '1' vire '01'
           const day = String(dateObj.getUTCDate()).padStart(2, '0');
-          const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); // Mês começa do 0
+          const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
           const year = dateObj.getUTCFullYear();
-
-          // 4. Salvamos no formato bonito
           setDataNascimento(`${day}/${month}/${year}`);
         } else {
-          // Se não tiver data, salvamos como vazio
           setDataNascimento('');
         }
-      
-
       } catch (error) {
         console.error("Erro no useEffect:", error);
       }
     };
 
     fetchUserProfile();
-  }, []);
-  // --- LÓGICA DE DADOS (handleSubmit) ---
-  const handleSubmit = (event) => {
-    event.preventDefault(); 
-    
-    // (Este será o Passo 3 - Salvar)
-    const dadosParaEnviar = {
-      telefone,
-      dataNascimento, // Vamos precisar converter de volta
-      tipoRed, // Vamos precisar converter de volta
-      peso,
+
+    window.addEventListener('focus', fetchUserProfile);
+
+    return () => {
+      window.removeEventListener('focus', fetchUserProfile);
     };
-    
-    console.log('Enviando dados para a API (simulação):', dadosParaEnviar);
-    alert('Perfil salvo! (Simulação)');
+
+  }, []); 
+  // 2. SUBSTITUINDO O HANDLESUBMIT DE SIMULAÇÃO PELO REAL
+  const handleSubmit = async (event) => {
+    event.preventDefault(); 
+    setIsLoading(true); // Trava o botão
+
+    const dadosParaEnviar = {
+      telefone: telefone,
+      dataNascimento: dataNascimento,
+      tipoRed: tipoRed,
+      peso: peso,
+    };
+
+    try {
+      const response = await authFetch('/api/user/me', {
+        method: 'PUT',
+        body: JSON.stringify(dadosParaEnviar),
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha ao salvar o perfil');
+      }
+
+      await response.json();
+      alert('Perfil salvo com sucesso!');
+
+    } catch (error) {
+      console.error('Erro no handleSubmit:', error);
+      alert('Erro ao salvar o perfil. Tente novamente.');
+    } finally {
+      setIsLoading(false); // Destrava o botão
+    }
   };
 
   // --- RENDERIZAÇÃO (Visual) ---
@@ -168,7 +175,7 @@ useEffect(() => {
                     id="dataNascimento"
                     value={dataNascimento}
                     onChange={(e) => setDataNascimento(e.target.value)}
-                    placeholder="dd / mm / aaaa"
+                    placeholder="dd/mm/aaaa"
                   />
                 </div>
               </div>
@@ -206,8 +213,9 @@ useEffect(() => {
                 </div>
               </div>
 
-              <button type="submit" className="form-button">
-                Salvar Alterações
+              {/* 3. ATUALIZANDO O BOTÃO PARA USAR O LOADING */}
+              <button type="submit" className="form-button" disabled={isLoading}>
+                {isLoading ? 'Salvando...' : 'Salvar Alterações'}
               </button>
             </form>
 
