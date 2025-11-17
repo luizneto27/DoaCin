@@ -7,22 +7,22 @@ function ProfilePage() {
   const [email, setEmail] = useState('Carregando...');
   const [telefone, setTelefone] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
-  const [tipoRed, setTipoSanguineo] = useState(''); // O estado do React
+  const [tipoRed, setTipoSanguineo] = useState(''); 
   const [peso, setPeso] = useState('');
   
   const [capibas, setCapibas] = useState(0);
   const [doacoes, setDoacoes] = useState(0);
 
-  // 1. ADICIONANDO O ESTADO DE LOADING (com a sintaxe correta)
+  
   const [isLoading, setIsLoading] = useState(false);
 
 
   // --- LÓGICA DE DADOS (useEffect) ---
   useEffect(() => {
     
-    // 1. A MESMA FUNÇÃO QUE VOCÊ JÁ TINHA
+    
     const fetchUserProfile = async () => {
-      console.log('Buscando dados atualizados do perfil...'); // Para vermos no F12
+      console.log('Buscando dados atualizados do perfil...'); 
       try {
         const response = await authFetch('/api/dashboard'); 
         if (!response.ok) throw new Error('Falha ao buscar dados');
@@ -60,7 +60,7 @@ function ProfilePage() {
     };
 
   }, []); 
-  // 2. SUBSTITUINDO O HANDLESUBMIT DE SIMULAÇÃO PELO REAL
+  
   const handleSubmit = async (event) => {
     event.preventDefault(); 
     setIsLoading(true); // Trava o botão
@@ -89,7 +89,7 @@ function ProfilePage() {
       console.error('Erro no handleSubmit:', error);
       alert('Erro ao salvar o perfil. Tente novamente.');
     } finally {
-      setIsLoading(false); // Destrava o botão
+      setIsLoading(false); 
     }
   };
 
