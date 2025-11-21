@@ -14,7 +14,7 @@ export const getDashboardStats = async (req, res) => {
         weight: true,
         nome: true,
         email: true,
-        phone: true,      // <-- CORREÇÃO AQUI (era 'telefone')
+        phone: true,      
         bloodType: true 
       }
     });

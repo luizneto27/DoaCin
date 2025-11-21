@@ -62,7 +62,7 @@ function DonationCooldown({
   
   // 0. Verifica se o perfil está completo
   const isWeightOk = weight != null && weight >= 50;
-  const isGenderSet = genero === 'M' || genero === 'F';
+  const isGenderSet = genero === 'Masculino' || genero === 'Feminino';
   const isAgeSet = birthDate != null;
 
   if (!isWeightOk || !isAgeSet || !isGenderSet) {

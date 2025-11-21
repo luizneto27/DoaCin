@@ -9,7 +9,7 @@ function ProfilePage() {
   const [dataNascimento, setDataNascimento] = useState('');
   const [tipoRed, setTipoSanguineo] = useState(''); 
   const [peso, setPeso] = useState('');
-  
+  const [genero, setGenero] = useState('');
   const [capibas, setCapibas] = useState(0);
   const [doacoes, setDoacoes] = useState(0);
 
@@ -33,7 +33,8 @@ function ProfilePage() {
         setEmail(data.email);
         setTelefone(data.telefone ?? ''); 
         setTipoSanguineo(data.bloodType ?? ''); 
-        setPeso(data.weight ?? '');             
+        setPeso(data.weight ?? '');
+        setGenero(data.genero ?? '');           
         setCapibas(data.capibasBalance ?? 0); 
         setDoacoes(data.doacoes ?? 0);     
         
@@ -70,6 +71,7 @@ function ProfilePage() {
       dataNascimento: dataNascimento,
       tipoRed: tipoRed,
       peso: peso,
+      genero: genero,
     };
 
     try {
@@ -180,7 +182,10 @@ function ProfilePage() {
                 </div>
               </div>
 
-              <div className="form-grid">
+              {}
+              <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+                
+                {}
                 <div className="form-group">
                   <label className="form-label" htmlFor="tipoRed">Tipo Sanguíneo</label>
                   <select
@@ -200,6 +205,8 @@ function ProfilePage() {
                     <option value="O-">O-</option>
                   </select>
                 </div>
+
+                {}
                 <div className="form-group">
                   <label className="form-label" htmlFor="peso">Peso (kg)</label>
                   <input
@@ -211,9 +218,25 @@ function ProfilePage() {
                     placeholder="Ex: 70"
                   />
                 </div>
+
+                {}
+                <div className="form-group">
+                  <label className="form-label" htmlFor="genero">Gênero</label>
+                  <select
+                    className="form-select"
+                    id="genero"
+                    value={genero}
+                    onChange={(e) => setGenero(e.target.value)}
+                  >
+                    <option value="">Selecione</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                  </select>
+                </div>
+
               </div>
 
-              {/* 3. ATUALIZANDO O BOTÃO PARA USAR O LOADING */}
+              {}
               <button type="submit" className="form-button" disabled={isLoading}>
                 {isLoading ? 'Salvando...' : 'Salvar Alterações'}
               </button>

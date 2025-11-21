@@ -17,22 +17,23 @@ function parseDate(dateString) {
   return null;
 }
 
+
+
 export const updateUserProfile = async (req, res) => {
-  
   const userId = req.userData.userId;
   
-  const { telefone, dataNascimento, tipoRed, peso } = req.body;
+  // 1. ADICIONAMOS 'genero' AQUI
+  const { telefone, dataNascimento, tipoRed, peso, genero } = req.body;
 
   try {
-    // 3. Convertemos os dados para o formato do banco
     const dataParaAtualizar = {
       phone: telefone,
       bloodType: tipoRed,
-      weight: peso ? parseFloat(peso) : null, 
-      birthDate: parseDate(dataNascimento)   
+      weight: peso ? parseFloat(peso) : null,
+      birthDate: parseDate(dataNascimento),
+      genero: genero // 2. ADICIONAMOS AO OBJETO DO PRISMA
     };
 
-    // 4. Usamos o Prisma para atualizar o usuário
     const userAtualizado = await prisma.user.update({
       where: {
         id: userId,
@@ -40,7 +41,6 @@ export const updateUserProfile = async (req, res) => {
       data: dataParaAtualizar,
     });
 
-    // 5. Enviamos a resposta de sucesso
     res.status(200).json({ 
       message: "Perfil atualizado com sucesso!",
       user: userAtualizado 
