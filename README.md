@@ -1,14 +1,17 @@
 # 🩸 DoaCIn
 
-##pra rodar( por enquanto) 
+## Pra rodar (por enquanto) 
 
-*execute o dockerdesktop no seu pc( baixe, se for preciso)
+ Rode o comando: `npm install -D tsx` para instalar as dependencias da seed e execute com o comando: `npx prisma db seed`
+
+ Execute o dockerdesktop no seu pc (baixe, se for preciso)
+
 * `docker-compose up -d`
 * `npm install`
 * `npx prisma migrate deploy`
 * `npx prisma generate`
 * `npm run dev`
-* Pra usar o prisma studio, split o terminal e rode `npx prisma studio` 
+* Pra usar o prisma studio, split o terminal e rode `npx prisma studio`
 
 ## Funcionalidades Principais
 
