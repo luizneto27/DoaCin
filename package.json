@@ -51,7 +51,7 @@
     "url": "https://github.com/luizneto27/DoaCin/issues"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "homepage": "https://github.com/luizneto27/DoaCin#readme"
 }
