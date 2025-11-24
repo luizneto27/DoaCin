@@ -185,3 +185,28 @@
   flex-grow: 1; 
 }
 
+/* Torna o grid de formulário responsivo */
+.form-grid.three-cols {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 20px; /* Reduz padding lateral excessivo (era 60px/130px) */
+  }
+
+  .profile-container {
+    flex-direction: column; /* Empilha card de perfil e formulário */
+  }
+
+  .profile-sidebar {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  /* Transforma grids de 2 ou 3 colunas em 1 coluna no mobile */
+  .form-grid, 
+  .form-grid.three-cols {
+    grid-template-columns: 1fr !important;
+  }
+}
