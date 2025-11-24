@@ -14,6 +14,7 @@ import authRoutes from "./routes/auth.js";
 import dashboardRoutes from "./routes/dashboard.js";
 import donationRoutes from "./routes/donations.js";
 import campaignsRoutes from "./routes/campaigns.js";
+import userRoutes from './routes/user.js';
 
 // 5. Registro das Rotas na API
 // Todas as rotas de autenticação ficarão sob /api/auth
@@ -24,6 +25,8 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/donations", donationRoutes);
 // Todas as rotas relacionadas a campanhas e locais ficarão sob /api/campaigns
 app.use("/api/campaigns", campaignsRoutes);
+// rota do perfil
+app.use('/api/user', userRoutes); 
 
 // inicia o server na porta definida
 app.listen(PORT, () => {
