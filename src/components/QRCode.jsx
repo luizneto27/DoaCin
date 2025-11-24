@@ -19,19 +19,6 @@ function QRCode() {
         type="button"
         onClick={() => setIsOpen(true)}
         className="button-qr-code"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#fff",
-          border: "1px solid gray",
-          padding: "16px",
-          margin: "8px",
-          borderRadius: "8px",
-          color: "rgba(235, 14, 14, 0.87)",
-          textDecoration: "none",
-          cursor: "pointer",
-        }}
       >
         QR Code
       </button>

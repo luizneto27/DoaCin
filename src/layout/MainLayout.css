@@ -221,3 +221,41 @@
   /* Centra o bloco de conteúdo na área disponível */
   margin: 0 auto;
 }
+
+/* Adicione isso ao final do arquivo */
+@media (max-width: 768px) {
+  .layout-container {
+    flex-direction: column; /* Empilha sidebar e conteúdo */
+  }
+
+  .sidebar {
+    width: 100%; /* Ocupa toda a largura */
+    min-height: auto; /* Altura ajustável ao conteúdo */
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px;
+  }
+
+  /* Ajuste para o menu ficar mais compacto no mobile */
+  .sidebar-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  
+  .nav-link {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  /* Esconde ou ajusta elementos menos importantes da sidebar no mobile */
+  .capibas-saldo, .conquistas-card, .sidebar-footer {
+    display: none; /* Opcional: esconde saldo/conquistas no topo para limpar a visão */
+  }
+  
+  /* Ajusta o padding do conteúdo principal */
+  .main-content {
+    padding: 1.5rem; /* Reduz de 2.5rem para 1.5rem */
+  }
+}

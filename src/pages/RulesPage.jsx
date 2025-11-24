@@ -133,15 +133,16 @@ function RulesPage() {
 const styles = {
   pageContainer: {
     maxWidth: '900px',
+    width: '100%',
     margin: '0 auto',
     padding: '20px',
     fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
     color: '#374151', // Tom de cinza mais escuro
     background: '#f9fafb', // Fundo levemente acinzentado
+    boxSizing: 'border-box', // Garante que o padding não aumente a largura total
   },
   header: {
-    fontSize: '2.25rem', // 36px
-    fontWeight: '700',
+    fontSize: 'clamp(1.5rem, 5vw, 2.25rem)', // Texto responsivo 
     color: '#ef4444', // Vermelho
     textAlign: 'left',
     marginBottom: '8px',
