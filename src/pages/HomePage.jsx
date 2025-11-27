@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDashboard } from "../context/DashboardContext.jsx";
 import { authFetch } from "../../services/api";
 
 // Importar o CSS
-import "./HomePage.css"; 
+import "./HomePage.css";
 
 // Importar os componentes
 import StatCard from "../components/StatCard.jsx";
@@ -36,6 +36,7 @@ const IconVidas = () => (
 
 
 function HomePage() {
+  const navigate = useNavigate();
   const { dashboardData, setDashboardData } = useDashboard();
   const [latestDonation, setLatestDonation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -49,7 +50,7 @@ function HomePage() {
       try {
         const saved = localStorage.getItem("dashboardData");
         if (saved) setDashboardData(JSON.parse(saved));
-        
+       
         const data = await authFetch("/api/dashboard").then((res) => res.json());
         if (dashboardMounted) setDashboardData(data);
       } catch (err) {
@@ -80,7 +81,7 @@ function HomePage() {
     };
   }, [setDashboardData]);
 
-  
+ 
   if (loading) {
     return <div>Carregando painel...</div>;
   }
@@ -93,46 +94,65 @@ function HomePage() {
 
   const vidasSalvas = donationCountLastYear * 4;
 
+  const handleNewDonation = () => {
+    navigate('/doacoes', { state: { openModal: true } });
+  };
+
   return (
     <div className="home-page-container">
 
       {/* --- NOVO CONTÊINER DO BANNER VERMELHO --- */}
       <div className="home-banner-container">
-        
+       
         {/* --- CABEÇALHO --- */}
         <div className="home-header">
           <div className="welcome-message">
-            {/* Adicionei o emoji '👋' da imagem de destino */}
             <h1>Olá, {nome}! 👋</h1>
             <p>Sua próxima doação pode salvar até 4 vidas ❤️</p>
           </div>
           <div className="header-actions">
-            <Link to="/campanhas" className="button-primary">
+            <Link
+              to="/doacoes"
+              state={{ openModal: true }}
+              className="button-primary"
+              style={{
+                backgroundColor: '#E63946',
+                color: 'white',
+                border: 'none',
+                padding: '10px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                textDecoration: 'none'
+              }}
+            >
               + Nova Doação
             </Link>
-            {/* O QRCode é renderizado aqui, mas os estilos em CSS
-                vão mudar sua aparência para o botão translúcido */}
-            <QRCode /> 
+            <QRCode />
           </div>
         </div>
 
         {/* --- LINHA DE STATS --- */}
         <div className="stats-row">
-          <StatCard 
-            title="Capibas" 
-            value={capibasBalance} 
-            icon={<IconCapiba />} 
+          <StatCard
+            title="Capibas"
+            value={capibasBalance}
+            icon={<IconCapiba />}
           />
-          <StatCard 
-            title="Doações" 
-            value={donationCountLastYear} 
+          <StatCard
+            title="Doações"
+            value={donationCountLastYear}
             /* Removi o 'unit' para bater com a imagem de destino */
-            icon={<IconDoacao />} 
+            icon={<IconDoacao />}
           />
-          <StatCard 
-            title="Vidas Salvas" 
-            value={vidasSalvas} 
-            icon={<IconVidas />} 
+          <StatCard
+            title="Vidas Salvas"
+            value={vidasSalvas}
+            icon={<IconVidas />}
           />
         </div>
       </div>
@@ -141,7 +161,7 @@ function HomePage() {
 
       {/* --- LAYOUT EM GRID (RESTO DA PÁGINA) --- */}
       <div className="home-grid-layout">
-        
+       
         {/* Coluna Principal (Esquerda) */}
         <div className="main-column">
           {/* Card de Cooldown */}
@@ -166,5 +186,6 @@ function HomePage() {
     </div>
   );
 }
+
 
 export default HomePage;
