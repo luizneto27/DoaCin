@@ -7,7 +7,7 @@ export const getDonationHistory = async (req, res) => {
 
   try {
     const donations = await prisma.donation.findMany({
-      where: { userId: userId }, // 
+      where: { userId: userId }, 
       orderBy: { donationDate: 'desc' }, // ordena por data da doação, mais recente primeiro
       include: {
         pontoColeta: { select: { nome: true } }
@@ -33,9 +33,40 @@ export const getDonationHistory = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Erro ao buscar histórico de doações", error: error.message });
   }
-
 };
 
-// melhorias que se aplicam a esse arquivo:
-  // 1. Paginação: findMany retirna todas as doacoes.  Melhor usar select para limitar o que o banco retorna.
-  // fintragem: Suportar query params para filtrar por status, intervalo de datas, pontoColetaId, e ordenação asc/desc.
+// --- NOVA FUNÇÃO: Confirmar Doação (Simulação via QR Code) ---
+export const confirmDonation = async (req, res) => {
+  const userId = req.userData.userId;
+
+  try {
+    // 1. Para simular, pegamos o primeiro Ponto de Coleta disponível no banco
+    // Na vida real, o QR Code conteria o ID específico do local
+    const ponto = await prisma.pontoColeta.findFirst();
+
+    if (!ponto) {
+      return res.status(400).json({ message: "Nenhum ponto de coleta encontrado para vincular a doação." });
+    }
+
+    // 2. Criar a doação já com status 'confirmed' e os pontos
+    const newDonation = await prisma.donation.create({
+      data: {
+        userId: userId,
+        pontoColetaId: ponto.id,
+        donationDate: new Date(),
+        status: 'confirmed',
+        pointsEarned: 100, // Valor fixo de recompensa
+        validatedByQR: true
+      }
+    });
+
+    res.status(201).json({ 
+      message: "Doação confirmada com sucesso!", 
+      donation: newDonation 
+    });
+
+  } catch (error) {
+    console.error("Erro ao confirmar doação:", error);
+    res.status(500).json({ message: "Erro ao confirmar doação", error: error.message });
+  }
+};

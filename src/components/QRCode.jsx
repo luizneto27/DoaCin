@@ -1,16 +1,41 @@
 // card pra exibir QR Code
 
-import React from "react";
+import React, { useState } from "react";
 import { useDashboard } from "../context/DashboardContext";
+import { authFetch } from "../../services/api"; // Importar authFetch para chamar o backend
 import qrcodeImg from "../assets/qrcode.svg";
 
 function QRCode() {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false); // Estado para loading do botão
   const { addCapibas } = useDashboard();
 
-  const handleConfirmDonation = () => {
-    addCapibas(100); // Adiciona 100 Capibas
-    setIsOpen(false);
+  const handleConfirmDonation = async () => {
+    if (isProcessing) return; // Evita duplo clique
+    setIsProcessing(true);
+
+    try {
+      // 1. Chama o backend para salvar a doação no banco de dados
+      const response = await authFetch('/api/donations/confirm', {
+        method: 'POST'
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao processar doação");
+      }
+
+      // 2. Se deu certo no banco, atualiza o visual (Context)
+      addCapibas(100); // Adiciona 100 Capibas e atualiza contadores locais
+      
+      alert("Doação confirmada com sucesso! Você ganhou 100 Capibas.");
+      setIsOpen(false);
+
+    } catch (error) {
+      console.error(error);
+      alert("Não foi possível confirmar a doação. Tente novamente.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -52,7 +77,7 @@ function QRCode() {
               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <h1 style={{ marginBottom: "20px", textAlign: "center" }}>
+            <h1 style={{ marginBottom: "20px", textAlign: "center", color: "#333" }}>
               Meu QR Code de Doador
             </h1>
             <div
@@ -72,10 +97,10 @@ function QRCode() {
             </div>
 
             <div style={{ marginBottom: "20px" }}>
-              <p style={{ marginBottom: "8px" }}>
+              <p style={{ marginBottom: "8px", color: "#333" }}>
                 <strong>Como usar?</strong>
               </p>
-              <ol style={{ margin: 0, paddingLeft: "20px" }}>
+              <ol style={{ margin: 0, paddingLeft: "20px", color: "#555" }}>
                 <li>Apresente este QR Code no hemocentro</li>
                 <li>O funcionário irá escaneá-lo</li>
                 <li>Sua doação será registrada automaticamente</li>
@@ -109,16 +134,18 @@ function QRCode() {
               <button
                 type="button"
                 onClick={handleConfirmDonation}
+                disabled={isProcessing}
                 style={{
-                  backgroundColor: "#269d17ff",
+                  backgroundColor: isProcessing ? "#9ca3af" : "#16a34a", // Cinza se loading, Verde se normal
                   border: "none",
                   padding: "12px 24px",
                   borderRadius: "8px",
                   color: "white",
-                  cursor: "pointer",
+                  cursor: isProcessing ? "not-allowed" : "pointer",
+                  fontWeight: "bold"
                 }}
               >
-                Confirmar Doação ✔
+                {isProcessing ? "Confirmando..." : "Confirmar Doação ✔"}
               </button>
             </div>
 
