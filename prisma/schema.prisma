@@ -3,120 +3,96 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "postgresql" // ou "mysql", "sqlite", conforme seu banco
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                String    @id @default(uuid())
-  cpf               String    @unique // NOVO
-  nome              String
-  email             String    @unique
-  password          String    // Hash bcrypt
-  phone             String?
-  birthDate         DateTime?
-  bloodType         String?
-  weight            Float?
-  endereco          String?   // NOVO
-  genero            String?   // NOVO (M, F, Outro)
-  foto              String?   // NOVO (URL da foto)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  
-  donations         Donation[]
-  agendamentos      Agendamento[]
-  quizAttempts      UserQuizAttempt[]
-}
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  name      String
+  password  String
+  bloodType String?
+  phone     String?
+  cpf       String?    @unique
+  donations Donation[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
-model PontoColeta {
-  id                String    @id @default(uuid())
-  nome              String
-  email             String?   // NOVO
-  telefone          String?   // NOVO
-  endereco          String
-  latitude          Float?
-  longitude         Float?
-  linkMaps          String?   // NOVO
-  horarioAbertura   String?   // NOVO (Ex: "08:00")
-  horarioFechamento String?   // NOVO (Ex: "18:00")
-  tipo              String    @default("fixed") // 'fixed', 'event'
-  eventStartDate    DateTime?
-  eventEndDate      DateTime?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  
-  agendamentos      Agendamento[]
-  donations         Donation[]
-}
-
-model Agendamento {
-  id                String    @id @default(uuid())
-  usuarioId         String
-  pontoColetaId     String
-  dataAgendamento   DateTime
-  status            String    @default("pendente") // 'pendente', 'confirmado', 'cancelado', 'realizado'
-  dataCriacao       DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  
-  usuario           User      @relation(fields: [usuarioId], references: [id])
-  pontoColeta       PontoColeta @relation(fields: [pontoColetaId], references: [id])
-  
-  @@unique([usuarioId, dataAgendamento, pontoColetaId]) // Evita duplicatas
+  @@index([email])
 }
 
 model Donation {
-  id                String    @id @default(uuid())
-  userId            String
-  pontoColetaId     String
-  user              User      @relation(fields: [userId], references: [id])
-  pontoColeta       PontoColeta @relation(fields: [pontoColetaId], references: [id])
-  donationDate      DateTime
-  status            String    @default("pending") // 'pending', 'confirmed', 'rejected'
-  pointsEarned      Int       @default(0)
-  validatedByQR     Boolean   @default(false)
-  createdAt         DateTime  @default(now())
+  id           Int       @id @default(autoincrement())
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  donationDate DateTime
+  hemocentro   String
+  observacoes  String?   @db.Text
+  status       String    @default("pendente") // "pendente", "confirmada", "rejeitada"
+  pointsEarned Int       @default(0)
+  locationId   Int?
+  location     Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([donationDate])
+  @@index([status])
 }
 
-// Modelos para o Quiz
-model Quiz {
-  id                String    @id @default(uuid())
-  title             String
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  
-  questions         Question[]
-  attempts          UserQuizAttempt[]
+model Location {
+  id        Int        @id @default(autoincrement())
+  name      String
+  address   String
+  city      String?
+  state     String?
+  zipCode   String?
+  phone     String?
+  latitude  Float?
+  longitude Float?
+  donations Donation[]
+  campaigns Campaign[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([city])
+  @@index([state])
 }
 
-model Question {
-  id                String    @id @default(uuid())
-  quizId            String
-  quiz              Quiz      @relation(fields: [quizId], references: [id])
-  text              String
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  
-  answers           Answer[]
+model Campaign {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String    @db.Text
+  startDate   DateTime
+  endDate     DateTime
+  locationId  Int?
+  location    Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  bloodType   String?
+  goal        Int?      // Meta de doações
+  current     Int       @default(0) // Doações atuais
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([locationId])
+  @@index([startDate])
+  @@index([endDate])
+  @@index([isActive])
 }
 
-model Answer {
-  id                String    @id @default(uuid())
-  questionId        String
-  question          Question  @relation(fields: [questionId], references: [id])
-  text              String
-  isCorrect         Boolean
-  explanation       String?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-}
-
-model UserQuizAttempt {
-  id                String    @id @default(uuid())
-  userId            String
-  user              User      @relation(fields: [userId], references: [id])
-  quizId            String
-  quiz              Quiz      @relation(fields: [quizId], references: [id])
-  score             Int
-  completedAt       DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-}
+INSERT INTO Donation (
+  userId, 
+  donationDate, 
+  hemocentro, 
+  observacoes, 
+  status, 
+  pointsEarned
+) VALUES (
+  1,
+  '2025-12-02',
+  'Hemocentro ABC',
+  'Primeira doação',
+  'pendente',
+  0
+);

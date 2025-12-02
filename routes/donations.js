@@ -1,13 +1,114 @@
 import express from 'express';
-import authMiddleware from './controllers/middleware/auth.js';
-import { getDonationHistory } from './controllers/donationsController.js';
+import { PrismaClient } from '@prisma/client';
+import authenticateUser from '../middleware/auth.js';
 
-const router = express.Router(); // instancia o router do express para agrupar rotas relacionadas ao historico de doacoes
+const router = express.Router();
+const prisma = new PrismaClient();
 
-// define a rota para obter o historico de doacoes protegida por middleware de autenticacao
-router.get('/', authMiddleware, getDonationHistory); // primeiro passa pelo authMiddleware antes de chamar getDonationHistory
+// GET /api/donations - Buscar doações do usuário logado
+router.get('/', authenticateUser, async (req, res) => {
+  try {
+    const userId = req.user.id; // ID do usuário vem do middleware de auth
 
-export default router; // exporta o router para ser usado em server.js onde sera montado em /api/donations
+    const donations = await prisma.donation.findMany({
+      where: {
+        userId: userId
+      },
+      include: {
+        location: true, // Inclui dados do hemocentro/local
+      },
+      orderBy: {
+        donationDate: 'desc'
+      }
+    });
 
-// melhorias praticas que se aplicam a este arquivo:
-    // 1. A consulta usa prisma.donation.findMany sem paginação; para usuários com muitos registros isso pode retornar muita informação e impactar memória/latência.Filtrar/orderBy por userId e donationDate deve ter índices no DB para performance.include: { pontoColeta: { select: { nome: true } } } evita N+1 pois traz relação em uma mesma query (bom).
+    res.json(donations);
+  } catch (error) {
+    console.error('Erro ao buscar doações:', error);
+    res.status(500).json({ error: 'Erro ao buscar doações' });
+  }
+});
+
+// POST /api/donations - Criar nova doação
+router.post('/', authenticateUser, async (req, res) => {
+  try {
+    const userId = req.user.id; // ID do usuário vem do middleware de auth
+    const { donationDate, hemocentro, observacoes } = req.body;
+
+    // Validação dos campos obrigatórios
+    if (!donationDate) {
+      return res.status(400).json({ error: 'Data da doação é obrigatória' });
+    }
+
+    if (!hemocentro || !hemocentro.trim()) {
+      return res.status(400).json({ error: 'Hemocentro é obrigatório' });
+    }
+
+    // Criar a doação no banco de dados
+    const newDonation = await prisma.donation.create({
+      data: {
+        userId: req.user.id, // ← do token JWT
+        donationDate: new Date(donationDate),
+        hemocentro: hemocentro.trim(),
+        observacoes: observacoes?.trim() || null,
+        status: 'pendente',
+        pointsEarned: 0,
+      }
+    });
+
+    res.status(201).json(newDonation);
+  } catch (error) {
+    console.error('Erro ao criar doação:', error);
+    res.status(500).json({ error: 'Erro ao criar doação' });
+  }
+});
+
+// PUT /api/donations/:id - Atualizar status da doação (para validação pelo hemocentro)
+router.put('/:id', authenticateUser, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, pointsEarned } = req.body;
+    const userId = req.user.id;
+
+    // Verificar se a doação pertence ao usuário
+    const donation = await prisma.donation.findFirst({
+      where: {
+        id: parseInt(id),
+        userId: userId
+      }
+    });
+
+    if (!donation) {
+      return res.status(404).json({ error: 'Doação não encontrada' });
+    }
+
+    // Atualizar a doação
+    const updatedDonation = await prisma.donation.update({
+      where: { id: parseInt(id) },
+      data: {
+        status: status || donation.status,
+        pointsEarned: pointsEarned || donation.pointsEarned,
+      },
+      include: {
+        location: true,
+      }
+    });
+
+    res.json(updatedDonation);
+  } catch (error) {
+    console.error('Erro ao atualizar doação:', error);
+    res.status(500).json({ error: 'Erro ao atualizar doação' });
+  }
+});
+
+export default router;
+
+// Código do lado do cliente para criar uma nova doação
+authFetch("/api/donations", {
+  method: "POST",
+  body: JSON.stringify({
+    donationDate: "2025-12-02",
+    hemocentro: "Hemocentro ABC",
+    observacoes: "Primeira doação"
+  })
+})

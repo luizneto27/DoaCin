@@ -15,6 +15,7 @@ function DonationsPage() {
     hemocentro: "",
     observacoes: "",
   });
+  const [formErrors, setFormErrors] = useState({});
   const [stats, setStats] = useState({
     totalDonations: 0,
     livesSaved: 0,
@@ -74,24 +75,53 @@ function DonationsPage() {
     }));
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.donationDate) {
+      errors.donationDate = "Data da doação é obrigatória";
+    }
+    if (!formData.hemocentro.trim()) {
+      errors.hemocentro = "Hemocentro é obrigatório";
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = () => {
+    // Validar antes de enviar
+    if (!validateForm()) {
+      return;
+    }
+
     authFetch("/api/donations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        donationDate: formData.donationDate,
+        hemocentro: formData.hemocentro,
+        observacoes: formData.observacoes || null, // garante que seja null se vazio
+      }),
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Erro ao criar doação");
+        if (!res.ok) {
+          return res.json().then((err) => {
+            throw new Error(err.error || "Erro ao criar doação");
+          });
+        }
         return res.json();
       })
       .then((newDonation) => {
+        console.log("Doação criada com sucesso:", newDonation);
+
         // fecha modal e limpa form
         setShowModal(false);
+        setShowNewDonation(false); // fecha também o outro formulário se estiver aberto
         setFormData({
           donationDate: new Date().toISOString().split("T")[0],
           hemocentro: "",
           observacoes: "",
         });
+        setFormErrors({});
 
         // atualiza lista e estatísticas sem reload
         setDonations((prev) => [newDonation, ...prev]);
@@ -101,7 +131,10 @@ function DonationsPage() {
           pending: prev.pending + (newDonation.status === "pendente" ? 1 : 0),
         }));
       })
-      .catch((err) => console.error("Erro ao registrar doação:", err));
+      .catch((err) => {
+        console.error("Erro ao registrar doação:", err);
+        alert(`Erro: ${err.message}`);
+      });
   };
 
   // handler público para abrir o modal (usado pela navegação)
@@ -389,7 +422,7 @@ function DonationsPage() {
                   fontSize: "13px",
                 }}
               >
-                Data da Doação
+                Data da Doação *
               </label>
               <input
                 type="date"
@@ -399,13 +432,27 @@ function DonationsPage() {
                 style={{
                   width: "100%",
                   padding: "10px",
-                  border: "1px solid #ddd",
+                  border: `1px solid ${
+                    formErrors.donationDate ? "#E63946" : "#ddd"
+                  }`,
                   borderRadius: "4px",
                   fontSize: "14px",
                   boxSizing: "border-box",
                   fontFamily: "inherit",
                 }}
               />
+              {formErrors.donationDate && (
+                <span
+                  style={{
+                    color: "#E63946",
+                    fontSize: "12px",
+                    marginTop: "4px",
+                    display: "block",
+                  }}
+                >
+                  {formErrors.donationDate}
+                </span>
+              )}
             </div>
 
             <div>
@@ -418,7 +465,7 @@ function DonationsPage() {
                   fontSize: "13px",
                 }}
               >
-                Hemocentro
+                Hemocentro *
               </label>
               <input
                 type="text"
@@ -429,13 +476,27 @@ function DonationsPage() {
                 style={{
                   width: "100%",
                   padding: "10px",
-                  border: "1px solid #ddd",
+                  border: `1px solid ${
+                    formErrors.hemocentro ? "#E63946" : "#ddd"
+                  }`,
                   borderRadius: "4px",
                   fontSize: "14px",
                   boxSizing: "border-box",
                   color: "#999",
                 }}
               />
+              {formErrors.hemocentro && (
+                <span
+                  style={{
+                    color: "#E63946",
+                    fontSize: "12px",
+                    marginTop: "4px",
+                    display: "block",
+                  }}
+                >
+                  {formErrors.hemocentro}
+                </span>
+              )}
             </div>
           </div>
 
