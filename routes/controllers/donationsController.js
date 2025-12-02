@@ -3,30 +3,34 @@ import conectaService from '../../services/conectaService.js';
 
 const prisma = new PrismaClient();
 
-// Função auxiliar para registrar no Conecta (evita repetição de código)
-async function registrarGamificacao(userCpf) {
+async function registrarGamificacao(userCpf, latitude, longitude) {
   try {
     const CHALLENGE_ID = process.env.CONECTA_CHALLENGE_ID;
     const REQUIREMENT_ID = process.env.CONECTA_REQUIREMENT_ID;
 
-    if (userCpf && CHALLENGE_ID && REQUIREMENT_ID) {
-      console.log(`[GAMIFICAÇÃO] Iniciando check-in para CPF: ${userCpf}...`);
+    // Verifica se temos todos os dados necessários
+    if (userCpf && CHALLENGE_ID && REQUIREMENT_ID && latitude != null && longitude != null) {
+      console.log(`[GAMIFICAÇÃO] Iniciando check-in para CPF: ${userCpf} nas coordenadas (${latitude}, ${longitude})...`);
 
       await conectaService.post(
         `/check-in/location/challenge/${CHALLENGE_ID}/requirement/${REQUIREMENT_ID}`,
-        { document: userCpf }
+        { 
+          document: userCpf,
+          latitude: latitude,
+          longitude: longitude
+        }
       );
 
       console.log(`[GAMIFICAÇÃO] Sucesso! Pontos computados no Conecta.`);
       return true;
     } else {
-      console.warn('[GAMIFICAÇÃO] Check-in ignorado: Faltou CPF ou IDs de configuração.');
+      console.warn('[GAMIFICAÇÃO] Check-in ignorado: Faltou CPF, IDs de configuração ou coordenadas.');
       return false;
     }
   } catch (gamificationError) {
     console.error('[GAMIFICAÇÃO ERRO] Falha ao pontuar no sistema externo:', gamificationError.message);
     if (gamificationError.response) {
-      console.error('Detalhes do erro:', gamificationError.response.data);
+      console.error('Detalhes do erro:', JSON.stringify(gamificationError.response.data, null, 2));
     }
     return false;
   }
@@ -48,11 +52,18 @@ export const createDonation = async (req, res) => {
         status: 'confirmed', 
         pointsEarned: 10,
       },
-      include: { user: true } // Necessário para pegar o CPF
+      include: { 
+        user: true,
+        pontoColeta: true
+      } 
     });
 
     // 2. Chama a integração
-    await registrarGamificacao(newDonation.user.cpf);
+    await registrarGamificacao(
+      newDonation.user.cpf,
+      newDonation.pontoColeta.latitude,
+      newDonation.pontoColeta.longitude
+    );
 
     res.status(201).json({ 
       message: "Doação registrada com sucesso!", 
@@ -122,8 +133,12 @@ export const confirmDonation = async (req, res) => {
       include: { user: true } // Necessário para pegar o CPF
     });
 
-    // 3. AGORA SIM: Chama a integração também na simulação!
-    await registrarGamificacao(newDonation.user.cpf);
+    // 3. Chama a integração usando as coordenadas do ponto encontrado
+    await registrarGamificacao(
+      newDonation.user.cpf, 
+      ponto.latitude, 
+      ponto.longitude
+    );
 
     res.status(201).json({ 
       message: "Doação confirmada com sucesso!", 

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { URLSearchParams } from 'url';
+import 'dotenv/config';
 
 // A classe ConectaService atua como um Singleton para manter o estado do Token
 class ConectaService {
