@@ -1,27 +1,89 @@
 import { PrismaClient } from '@prisma/client';
+import conectaService from '../../services/conectaService.js';
 
 const prisma = new PrismaClient();
 
+// Função auxiliar para registrar no Conecta (evita repetição de código)
+async function registrarGamificacao(userCpf) {
+  try {
+    const CHALLENGE_ID = process.env.CONECTA_CHALLENGE_ID;
+    const REQUIREMENT_ID = process.env.CONECTA_REQUIREMENT_ID;
+
+    if (userCpf && CHALLENGE_ID && REQUIREMENT_ID) {
+      console.log(`[GAMIFICAÇÃO] Iniciando check-in para CPF: ${userCpf}...`);
+
+      await conectaService.post(
+        `/check-in/location/challenge/${CHALLENGE_ID}/requirement/${REQUIREMENT_ID}`,
+        { document: userCpf }
+      );
+
+      console.log(`[GAMIFICAÇÃO] Sucesso! Pontos computados no Conecta.`);
+      return true;
+    } else {
+      console.warn('[GAMIFICAÇÃO] Check-in ignorado: Faltou CPF ou IDs de configuração.');
+      return false;
+    }
+  } catch (gamificationError) {
+    console.error('[GAMIFICAÇÃO ERRO] Falha ao pontuar no sistema externo:', gamificationError.message);
+    if (gamificationError.response) {
+      console.error('Detalhes do erro:', gamificationError.response.data);
+    }
+    return false;
+  }
+}
+
+// --- CRIAR DOAÇÃO (Formulário Manual) ---
+export const createDonation = async (req, res) => {
+  // CORREÇÃO: Pegar userId do token para segurança, em vez do body
+  const userId = req.userData.userId; 
+  const { pontoColetaId, donationDate } = req.body;
+
+  try {
+    // 1. Cria a doação local
+    const newDonation = await prisma.donation.create({
+      data: {
+        userId: userId,
+        pontoColetaId: pontoColetaId,
+        donationDate: new Date(donationDate),
+        status: 'confirmed', 
+        pointsEarned: 10,
+      },
+      include: { user: true } // Necessário para pegar o CPF
+    });
+
+    // 2. Chama a integração
+    await registrarGamificacao(newDonation.user.cpf);
+
+    res.status(201).json({ 
+      message: "Doação registrada com sucesso!", 
+      donation: newDonation 
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Erro ao registrar doação.', error: error.message });
+  }
+};
+
+// --- HISTÓRICO ---
 export const getDonationHistory = async (req, res) => {
-  const userId = req.userData.userId; //vem do  authmiddleware
+  const userId = req.userData.userId;
 
   try {
     const donations = await prisma.donation.findMany({
       where: { userId: userId }, 
-      orderBy: { donationDate: 'desc' }, // ordena por data da doação, mais recente primeiro
+      orderBy: { donationDate: 'desc' },
       include: {
         pontoColeta: { select: { nome: true } }
       }
     });
 
-    //mapeando os dados para corresponder ao que o frontend espera (location.name)
     const formattedDonations = donations.map(donation => {
       return {
         id: donation.id,
         donationDate: donation.donationDate,
         status: donation.status,
         pointsEarned: donation.pointsEarned,
-        //propriedade 'location' que o frontend espera
         location: {
           name: donation.pontoColeta ? donation.pontoColeta.nome : 'Local não informado'
         }
@@ -35,30 +97,33 @@ export const getDonationHistory = async (req, res) => {
   }
 };
 
-// --- NOVA FUNÇÃO: Confirmar Doação (Simulação via QR Code) ---
+// --- CONFIRMAR DOAÇÃO (Simulação via Botão QR Code) ---
 export const confirmDonation = async (req, res) => {
   const userId = req.userData.userId;
 
   try {
-    // 1. Para simular, pegamos o primeiro Ponto de Coleta disponível no banco
-    // Na vida real, o QR Code conteria o ID específico do local
+    // 1. Pega um ponto de coleta qualquer para simular
     const ponto = await prisma.pontoColeta.findFirst();
 
     if (!ponto) {
       return res.status(400).json({ message: "Nenhum ponto de coleta encontrado para vincular a doação." });
     }
 
-    // 2. Criar a doação já com status 'confirmed' e os pontos
+    // 2. Cria a doação local
     const newDonation = await prisma.donation.create({
       data: {
         userId: userId,
         pontoColetaId: ponto.id,
         donationDate: new Date(),
         status: 'confirmed',
-        pointsEarned: 100, // Valor fixo de recompensa
+        pointsEarned: 100,
         validatedByQR: true
-      }
+      },
+      include: { user: true } // Necessário para pegar o CPF
     });
+
+    // 3. AGORA SIM: Chama a integração também na simulação!
+    await registrarGamificacao(newDonation.user.cpf);
 
     res.status(201).json({ 
       message: "Doação confirmada com sucesso!", 
