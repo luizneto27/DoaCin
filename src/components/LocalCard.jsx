@@ -4,77 +4,108 @@ function LocalCard({ local }) {
   if (!local) return null;
 
   const { id, name, address, hours, contact, type } = local;
-  const mapsHref = address
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        address
-      )}`
-    : null;
+
+  const rawInicio = local.dataInicio || local.eventStartDate;
+  const rawFim    = local.dataFim    || local.eventEndDate;
+  const dataInicioFormatada = rawInicio ? new Date(rawInicio).toLocaleDateString('pt-BR') : null;
+  const dataFimFormatada    = rawFim    ? new Date(rawFim).toLocaleDateString('pt-BR')    : null;
+
+  const tipoLimpo = (type || "").toLowerCase();
+  const isEvento = tipoLimpo.includes("event") || tipoLimpo.includes("evento");
 
   return (
     <div
       className="local-card"
       style={{
-        border: "1px solid #e5e7eb",
-        borderRadius: 8,
-        padding: 12,
+        border: "1px solid #f3f4f6", 
+        borderRadius: "12px",
+        padding: "16px",
         background: "#fff",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+        boxShadow: "0 2px 5px rgba(0,0,0,0.05)", 
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
+        fontFamily: "system-ui, -apple-system, sans-serif" 
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h3 style={{ margin: 0, fontSize: 18 }}>{name}</h3>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "4px" }}>
+        <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#1f2937", fontWeight: "600", lineHeight: "1.2" }}>
+          {name}
+        </h3>
         {type && (
           <span
             style={{
-              fontSize: 12,
-              padding: "4px 8px",
-              borderRadius: 9999,
-              background: "#eef2ff",
-              color: "#4f46e5",
+              fontSize: "0.7rem",
+              padding: "4px 10px",
+              borderRadius: "20px",
+              background: isEvento ? "#fff7ed" : "#f5f3ff", 
+              color: isEvento ? "#c2410c" : "#4f46e5", 
+              fontWeight: "700",
+              textTransform: "uppercase",
+              letterSpacing: "0.5px",
+              flexShrink: 0,
+              marginLeft: "8px"
             }}
           >
-            {type}
+            {isEvento ? 'Evento' : 'Fixo'}
           </span>
         )}
       </div>
 
-      {address && <p style={{ margin: "8px 0" }}>{address}</p>}
+      
+      {address && (
+        <p style={{ margin: 0, color: "#4b5563", fontSize: "0.9rem", lineHeight: "1.4" }}>
+          📍 {address}
+        </p>
+      )}
 
       {hours && (
-        <p style={{ margin: "4px 0", color: "#374151" }}>
-          <strong>Horário:</strong> {hours}
+        <p style={{ margin: 0, color: "#6b7280", fontSize: "0.9rem" }}>
+          🕒 {hours}
         </p>
+      )}
+
+      {isEvento && dataInicioFormatada && (
+        <div style={{ 
+            marginTop: "4px",
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '6px', 
+            color: "#ea580c", 
+            fontSize: "0.9rem",
+            fontWeight: "500"
+        }}>
+           <span>📅</span>
+           <span>
+              {dataInicioFormatada} {dataFimFormatada ? ` até ${dataFimFormatada}` : ''}
+           </span>
+        </div>
       )}
 
       {contact && (
-        <p style={{ margin: "4px 0" }}>
-          <strong>Contato:</strong>{" "}
-          <a href={`tel:${contact}`} style={{ color: "#2563eb" }}>
-            {contact}
-          </a>
+        <p style={{ margin: 0, fontSize: "0.9rem", color: "#6b7280" }}>
+          📞 <a href={`tel:${contact}`} style={{ color: "#2563eb", textDecoration: "none" }}>{contact}</a>
         </p>
       )}
 
-      <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-        {mapsHref && (
-          <a
-            href={mapsHref}
+      <div style={{ marginTop: "12px", display: "flex", gap: "10px" }}>
+        {address && (
+           <a
+            href={`http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(address)}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              padding: "8px 12px",
-              borderRadius: 6,
-              background: "#fff",
-              border: "1px solid #d1d5db",
-              color: "#111827",
-              textDecoration: "none",
-              fontSize: 14,
+              flex: 1, textAlign: "center",
+              padding: "10px", 
+              borderRadius: "8px", 
+              background: "#f9fafb", 
+              border: "1px solid #e5e7eb", 
+              color: "#374151", 
+              textDecoration: "none", 
+              fontSize: "0.85rem",
+              fontWeight: "500",
+              transition: "0.2s"
             }}
           >
             Ver no mapa
@@ -84,16 +115,19 @@ function LocalCard({ local }) {
         <a
           href={`/agendar?localId=${id}`}
           style={{
-            padding: "8px 12px",
-            borderRadius: 6,
-            background: "#10b981",
-            border: "1px solid #10b981",
-            color: "white",
-            textDecoration: "none",
-            fontSize: 14,
+            flex: 1, textAlign: "center",
+            padding: "10px", 
+            borderRadius: "8px", 
+            background: "#10b981", 
+            border: "none", 
+            color: "white", 
+            textDecoration: "none", 
+            fontSize: "0.85rem",
+            fontWeight: "600",
+            boxShadow: "0 2px 4px rgba(16, 185, 129, 0.2)" 
           }}
         >
-          Agendar doação
+          Agendar
         </a>
       </div>
     </div>

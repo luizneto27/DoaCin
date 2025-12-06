@@ -2,9 +2,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const getLocalsCampaign = async (req, res) => {
-  // Returns campaign locals. If ?campaignId= is provided, filter by it.
-  // no campaignId filtering for now; can be extended with ?campaignId=
-
+  // Retorna os locais.
   try {
     const where = {};
     const locals = await prisma.pontoColeta.findMany({
@@ -17,6 +15,10 @@ export const getLocalsCampaign = async (req, res) => {
         horarioFechamento: true,
         telefone: true,
         tipo: true,
+        latitude: true, 
+        longitude: true,
+        eventStartDate: true, 
+        eventEndDate: true,
       },
       orderBy: { nome: "asc" },
     });
@@ -31,6 +33,12 @@ export const getLocalsCampaign = async (req, res) => {
           : l.horarioAbertura || l.horarioFechamento || "",
       contact: l.telefone || null,
       type: l.tipo || "fixed",
+      latitude: l.latitude,
+      longitude: l.longitude,
+      
+      eventStartDate: l.eventStartDate,
+      eventEndDate: l.eventEndDate,
+      // --------------------------------
     }));
 
     return res.status(200).json({ data: normalized });
@@ -43,8 +51,8 @@ export const getLocalsCampaign = async (req, res) => {
 };
 
 export const createLocalCampaign = async (req, res) => {
-  // Expects body: { name, address, hours, contact }
-  const { name, address, hours, contact } = req.body;
+
+  const { name, address, hours, contact, latitude, longitude, type, eventStartDate, eventEndDate } = req.body;
 
   if (!name || !address) {
     return res
@@ -59,7 +67,13 @@ export const createLocalCampaign = async (req, res) => {
         endereco: address,
         horarioAbertura: hours || null,
         telefone: contact || null,
-        tipo: "fixed",
+        tipo: type || "fixed",
+        latitude: latitude ? parseFloat(latitude) : null,
+        longitude: longitude ? parseFloat(longitude) : null,
+        
+
+        eventStartDate: eventStartDate ? new Date(eventStartDate) : null,
+        eventEndDate: eventEndDate ? new Date(eventEndDate) : null,
       },
     });
 
@@ -73,6 +87,11 @@ export const createLocalCampaign = async (req, res) => {
           : created.horarioAbertura || created.horarioFechamento || "",
       contact: created.telefone || null,
       type: created.tipo || "fixed",
+      latitude: created.latitude,
+      longitude: created.longitude,
+    
+      eventStartDate: created.eventStartDate,
+      eventEndDate: created.eventEndDate,
     };
     return res.status(201).json({ data: normalized });
   } catch (error) {
@@ -82,11 +101,3 @@ export const createLocalCampaign = async (req, res) => {
     });
   }
 };
-
-// melhorias que se aplicam a esse arquivo:
-
-  // 1. filtragem por campaignId
-
-  // 2. implementar checagem de role (ex.: apenas admins/gestores podem criar locais) ou um fluxo de aprovação para novos locais.
-
-  // 3. separar horarioAbertura e horarioFechamento no backend para facilitar buscas e filtragens futuras
