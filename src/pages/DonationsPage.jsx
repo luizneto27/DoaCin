@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DonationHistoryItem from "../components/DonationHistoryItem";
 import { authFetch } from "../../services/api";
 
 function DonationsPage() {
@@ -175,7 +174,7 @@ function DonationsPage() {
               margin: "0 0 8px 0",
               fontSize: "32px",
               fontWeight: "bold",
-              color: "#1a1a1a",
+              color: "#E63946",
             }}
           >
             Minhas Doações
@@ -805,36 +804,108 @@ function DonationsPage() {
       <div
         style={{
           backgroundColor: "white",
-          borderRadius: "8px",
+          borderRadius: "12px",
           padding: "24px",
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          border: "1px solid #e5e7eb",
         }}
       >
         <h2
           style={{
-            margin: "0 0 24px 0",
+            margin: "0 0 16px 0",
             color: "#E63946",
             fontSize: "18px",
             fontWeight: "600",
+            paddingBottom: "12px",
+            borderBottom: "1px solid #e5e7eb",
           }}
         >
           Histórico de Doações
         </h2>
 
         {donations.length > 0 ? (
-          <div>
-            {donations.map((donation) => (
-              <DonationHistoryItem
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
+            }}
+          >
+            {donations.map((donation, index) => (
+              <li
                 key={donation.id}
-                date={new Date(donation.donationDate).toLocaleDateString(
-                  "pt-BR"
-                )}
-                location={donation.location?.name || donation.hemocentro || "-"}
-                status={donation.status}
-                points={donation.pointsEarned}
-              />
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "12px 0",
+                  borderTop: index > 0 ? "1px solid #e5e7eb" : "none",
+                }}
+              >
+                <div
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      color: "#1a1a1a",
+                      margin: 0,
+                    }}
+                  >
+                    {donation.location?.name || donation.hemocentro || "-"}
+                  </h4>
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      color: "#6b7280",
+                      margin: "4px 0 0",
+                    }}
+                  >
+                    {new Date(donation.donationDate).toLocaleDateString(
+                      "pt-BR"
+                    )}
+                  </p>
+                </div>
+                <div
+                  style={{
+                    textAlign: "right",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      color:
+                        donation.status === "confirmed" ? "#065f46" : "#9a3412",
+                      backgroundColor:
+                        donation.status === "confirmed" ? "#d1fae5" : "#ffedd5",
+                    }}
+                  >
+                    {donation.status === "confirmed"
+                      ? "Confirmada"
+                      : "Pendente"}
+                  </span>
+                  {donation.status === "confirmed" && (
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        color: "#065f46",
+                        margin: "4px 0 0",
+                      }}
+                    >
+                      +{donation.pointsEarned} Capibas
+                    </p>
+                  )}
+                </div>
+              </li>
             ))}
-          </div>
+          </ul>
         ) : (
           <div style={{ textAlign: "center", padding: "60px 20px" }}>
             <div
