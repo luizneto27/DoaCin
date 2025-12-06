@@ -34,11 +34,12 @@ export function DashboardProvider({ children }) {
   }, [dashboardData]);
 
   const addCapibas = (amount) => {
-    // Preserva os outros dados (genero, count, etc.) ao simular
+    // Atualiza o estado local para refletir a mudança imediatamente (Optimistic UI)
     setDashboardData((prev) => ({
       ...prev,
-      capibasBalance: prev.capibasBalance + amount,
-      lastDonationDate: new Date().toISOString(),
+      capibasBalance: (prev.capibasBalance || 0) + amount, // Soma os pontos
+      donationCountLastYear: (prev.donationCountLastYear || 0) + 1, // Incrementa contagem de doações
+      lastDonationDate: new Date().toISOString(), // Atualiza a data da última doação
     }));
   };
 

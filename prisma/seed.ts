@@ -57,7 +57,18 @@ async function main() {
     },
   });
 
-  console.log({ gsh, hemope, ihene });
+  const usuarioAdmin = await prisma.user.upsert({
+    where: { cpf: "000.000.000-00" },
+    update: {},
+    create: {
+      nome: "Admin",
+      email: "teste@gmail.com",
+      cpf: "000.000.000-00",
+      password: "$2a$12$uiMMFXhkz2IgxoGya7JyQuxxqE41fgy48MQtzAsVG49e9OyNHj9bu",
+    },
+  });
+
+  console.log({ gsh, hemope, ihene, usuarioAdmin });
 }
 
 main()

@@ -183,7 +183,7 @@ function ProfilePage() {
               </div>
 
               {}
-              <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+              <div className="form-grid three-cols">
                 
                 {}
                 <div className="form-group">
