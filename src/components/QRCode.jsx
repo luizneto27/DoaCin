@@ -15,24 +15,29 @@ function QRCode() {
     setIsProcessing(true);
 
     try {
-      // 1. Chama o backend para salvar a doação no banco de dados
-      const response = await authFetch('/api/donations/confirm', {
-        method: 'POST'
+      // 1. Chama o backend para confirmar a doação pendente
+      const response = await authFetch("/api/donations/confirm", {
+        method: "POST",
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao processar doação");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao processar doação");
       }
 
-      // 2. Se deu certo no banco, atualiza o visual (Context)
-      addCapibas(100); // Adiciona 100 Capibas e atualiza contadores locais
-      
-      alert("Doação confirmada com sucesso! Você ganhou 100 Capibas.");
-      setIsOpen(false);
+      const data = await response.json();
+      const pointsEarned = data.donation?.pointsEarned || 4; // 4 vidas salvas por doação
 
+      // 2. Se deu certo no banco, atualiza o visual (Context)
+      addCapibas(pointsEarned); // Adiciona Capibas baseado na doação
+
+      alert(
+        `Doação confirmada com sucesso! Você ganhou ${pointsEarned} Capibas.`
+      );
+      setIsOpen(false);
     } catch (error) {
       console.error(error);
-      alert("Não foi possível confirmar a doação. Tente novamente.");
+      alert(`Erro: ${error.message}`);
     } finally {
       setIsProcessing(false);
     }
@@ -77,7 +82,13 @@ function QRCode() {
               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <h1 style={{ marginBottom: "20px", textAlign: "center", color: "#333" }}>
+            <h1
+              style={{
+                marginBottom: "20px",
+                textAlign: "center",
+                color: "#333",
+              }}
+            >
               Meu QR Code de Doador
             </h1>
             <div
@@ -101,9 +112,10 @@ function QRCode() {
                 <strong>Como usar?</strong>
               </p>
               <ol style={{ margin: 0, paddingLeft: "20px", color: "#555" }}>
+                <li>Registre sua doação na página de doações</li>
                 <li>Apresente este QR Code no hemocentro</li>
                 <li>O funcionário irá escaneá-lo</li>
-                <li>Sua doação será registrada automaticamente</li>
+                <li>Sua doação será confirmada automaticamente</li>
                 <li>Você ganhará 100 Capibas! 🎉</li>
               </ol>
             </div>
@@ -142,7 +154,7 @@ function QRCode() {
                   borderRadius: "8px",
                   color: "white",
                   cursor: isProcessing ? "not-allowed" : "pointer",
-                  fontWeight: "bold"
+                  fontWeight: "bold",
                 }}
               >
                 {isProcessing ? "Confirmando..." : "Confirmar Doação ✔"}
