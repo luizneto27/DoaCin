@@ -7,18 +7,23 @@
 .layout-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f9fafb; /* Fundo cinza claro para o conteúdo */
+  background-color: #f9fafb;
 }
 
 .sidebar {
-  width: 260px; /* Mais espaço, como na imagem */
+  width: 260px;
   min-height: 100vh;
   background-color: #ffffff;
   border-right: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  box-sizing: border-box; /* Garante que o padding não aumente a largura */
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
 }
 
 /* 1. Cabeçalho (Logo) */
@@ -31,14 +36,14 @@
 .sidebar-logo {
   width: 48px;
   height: 48px;
-  background-color: #d9302b; /* Vermelho */
+  background-color: #d9302b;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .sidebar-logo img {
-  width: 28px; /* Tamanho do ícone de gota */
+  width: 28px;
   height: 28px;
   color: white;
 }
@@ -56,7 +61,7 @@
 
 /* 2. Saldo Capibas */
 .capibas-saldo {
-  background-color: #fef2f2; /* Vermelho claro */
+  background-color: #fef2f2;
   border: 1px solid #fee2e2;
   border-radius: 8px;
   padding: 16px;
@@ -64,21 +69,24 @@
   text-align: left;
 }
 .capibas-saldo p {
-  color: #991b1b; /* Vermelho escuro (texto) */
+  color: #991b1b;
   font-size: 14px;
   font-weight: 500;
   margin: 0 0 4px 0;
 }
 .capibas-saldo .saldo {
-  color: #b91c1c; /* Vermelho escuro (número) */
+  color: #b91c1c;
   font-size: 24px;
   font-weight: 700;
 }
 
-/* 3. Navegação */
-.sidebar-nav {
-  flex-grow: 1; /* Empurra o footer para baixo */
+.sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
 }
+
+/* 3. Navegação */
 .sidebar-nav ul {
   list-style: none;
   padding: 0;
@@ -94,33 +102,32 @@
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
-  color: #374151; /* Cinza escuro */
+  color: #374151;
   transition: background-color 0.2s, color 0.2s;
 }
 .nav-link svg {
   width: 20px;
   height: 20px;
-  color: #6b7280; /* Cinza médio */
+  color: #6b7280;
 }
 .nav-link:hover {
-  background-color: #f3f4f6; /* Cinza claro no hover */
+  background-color: #f3f4f6;
 }
-/* Estilo do link ATIVO (como na imagem) */
 .nav-link.active {
-  background-color: #fef2f2; /* Vermelho claro */
-  color: #ef4444; /* Vermelho */
+  background-color: #fef2f2;
+  color: #ef4444;
 }
 .nav-link.active svg {
-  color: #ef4444; /* Vermelho */
+  color: #ef4444;
 }
 
 /* 4. Conquistas */
 .conquistas-card {
-  background-color: #d9302b; /* Vermelho */
+  background-color: #d9302b;
   color: white;
   border-radius: 8px;
   padding: 16px;
-  margin-bottom: 24px;
+  margin: 24px 0;
 }
 .conquistas-card h3 {
   margin: 0 0 12px 0;
@@ -159,8 +166,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #fee2e2; /* Fundo vermelho claro */
-  color: #d9302b; /* Ícone vermelho */
+  background-color: #fee2e2;
+  color: #d9302b;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -189,73 +196,90 @@
   width: 100%;
   padding: 10px;
   background: none;
-  border: 1px solid #d1d5db; /* Borda cinza */
+  border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  color: #374151; /* Texto cinza escuro */
+  color: #374151;
   cursor: pointer;
 }
 .logout-button:hover {
   background-color: #f9fafb;
 }
-/* Estilo para o SVG dentro do botão de sair */
 .logout-button svg {
-  width: 20px; /* Reduz o tamanho do ícone de sair */
+  width: 20px;
   height: 20px;
-  color: #374151; /* Garante a cor cinza escura */
+  color: #374151;
 }
 
 /* Conteúdo Principal */
 .main-content {
-  flex: 1; /* Ocupa o espaço restante */
+  flex: 1;
   width: 100%;
   box-sizing: border-box;
-  
-  /* Adiciona "respiro" (margem interna) em volta de todo o conteúdo */
-  padding: 2.5rem; /* 40px de padding */
-  
-  /* Define uma largura máxima para o conteúdo não esticar demais */
-  max-width: 1280px; 
-  
-  /* Centra o bloco de conteúdo na área disponível */
+  padding: 2.5rem;
+  max-width: 1280px;
   margin: 0 auto;
+  margin-left: 260px;
 }
 
-/* Adicione isso ao final do arquivo */
+/* Mobile */
 @media (max-width: 768px) {
   .layout-container {
-    flex-direction: column; /* Empilha sidebar e conteúdo */
+    flex-direction: column;
   }
 
   .sidebar {
-    width: 100%; /* Ocupa toda a largura */
-    min-height: auto; /* Altura ajustável ao conteúdo */
+    width: 100%;
+    min-height: auto;
     border-right: none;
     border-bottom: 1px solid #e5e7eb;
     padding: 16px;
+    position: relative;
+    height: auto;
   }
 
-  /* Ajuste para o menu ficar mais compacto no mobile */
+  .sidebar-scroll {
+    overflow-y: visible; /* desmonta o scroll no mobile */
+  }
+
   .sidebar-nav ul {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     justify-content: center;
   }
-  
+
   .nav-link {
     font-size: 14px;
     padding: 8px;
   }
 
-  /* Esconde ou ajusta elementos menos importantes da sidebar no mobile */
-  .capibas-saldo, .conquistas-card, .sidebar-footer {
-    display: none; /* Opcional: esconde saldo/conquistas no topo para limpar a visão */
+  .capibas-saldo,
+  .conquistas-card,
+  .sidebar-footer {
+    display: none;
   }
-  
-  /* Ajusta o padding do conteúdo principal */
+
   .main-content {
-    padding: 1.5rem; /* Reduz de 2.5rem para 1.5rem */
+    padding: 1.5rem;
+    margin-left: 0;
   }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cccccc; 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3;
 }

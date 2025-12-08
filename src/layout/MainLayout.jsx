@@ -1,12 +1,10 @@
 import React from 'react';
-// Importa NavLink para o estilo de link ativo
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'; 
 import { useAuth } from '../context/AuthContext';
-import { useDashboard } from '../context/DashboardContext'; // Importar o DashboardContext
-import './MainLayout.css'; // Importar o novo CSS
+import { useDashboard } from '../context/DashboardContext';
+import './MainLayout.css';
 
-// --- Ícones (Definidos inline para simplicidade) ---
-// Você pode substituí-los por 'react-icons' ou arquivos SVG se preferir
+// Ícones
 const IconBloodDrop = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white">
     <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
@@ -50,130 +48,93 @@ const IconSair = () => (
   </svg>
 );
 
-// --- Componente Principal ---
 
 function MainLayout() {
   const { logout } = useAuth();
-  
-  // Buscar dados do dashboard (que agora inclui nome e email)
   const { dashboardData } = useDashboard();
-  const { 
-    capibasBalance = 0, 
-    donationCountLastYear = 0, 
-    nome, 
-    email 
-  } = dashboardData || {};
-
-  // Lógica da imagem: 2 doações = 8 vidas salvas (1 doação = 4 vidas)
+  const { capibasBalance = 0, donationCountLastYear = 0, nome, email } = dashboardData || {};
   const vidasSalvas = donationCountLastYear * 4;
-  
   const navigate = useNavigate();
 
   const handleLogout = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     logout();
-    navigate('/login'); 
+    navigate('/login');
   };
 
-  // Função para definir a classe do NavLink (para o .active)
-  const getNavLinkClass = ({ isActive }) => 
+  const getNavLinkClass = ({ isActive }) =>
     isActive ? 'nav-link active' : 'nav-link';
-  
+
   return (
     <div className="layout-container">
-      {/* ===== BARRA LATERAL ===== */}
       <nav className="sidebar">
-        
-        {/* 1. Cabeçalho */}
+
+        {/* Cabeçalho */}
         <div className="sidebar-header">
-          
           <div className="sidebar-logo">
             <IconBloodDrop />
           </div>
           <div className="sidebar-title">
-            <h1>Doacin</h1>
+            <h1>DoaCin</h1>
             <p>Doe Sangue, Salve Vidas</p>
           </div>
         </div>
 
-        {/* 2. Saldo Capibas */}
+        {/* Saldo */}
         <div className="capibas-saldo">
           <p>Saldo Capibas</p>
           <span className="saldo">{capibasBalance}</span>
         </div>
 
-        {/* 3. Navegação */}
-        <div className="sidebar-nav">
-          <ul>
-            <li>
-              <NavLink to="/" className={getNavLinkClass} end>
-                <IconHome /> Início
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/doacoes" className={getNavLinkClass}>
-                <IconDoacoes /> Minhas Doações
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/campanhas" className={getNavLinkClass}>
-                <IconCampanhas /> Campanhas
-              </NavLink>
-            </li>
-             <li>
-              <NavLink to="/quiz" className={getNavLinkClass}>
-                <IconQuiz /> Quiz
-              </NavLink>
-            </li>
-             <li>
-              <NavLink to="/regras" className={getNavLinkClass}>
-                <IconRegras /> Regras
-              </NavLink>
-            </li>
-             <li>
-              <NavLink to="/perfil" className={getNavLinkClass}>
-                <IconPerfil /> Perfil
-              </NavLink>
-            </li>
-          </ul>
-        </div>
+        {/* 🔥 SCROLL APENAS NESSA ÁREA */}
+        <div className="sidebar-scroll">
 
-        {/* 4. Conquistas */}
-        <div className="conquistas-card">
-          <h3>Suas Conquistas</h3>
-          <div className="conquistas-stats">
-            <div>
-              <p>Doações:</p>
-              <span className="stat-number">{donationCountLastYear}</span>
-            </div>
-            <div>
-              <p>Vidas Salvas:</p>
-              <span className="stat-number">{vidasSalvas}</span>
+          {/* Navegação */}
+          <div className="sidebar-nav">
+            <ul>
+              <li><NavLink to="/" className={getNavLinkClass} end><IconHome /> Início</NavLink></li>
+              <li><NavLink to="/doacoes" className={getNavLinkClass}><IconDoacoes /> Minhas Doações</NavLink></li>
+              <li><NavLink to="/campanhas" className={getNavLinkClass}><IconCampanhas /> Campanhas</NavLink></li>
+              <li><NavLink to="/quiz" className={getNavLinkClass}><IconQuiz /> Quiz</NavLink></li>
+              <li><NavLink to="/regras" className={getNavLinkClass}><IconRegras /> Regras</NavLink></li>
+              <li><NavLink to="/perfil" className={getNavLinkClass}><IconPerfil /> Perfil</NavLink></li>
+            </ul>
+          </div>
+
+          {/* Conquistas */}
+          <div className="conquistas-card">
+            <h3>Suas Conquistas</h3>
+            <div className="conquistas-stats">
+              <div>
+                <p>Doações:</p>
+                <span className="stat-number">{donationCountLastYear}</span>
+              </div>
+              <div>
+                <p>Vidas Salvas:</p>
+                <span className="stat-number">{vidasSalvas}</span>
+              </div>
             </div>
           </div>
+
         </div>
 
-        {/* 5. Footer (Usuário e Sair) */}
+        {/* Footer fixo */}
         <div className="sidebar-footer">
           <div className="user-info">
-            <div className="user-avatar">
-              <IconPerfil />
-            </div>
+            <div className="user-avatar"><IconPerfil /></div>
             <div className="user-details">
               <h4>{nome || 'Carregando...'}</h4>
               <p>{email || '...'}</p>
             </div>
           </div>
           <button className="logout-button" onClick={handleLogout}>
-            <IconSair />
-            Sair
+            <IconSair /> Sair
           </button>
         </div>
+
       </nav>
-      
-      {/* ===== CONTEÚDO PRINCIPAL ===== */}
+
       <main className="main-content">
-        {/* O <Outlet /> renderiza a página atual aqui */}
         <Outlet />
       </main>
     </div>
