@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs'; // hash de senha
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import prisma from '../../prisma/prismaClient.js';
+const { syncCapibas } = require('../../services/userSyncService.js');
 
 const prisma = new PrismaClient();
 
@@ -43,41 +45,39 @@ export const register = async (req, res) => {
 
 //fazer login
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  try {
-    //buscar o usuário pelo email
-    const user = await prisma.user.findUnique({
-      where: { email: email }
-    });
+    try {
+        // busca o usuario pelo email
+        const user = await prisma.user.findUnique({
+            where: { email },
+        });
 
-    if (!user) {
-      return res.status(401).json({ message: 'Email ou senha inválidos.' });
+        // se o usuario nao existir ou a senha estiver incorreta, retorna erro
+        if (!user || !bcrypt.compareSync(password, user.password)) {
+            return res.status(401).json({ message: 'Credenciais inválidas' });
+        }
+
+        // gera o token de acesso
+        const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+            expiresIn: '1h',
+        });
+
+        // Sincroniza o saldo de capibas usando o serviço
+        try {
+            await syncCapibas(user.id, accessToken);
+        } catch (error) {
+            // Loga o erro mas não impede o login, pois a autenticação principal foi bem-sucedida.
+            console.error('Falha ao sincronizar saldo do Conecta durante o login:', error.message);
+        }
+
+
+        // retorna o token de acesso
+        res.json({ accessToken });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Erro interno do servidor' });
     }
-
-    //comparar a senha
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordCorrect) {
-      return res.status(401).json({ message: 'Email ou senha inválidos.' });
-    }
-
-    //criar o token JWT
-    const token = jwt.sign(
-      { userId: user.id, email: user.email }, // Payload
-      process.env.JWT_SECRET, //segredo do .env
-      { expiresIn: '1h' } //duracao do token
-    );
-
-    //retorna o token e o id do usuário
-    res.status(200).json({
-      token: token,
-      userId: user.id
-    });
-
-  } catch (error) {
-    res.status(500).json({ message: 'Erro ao fazer login', error: error.message });
-  }
 };
 
 // melhorias que se aplicam a esse arquivo:

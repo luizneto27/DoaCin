@@ -1,4 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import prisma from "../../prisma/prismaClient.js";
+const { syncCapibas } = require("../../services/userSyncService.js");
+const conectaService = require("../../services/conectaService.js");
 
 const prisma = new PrismaClient();
 
@@ -108,9 +111,9 @@ export const createDonation = async (req, res) => {
   }
 };
 
-// --- FUNÇÃO: Confirmar Doação via QR Code ---
+// --- CONTROLLER: Confirmar doação ---
 export const confirmDonation = async (req, res) => {
-  const userId = req.userData.userId;
+  const userId = req.user.userId; // ID do usuário vindo do authMiddleware
 
   try {
     // 1. Buscar a primeira doação com status 'pending' do usuário
@@ -141,6 +144,21 @@ export const confirmDonation = async (req, res) => {
       },
     });
 
+    // Sincroniza o saldo de capibas usando o serviço
+    try {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        const accessToken = authHeader.split(" ")[1];
+        await syncCapibas(userId, accessToken);
+      }
+    } catch (error) {
+      // Apenas registra o erro para análise posterior, não interrompe o fluxo.
+      console.error(
+        "Falha ao sincronizar o saldo de capibas após a doação:",
+        error.message
+      );
+    }
+
     res.status(200).json({
       message: "Doação confirmada com sucesso!",
       donation: confirmedDonation,
@@ -149,6 +167,6 @@ export const confirmDonation = async (req, res) => {
     console.error("Erro ao confirmar doação:", error);
     res
       .status(500)
-      .json({ error: "Erro ao confirmar doação", message: error.message });
+      .json({ error: "Erro interno do servidor ao confirmar a doação." });
   }
 };
