@@ -1,18 +1,19 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../config/database.js';
 import bcrypt from 'bcryptjs'; // hash de senha
 import jwt from 'jsonwebtoken';
-
-const prisma = new PrismaClient();
 
 //registrar um novo usuário
 export const register = async (req, res) => {
   const { nome, email, password, cpf } = req.body;
 
   try {
+    // Normalizar email
+    const normalizedEmail = email.toLowerCase().trim();
+    
     //verificar existencia do user por email ou cpf
     const existingUser = await prisma.user.findFirst({
       where: { 
-        OR: [{ email: email }, { cpf: cpf }]
+        OR: [{ email: normalizedEmail }, { cpf: cpf }]
       }
     });
 
@@ -27,7 +28,7 @@ export const register = async (req, res) => {
     const user = await prisma.user.create({
       data: {
         nome: nome,
-        email: email,
+        email: normalizedEmail,
         cpf: cpf,
         password: hashedPassword
         //adicione outros campos do schema.prisma se necessário
@@ -46,9 +47,12 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Normalizar email
+    const normalizedEmail = email.toLowerCase().trim();
+    
     //buscar o usuário pelo email
     const user = await prisma.user.findUnique({
-      where: { email: email }
+      where: { email: normalizedEmail }
     });
 
     if (!user) {

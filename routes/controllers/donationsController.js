@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../config/database.js";
+import conectaService from "../../services/conectaService.js";
 
 async function registrarGamificacao(userCpf, latitude, longitude) {
   try {
@@ -11,12 +10,14 @@ async function registrarGamificacao(userCpf, latitude, longitude) {
     if (userCpf && CHALLENGE_ID && REQUIREMENT_ID && latitude != null && longitude != null) {
       console.log(`[GAMIFICAÇÃO] Iniciando check-in para CPF: ${userCpf} nas coordenadas (${latitude}, ${longitude})...`);
 
+      // Endpoint baseado na documentação (Página 16 do PDF)
+      // POST /api/check-in/location/challenge/{challengeId}/requirement/{requirementId}
       await conectaService.post(
         `/check-in/location/challenge/${CHALLENGE_ID}/requirement/${REQUIREMENT_ID}`,
         { 
           document: userCpf,
-          latitude: latitude,
-          longitude: longitude
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude)
         }
       );
 
@@ -28,56 +29,13 @@ async function registrarGamificacao(userCpf, latitude, longitude) {
     }
   } catch (gamificationError) {
     console.error('[GAMIFICAÇÃO ERRO] Falha ao pontuar no sistema externo:', gamificationError.message);
-    if (gamificationError.response) {
-      console.error('Detalhes do erro:', JSON.stringify(gamificationError.response.data, null, 2));
-    }
     return false;
   }
 }
 
-// --- CRIAR DOAÇÃO (Formulário Manual) ---
-export const createDonation = async (req, res) => {
-  // CORREÇÃO: Pegar userId do token para segurança, em vez do body
-  const userId = req.userData.userId; 
-  const { pontoColetaId, donationDate } = req.body;
-
-  try {
-    // 1. Cria a doação local
-    const newDonation = await prisma.donation.create({
-      data: {
-        userId: userId,
-        pontoColetaId: pontoColetaId,
-        donationDate: new Date(donationDate),
-        status: 'confirmed', 
-        pointsEarned: 10,
-      },
-      include: { 
-        user: true,
-        pontoColeta: true
-      } 
-    });
-
-    // 2. Chama a integração
-    await registrarGamificacao(
-      newDonation.user.cpf,
-      newDonation.pontoColeta.latitude,
-      newDonation.pontoColeta.longitude
-    );
-
-    res.status(201).json({ 
-      message: "Doação registrada com sucesso!", 
-      donation: newDonation 
-    });
-
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Erro ao registrar doação.', error: error.message });
-  }
-};
-
 // --- HISTÓRICO ---
 export const getDonationHistory = async (req, res) => {
-  const userId = req.userData.userId;
+  const userId = req.user.userId;
 
   try {
     const donations = await prisma.donation.findMany({
@@ -114,7 +72,7 @@ export const getDonationHistory = async (req, res) => {
 
 // --- Criar Doação Manual ---
 export const createDonation = async (req, res) => {
-  const userId = req.userData.userId;
+  const userId = req.user.userId;
   const { donationDate, hemocentro, observacoes } = req.body;
 
   try {
@@ -183,7 +141,7 @@ export const createDonation = async (req, res) => {
 
 // --- FUNÇÃO: Confirmar Doação via QR Code ---
 export const confirmDonation = async (req, res) => {
-  const userId = req.userData.userId;
+  const userId = req.user.userId;
 
   try {
     // 1. Buscar a primeira doação com status 'pending' do usuário
@@ -210,9 +168,17 @@ export const confirmDonation = async (req, res) => {
         validatedByQR: true,
       },
       include: {
-        pontoColeta: { select: { nome: true } },
+        pontoColeta: { select: { nome: true, latitude: true, longitude: true } },
+        user: { select: { cpf: true } },
       },
     });
+
+    // 3. Registrar pontos no sistema de gamificação Conecta
+    await registrarGamificacao(
+      confirmedDonation.user.cpf,
+      confirmedDonation.pontoColeta.latitude,
+      confirmedDonation.pontoColeta.longitude
+    );
 
     res.status(200).json({
       message: "Doação confirmada com sucesso!",

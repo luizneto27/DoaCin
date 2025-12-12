@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '../../config/database.js';
 
 export const getDashboardStats = async (req, res) => {
-  const userId = req.userData.userId; 
+  const userId = req.user.userId; 
 
   try {
     // 1. Buscar dados do usuário

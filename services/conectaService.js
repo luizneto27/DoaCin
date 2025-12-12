@@ -1,17 +1,17 @@
 import axios from 'axios';
 import { URLSearchParams } from 'url';
-import 'dotenv/config';
+
+
 
 // A classe ConectaService atua como um Singleton para manter o estado do Token
 class ConectaService {
     constructor() {
-        // Inicializa o cliente Axios com a URL base da API de Gamificação
+        // Inicializa o cliente Axios com a URL base da API 
         this.client = axios.create({
             baseURL: process.env.CONECTA_API_BASE_URL,
             headers: {
                 'Content-Type': 'application/json',
             },
-            // Não deve seguir redirecionamentos, embora isso seja mais comum em navegadores
             maxRedirects: 0, 
         });
 
@@ -19,13 +19,13 @@ class ConectaService {
         this.isRefreshing = false; // Flag para evitar múltiplas chamadas de refresh simultâneas
         this.failedQueue = []; // Fila de requisições que falharam por 401
         
-        // Configura o Interceptor do Axios (Mecanismo de renovação automática - Critério 2)
+        // Interceptor de Resposta (Tratamento de Erro 401)
         this.client.interceptors.response.use(
             (response) => response, // Requisição OK
             (error) => this.handleResponseError(error) // Requisição com Erro
         );
 
-        // Configura o Interceptor para anexar o Token Bearer
+        // Interceptor de Requisição (Injeção do Token)
         this.client.interceptors.request.use(
             (config) => {
                 if (this.accessToken) {
@@ -49,7 +49,7 @@ class ConectaService {
         this.failedQueue = [];
     }
 
-    // Lógica de tratamento de erro de resposta (Renovação de Token - Critério 2)
+    // Tratamento de erro de resposta (Renovação de Token)
     async handleResponseError(error) {
         const originalRequest = error.config;
         
@@ -66,7 +66,7 @@ class ConectaService {
             try {
                 await this.getAccessToken(); // Tenta obter um novo token (Critério 1)
                 
-                // Processa a fila com sucesso e passa o novo token
+                // Processa a fila de requisições pendentes
                 this.processQueue(null, this.accessToken); 
                 
                 // Repete a requisição original
@@ -83,9 +83,9 @@ class ConectaService {
         }
         
         // Se já estivermos renovando, coloca a requisição na fila e espera o novo token
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
             this.failedQueue.push({ resolve, reject });
-        }.bind(this))
+        })
         .then(token => {
             originalRequest.headers.Authorization = `Bearer ${token}`;
             return this.client(originalRequest);
@@ -95,7 +95,7 @@ class ConectaService {
         });
     }
 
-    // Função para obter o Access Token (Critério 1)
+    // Função para obter o Access Token
     async getAccessToken() {
         const { CONECTA_AUTH_URL, CONECTA_CLIENT_ID, CONECTA_SERVICE_USERNAME, CONECTA_SERVICE_PASSWORD } = process.env;
         
@@ -107,6 +107,7 @@ class ConectaService {
         data.append('client_id', CONECTA_CLIENT_ID);
         
         try {
+            console.log(`[ConectaService] Solicitando token em: ${CONECTA_AUTH_URL}`);
             const response = await axios.post(CONECTA_AUTH_URL, data.toString(), {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -114,15 +115,14 @@ class ConectaService {
             });
             
             this.accessToken = response.data.access_token;
-            console.log('Token Conecta Recife obtido com sucesso.');
+            console.log('[ConectaService] Token obtido/renovado com sucesso.');
             return this.accessToken;
             
         } catch (error) {
-            console.error('Falha ao obter o Token Conecta Recife:', error.response?.data || error.message);
-            throw new Error('Falha na autenticação com o Conecta Recife.');
+            console.error('[ConectaService] Erro fatal na autenticação:', error.response?.data || error.message);
+            throw error; // Propaga o erro para ser tratado no interceptor
         }
     }
-
     // Métodos genéricos para uso nos Controllers/Services
     
     async get(url, config = {}) {
@@ -133,18 +133,18 @@ class ConectaService {
         return this.client.post(url, data, config);
     }
     
-    // Método para ser chamado na inicialização do servidor (opcional)
     async initialize() {
         if (!this.accessToken) {
-            await this.getAccessToken();
+            try {
+                await this.getAccessToken();
+            } catch (e) {
+                console.warn("[ConectaService] Inicialização falhou (API offline?), tentará novamente na primeira requisição.");
+            }
         }
     }
 }
 
 // Cria e exporta uma única instância
 const conectaService = new ConectaService();
-
-// Inicializa o serviço no boot da aplicação (sugestão: adicionar ao server.js)
-// conectaService.initialize();
 
 export default conectaService;
