@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import conectaService from "./services/conectaService.js";
 
 dotenv.config(); // carrega as variaveis do arquivo .env
 const app = express();
@@ -29,6 +30,14 @@ app.use("/api/campaigns", campaignsRoutes);
 app.use('/api/user', userRoutes); 
 
 // inicia o server na porta definida
-app.listen(PORT, () => {
+app.listen(PORT, async () => { // <--- 2. Transforme em async
   console.log(`Backend Express rodando na porta ${PORT}`);
-});
+
+  // Inicializa a autenticação com o Conecta Recife ao subir o servidor
+  try {
+    await conectaService.initialize();
+    console.log(" Serviço Conecta Recife inicializado com sucesso.");
+  } catch (error) {
+    console.error(" Aviso: Falha ao inicializar serviço Conecta Recife. O sistema tentará novamente na primeira requisição.");
+  }
+}); 
