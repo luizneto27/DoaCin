@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-import conectaService from '../../services/conectaService.js';
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -82,71 +81,147 @@ export const getDonationHistory = async (req, res) => {
 
   try {
     const donations = await prisma.donation.findMany({
-      where: { userId: userId }, 
-      orderBy: { donationDate: 'desc' },
+      where: { userId: userId },
+      orderBy: { donationDate: "desc" }, // ordena por data da doação, mais recente primeiro
       include: {
-        pontoColeta: { select: { nome: true } }
-      }
+        pontoColeta: { select: { nome: true } },
+      },
     });
 
-    const formattedDonations = donations.map(donation => {
+    //mapeando os dados para corresponder ao que o frontend espera (location.name)
+    const formattedDonations = donations.map((donation) => {
       return {
         id: donation.id,
         donationDate: donation.donationDate,
         status: donation.status,
         pointsEarned: donation.pointsEarned,
         location: {
-          name: donation.pontoColeta ? donation.pontoColeta.nome : 'Local não informado'
-        }
+          name: donation.pontoColeta
+            ? donation.pontoColeta.nome
+            : "Local não informado",
+        },
       };
     });
 
     res.status(200).json(formattedDonations);
-    
   } catch (error) {
-    res.status(500).json({ message: "Erro ao buscar histórico de doações", error: error.message });
+    res.status(500).json({
+      message: "Erro ao buscar histórico de doações",
+      error: error.message,
+    });
   }
 };
 
-// --- CONFIRMAR DOAÇÃO (Simulação via Botão QR Code) ---
+// --- Criar Doação Manual ---
+export const createDonation = async (req, res) => {
+  const userId = req.userData.userId;
+  const { donationDate, hemocentro, observacoes } = req.body;
+
+  try {
+    // Validar campos obrigatórios
+    if (!donationDate || !hemocentro) {
+      return res
+        .status(400)
+        .json({ error: "Data da doação e hemocentro são obrigatórios" });
+    }
+
+    // Procurar o ponto de coleta pelo nome
+    let pontoColeta = await prisma.pontoColeta.findFirst({
+      where: {
+        nome: {
+          contains: hemocentro,
+          mode: "insensitive",
+        },
+      },
+    });
+
+    // Se não encontrar, criar um novo ponto de coleta
+    if (!pontoColeta) {
+      pontoColeta = await prisma.pontoColeta.create({
+        data: {
+          nome: hemocentro,
+          endereco: "Endereço não informado",
+          tipo: "fixed",
+        },
+      });
+    }
+
+    // Criar a doação com status 'pending' até confirmação
+    const newDonation = await prisma.donation.create({
+      data: {
+        userId: userId,
+        pontoColetaId: pontoColeta.id,
+        donationDate: new Date(donationDate),
+        status: "pending",
+        pointsEarned: 100, // 100 Capibas por doação
+        validatedByQR: false,
+      },
+      include: {
+        pontoColeta: { select: { nome: true } },
+      },
+    });
+
+    // Formatar resposta
+    const formattedDonation = {
+      id: newDonation.id,
+      donationDate: newDonation.donationDate,
+      status: newDonation.status,
+      pointsEarned: newDonation.pointsEarned,
+      location: {
+        name: newDonation.pontoColeta.nome,
+      },
+    };
+
+    res.status(201).json(formattedDonation);
+  } catch (error) {
+    console.error("Erro ao criar doação:", error);
+    res
+      .status(500)
+      .json({ error: "Erro ao registrar doação", message: error.message });
+  }
+};
+
+// --- FUNÇÃO: Confirmar Doação via QR Code ---
 export const confirmDonation = async (req, res) => {
   const userId = req.userData.userId;
 
   try {
-    // 1. Pega um ponto de coleta qualquer para simular
-    const ponto = await prisma.pontoColeta.findFirst();
+    // 1. Buscar a primeira doação com status 'pending' do usuário
+    const pendingDonation = await prisma.donation.findFirst({
+      where: {
+        userId: userId,
+        status: "pending",
+      },
+      orderBy: { createdAt: "desc" }, // Pega a mais recente
+    });
 
-    if (!ponto) {
-      return res.status(400).json({ message: "Nenhum ponto de coleta encontrado para vincular a doação." });
+    if (!pendingDonation) {
+      return res.status(400).json({
+        error:
+          "Nenhuma doação pendente para confirmar. Registre uma doação primeiro.",
+      });
     }
 
-    // 2. Cria a doação local
-    const newDonation = await prisma.donation.create({
+    // 2. Atualizar a doação de 'pending' para 'confirmed'
+    const confirmedDonation = await prisma.donation.update({
+      where: { id: pendingDonation.id },
       data: {
-        userId: userId,
-        pontoColetaId: ponto.id,
-        donationDate: new Date(),
-        status: 'confirmed',
-        pointsEarned: 100,
-        validatedByQR: true
+        status: "confirmed",
+        validatedByQR: true,
       },
-      include: { user: true } // Necessário para pegar o CPF
+      include: {
+        pontoColeta: { select: { nome: true } },
+      },
     });
 
-    // 3. Chama a integração usando as coordenadas do ponto encontrado
-    await registrarGamificacao(
-      newDonation.user.cpf, 
-      ponto.latitude, 
-      ponto.longitude
-    );
-
-    res.status(201).json({ 
-      message: "Doação confirmada com sucesso!", 
-      donation: newDonation 
+    res.status(200).json({
+      message: "Doação confirmada com sucesso!",
+      donation: confirmedDonation,
     });
-
   } catch (error) {
     console.error("Erro ao confirmar doação:", error);
-    res.status(500).json({ message: "Erro ao confirmar doação", error: error.message });
+    res
+      .status(500)
+      .json({ error: "Erro ao confirmar doação", message: error.message });
   }
 };
