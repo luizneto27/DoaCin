@@ -1,6 +1,8 @@
 import prisma from '../../config/database.js';
 import bcrypt from 'bcryptjs'; // hash de senha
 import jwt from 'jsonwebtoken';
+import prisma from '../../prisma/prismaClient.js';
+const { syncCapibas } = require('../../services/userSyncService.js');
 
 //registrar um novo usuário
 export const register = async (req, res) => {
@@ -65,23 +67,6 @@ export const login = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: 'Email ou senha inválidos.' });
     }
-
-    //criar o token JWT
-    const token = jwt.sign(
-      { userId: user.id, email: user.email }, // Payload
-      process.env.JWT_SECRET, //segredo do .env
-      { expiresIn: '1h' } //duracao do token
-    );
-
-    //retorna o token e o id do usuário
-    res.status(200).json({
-      token: token,
-      userId: user.id
-    });
-
-  } catch (error) {
-    res.status(500).json({ message: 'Erro ao fazer login', error: error.message });
-  }
 };
 
 // melhorias que se aplicam a esse arquivo:

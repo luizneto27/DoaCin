@@ -139,7 +139,7 @@ export const createDonation = async (req, res) => {
   }
 };
 
-// --- FUNÇÃO: Confirmar Doação via QR Code ---
+// --- CONTROLLER: Confirmar doação ---
 export const confirmDonation = async (req, res) => {
   const userId = req.user.userId;
 
@@ -188,6 +188,6 @@ export const confirmDonation = async (req, res) => {
     console.error("Erro ao confirmar doação:", error);
     res
       .status(500)
-      .json({ error: "Erro ao confirmar doação", message: error.message });
+      .json({ error: "Erro interno do servidor ao confirmar a doação." });
   }
 };
