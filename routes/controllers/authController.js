@@ -1,20 +1,21 @@
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import prisma from '../../config/database.js';
+import bcrypt from 'bcryptjs'; // hash de senha
 import jwt from 'jsonwebtoken';
 import prisma from '../../prisma/prismaClient.js';
 const { syncCapibas } = require('../../services/userSyncService.js');
-
-const prisma = new PrismaClient();
 
 //registrar um novo usuário
 export const register = async (req, res) => {
   const { nome, email, password, cpf } = req.body;
 
   try {
+    // Normalizar email
+    const normalizedEmail = email.toLowerCase().trim();
+    
     //verificar existencia do user por email ou cpf
     const existingUser = await prisma.user.findFirst({
       where: { 
-        OR: [{ email: email }, { cpf: cpf }]
+        OR: [{ email: normalizedEmail }, { cpf: cpf }]
       }
     });
 
@@ -29,7 +30,7 @@ export const register = async (req, res) => {
     const user = await prisma.user.create({
       data: {
         nome: nome,
-        email: email,
+        email: normalizedEmail,
         cpf: cpf,
         password: hashedPassword
         //adicione outros campos do schema.prisma se necessário
@@ -45,38 +46,26 @@ export const register = async (req, res) => {
 
 //fazer login
 export const login = async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    try {
-        // busca o usuario pelo email
-        const user = await prisma.user.findUnique({
-            where: { email },
-        });
+  try {
+    // Normalizar email
+    const normalizedEmail = email.toLowerCase().trim();
+    
+    //buscar o usuário pelo email
+    const user = await prisma.user.findUnique({
+      where: { email: normalizedEmail }
+    });
 
-        // se o usuario nao existir ou a senha estiver incorreta, retorna erro
-        if (!user || !bcrypt.compareSync(password, user.password)) {
-            return res.status(401).json({ message: 'Credenciais inválidas' });
-        }
+    if (!user) {
+      return res.status(401).json({ message: 'Email ou senha inválidos.' });
+    }
 
-        // gera o token de acesso
-        const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-            expiresIn: '1h',
-        });
+    //comparar a senha
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
-        // Sincroniza o saldo de capibas usando o serviço
-        try {
-            await syncCapibas(user.id, accessToken);
-        } catch (error) {
-            // Loga o erro mas não impede o login, pois a autenticação principal foi bem-sucedida.
-            console.error('Falha ao sincronizar saldo do Conecta durante o login:', error.message);
-        }
-
-
-        // retorna o token de acesso
-        res.json({ accessToken });
-
-    } catch (error) {
-        res.status(500).json({ message: 'Erro interno do servidor' });
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: 'Email ou senha inválidos.' });
     }
 };
 

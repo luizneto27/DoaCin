@@ -1,12 +1,41 @@
-import { PrismaClient } from "@prisma/client";
-import prisma from "../../prisma/prismaClient.js";
-const { syncCapibas } = require("../../services/userSyncService.js");
-const conectaService = require("../../services/conectaService.js");
+import prisma from "../../config/database.js";
+import conectaService from "../../services/conectaService.js";
 
-const prisma = new PrismaClient();
+async function registrarGamificacao(userCpf, latitude, longitude) {
+  try {
+    const CHALLENGE_ID = process.env.CONECTA_CHALLENGE_ID;
+    const REQUIREMENT_ID = process.env.CONECTA_REQUIREMENT_ID;
 
+    // Verifica se temos todos os dados necessários
+    if (userCpf && CHALLENGE_ID && REQUIREMENT_ID && latitude != null && longitude != null) {
+      console.log(`[GAMIFICAÇÃO] Iniciando check-in para CPF: ${userCpf} nas coordenadas (${latitude}, ${longitude})...`);
+
+      // Endpoint baseado na documentação (Página 16 do PDF)
+      // POST /api/check-in/location/challenge/{challengeId}/requirement/{requirementId}
+      await conectaService.post(
+        `/check-in/location/challenge/${CHALLENGE_ID}/requirement/${REQUIREMENT_ID}`,
+        { 
+          document: userCpf,
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude)
+        }
+      );
+
+      console.log(`[GAMIFICAÇÃO] Sucesso! Pontos computados no Conecta.`);
+      return true;
+    } else {
+      console.warn('[GAMIFICAÇÃO] Check-in ignorado: Faltou CPF, IDs de configuração ou coordenadas.');
+      return false;
+    }
+  } catch (gamificationError) {
+    console.error('[GAMIFICAÇÃO ERRO] Falha ao pontuar no sistema externo:', gamificationError.message);
+    return false;
+  }
+}
+
+// --- HISTÓRICO ---
 export const getDonationHistory = async (req, res) => {
-  const userId = req.userData.userId; //vem do  authmiddleware
+  const userId = req.user.userId;
 
   try {
     const donations = await prisma.donation.findMany({
@@ -24,7 +53,6 @@ export const getDonationHistory = async (req, res) => {
         donationDate: donation.donationDate,
         status: donation.status,
         pointsEarned: donation.pointsEarned,
-        //propriedade 'location' que o frontend espera
         location: {
           name: donation.pontoColeta
             ? donation.pontoColeta.nome
@@ -44,7 +72,7 @@ export const getDonationHistory = async (req, res) => {
 
 // --- Criar Doação Manual ---
 export const createDonation = async (req, res) => {
-  const userId = req.userData.userId;
+  const userId = req.user.userId;
   const { donationDate, hemocentro, observacoes } = req.body;
 
   try {
@@ -113,7 +141,7 @@ export const createDonation = async (req, res) => {
 
 // --- CONTROLLER: Confirmar doação ---
 export const confirmDonation = async (req, res) => {
-  const userId = req.user.userId; // ID do usuário vindo do authMiddleware
+  const userId = req.user.userId;
 
   try {
     // 1. Buscar a primeira doação com status 'pending' do usuário
@@ -140,24 +168,17 @@ export const confirmDonation = async (req, res) => {
         validatedByQR: true,
       },
       include: {
-        pontoColeta: { select: { nome: true } },
+        pontoColeta: { select: { nome: true, latitude: true, longitude: true } },
+        user: { select: { cpf: true } },
       },
     });
 
-    // Sincroniza o saldo de capibas usando o serviço
-    try {
-      const authHeader = req.headers.authorization;
-      if (authHeader && authHeader.startsWith("Bearer ")) {
-        const accessToken = authHeader.split(" ")[1];
-        await syncCapibas(userId, accessToken);
-      }
-    } catch (error) {
-      // Apenas registra o erro para análise posterior, não interrompe o fluxo.
-      console.error(
-        "Falha ao sincronizar o saldo de capibas após a doação:",
-        error.message
-      );
-    }
+    // 3. Registrar pontos no sistema de gamificação Conecta
+    await registrarGamificacao(
+      confirmedDonation.user.cpf,
+      confirmedDonation.pontoColeta.latitude,
+      confirmedDonation.pontoColeta.longitude
+    );
 
     res.status(200).json({
       message: "Doação confirmada com sucesso!",
