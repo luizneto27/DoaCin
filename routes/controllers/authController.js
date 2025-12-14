@@ -1,8 +1,6 @@
-import prisma from '../../config/database.js';
-import bcrypt from 'bcryptjs'; // hash de senha
-import jwt from 'jsonwebtoken';
-import prisma from '../../prisma/prismaClient.js';
-const { syncCapibas } = require('../../services/userSyncService.js');
+import prisma from "../../config/database.js";
+import bcrypt from "bcryptjs"; // hash de senha
+import jwt from "jsonwebtoken";
 
 //registrar um novo usuário
 export const register = async (req, res) => {
@@ -11,16 +9,17 @@ export const register = async (req, res) => {
   try {
     // Normalizar email
     const normalizedEmail = email.toLowerCase().trim();
-    
+
     //verificar existencia do user por email ou cpf
     const existingUser = await prisma.user.findFirst({
-      where: { 
-        OR: [{ email: normalizedEmail }, { cpf: cpf }]
-      }
+      where: {
+        OR: [{ email: normalizedEmail }, { cpf: cpf }],
+      },
     });
 
-    if (existingUser) { // se ja existir, retorna message
-      return res.status(400).json({ message: 'Email ou CPF já cadastrado.' });
+    if (existingUser) {
+      // se ja existir, retorna message
+      return res.status(400).json({ message: "Email ou CPF já cadastrado." });
     }
 
     //criptografar a senha
@@ -32,15 +31,16 @@ export const register = async (req, res) => {
         nome: nome,
         email: normalizedEmail,
         cpf: cpf,
-        password: hashedPassword
+        password: hashedPassword,
         //adicione outros campos do schema.prisma se necessário
-      }
+      },
     });
 
-    res.status(201).json({ message: 'Usuário registrado com sucesso!' });
-
+    res.status(201).json({ message: "Usuário registrado com sucesso!" });
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao registrar usuário', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Erro ao registrar usuário", error: error.message });
   }
 };
 
@@ -51,28 +51,44 @@ export const login = async (req, res) => {
   try {
     // Normalizar email
     const normalizedEmail = email.toLowerCase().trim();
-    
+
     //buscar o usuário pelo email
     const user = await prisma.user.findUnique({
-      where: { email: normalizedEmail }
+      where: { email: normalizedEmail },
     });
 
     if (!user) {
-      return res.status(401).json({ message: 'Email ou senha inválidos.' });
+      return res.status(401).json({ message: "Email ou senha inválidos." });
     }
 
     //comparar a senha
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
-      return res.status(401).json({ message: 'Email ou senha inválidos.' });
+      return res.status(401).json({ message: "Email ou senha inválidos." });
     }
-};
 
-// melhorias que se aplicam a esse arquivo:
+    // Gerar token JWT
+    const jwtSecret = process.env.JWT_SECRET || "change_this_secret";
+    const token = jwt.sign({ userId: user.id, email: user.email }, jwtSecret, {
+      expiresIn: "7d",
+    });
+
+    // Remover senha antes de retornar o usuário
+    const { password: _pwd, ...userWithoutPassword } = user;
+
+    return res.status(200).json({ token, user: userWithoutPassword });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Erro ao fazer login", error: error.message });
+  }
+
+  // melhorias que se aplicam a esse arquivo:
 
   // 1. Normalizacao de email(lowercase)
 
   // 2. Tratar Unique Contraint do DB: Adicionar constraints unique no schema.prisma (email e cpf) e tratar erro Prisma P2002 para retornar 409 Conflict com mensagem apropriada.
 
   // 3. UX do registro: Enviar e-mail de verificação antes de ativar conta; evitar que usuários usem a aplicação sem confirmar e-mail.
+};
