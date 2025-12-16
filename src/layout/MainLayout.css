@@ -7,14 +7,63 @@
 .layout-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: var(--bg-secondary);
+  position: relative;
+}
+
+/* Botão Hambúrguer (Mobile) */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1100;
+  width: 44px;
+  height: 44px;
+  background-color: var(--doacin-red);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(217, 48, 43, 0.3);
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(217, 48, 43, 0.4);
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Overlay escuro mobile */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .sidebar {
   width: 260px;
   min-height: 100vh;
-  background-color: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  background-color: var(--bg-primary);
+  border-right: 1px solid var(--border-light);
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -24,6 +73,18 @@
   left: 0;
   height: 100vh;
   z-index: 1000;
+  animation: slideDown 0.5s ease-out;
+  transition: transform 0.3s ease;
+}
+
+/* Main Content - Compensação da sidebar */
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 40px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  width: calc(100% - 260px);
 }
 
 /* 1. Cabeçalho (Logo) */
@@ -34,50 +95,68 @@
   margin-bottom: 24px;
 }
 .sidebar-logo {
-  width: 48px;
-  height: 48px;
-  background-color: #d9302b;
-  border-radius: 8px;
+  width: 52px;
+  height: 52px;
+  background-color: var(--doacin-red);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .sidebar-logo img {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   color: white;
 }
 .sidebar-title h1 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #111827;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
   margin: 0;
+  letter-spacing: -0.3px;
 }
 .sidebar-title p {
   font-size: 14px;
-  color: #6b7280;
+  font-weight: 500;
+  color: var(--text-secondary);
   margin: 0;
+  margin-top: 2px;
 }
 
 /* 2. Saldo Capibas */
 .capibas-saldo {
-  background-color: #fef2f2;
-  border: 1px solid #fee2e2;
-  border-radius: 8px;
-  padding: 16px;
+  background: linear-gradient(135deg, var(--doacin-red-light) 0%, #fef2f2 100%);
+  border: 1px solid var(--doacin-red-border);
+  border-radius: 12px;
+  padding: 20px;
   margin-bottom: 24px;
   text-align: left;
+  box-shadow: 0 4px 12px rgba(217, 48, 43, 0.1);
+  transition: all 0.3s ease;
+  animation: scaleIn 0.5s ease-out 0.2s both;
 }
+
+.capibas-saldo:hover {
+  box-shadow: 0 6px 16px rgba(217, 48, 43, 0.15);
+  transform: translateY(-2px);
+}
+
 .capibas-saldo p {
   color: #991b1b;
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0 0 4px 0;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
+
 .capibas-saldo .saldo {
   color: #b91c1c;
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
+  display: block;
+  line-height: 1;
+  letter-spacing: -0.5px;
 }
 
 .sidebar-scroll {
@@ -91,39 +170,76 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-nav li {
+  width: 100%;
 }
 .nav-link {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   margin: 4px 0;
-  border-radius: 6px;
+  border-radius: 10px;
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
-  color: #374151;
-  transition: background-color 0.2s, color 0.2s;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background-color: var(--doacin-red);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
 .nav-link svg {
-  width: 20px;
-  height: 20px;
-  color: #6b7280;
+  width: 22px;
+  height: 22px;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
 }
+
 .nav-link:hover {
-  background-color: #f3f4f6;
+  background-color: var(--bg-tertiary);
+  transform: translateX(4px);
 }
+
+.nav-link:hover svg {
+  color: var(--doacin-red);
+  transform: scale(1.1);
+}
+
 .nav-link.active {
-  background-color: #fef2f2;
-  color: #ef4444;
+  background-color: var(--doacin-red-light);
+  color: var(--doacin-red);
 }
+
+.nav-link.active::before {
+  transform: scaleY(1);
+}
+
 .nav-link.active svg {
-  color: #ef4444;
+  color: var(--doacin-red);
+  transform: scale(1.05);
 }
 
 /* 4. Conquistas */
 .conquistas-card {
-  background-color: #d9302b;
+  background-color: var(--doacin-red);
   color: white;
   border-radius: 8px;
   padding: 16px;
@@ -194,77 +310,138 @@
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: none;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border: 2px solid #d1d5db;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 500;
   color: #374151;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
+
 .logout-button:hover {
-  background-color: #f9fafb;
+  background-color: #fef2f2;
+  border-color: var(--doacin-red);
+  color: var(--doacin-red);
+  transform: translateY(-1px);
 }
+
+.logout-button:hover svg {
+  color: var(--doacin-red);
+  transform: translateX(-2px);
+}
+
+.logout-button:active {
+  transform: scale(0.98);
+}
+/* =====================================
+   RESPONSIVIDADE - MEDIA QUERIES
+===================================== */
+
+/* Tablet - 1024px e abaixo */
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 32px 24px;
+  }
+}
+
+/* Mobile - 768px e abaixo */
+@media (max-width: 768px) {
+  /* Mostrar botão hambúrguer */
+  .menu-toggle {
+    display: flex;
+  }
+
+  /* Overlay visível quando menu aberto */
+  .sidebar-overlay {
+    display: block;
+  }
+
+  /* Sidebar escondida por padrão no mobile */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px;
+    max-width: 85vw;
+    height: 100vh;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  /* Sidebar visível quando aberta - sobrepõe o conteúdo */
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Main content ocupa tela toda - SEM margin-left */
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 80px 20px 20px;
+  }
+
+  /* Ajustes na sidebar mobile */
+  .sidebar-header {
+    margin-bottom: 20px;
+  }
+
+  .sidebar-title h1 {
+    font-size: 20px;
+  }
+
+  .sidebar-title p {
+    font-size: 12px;
+  }
+
+  .capibas-saldo {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .capibas-saldo .saldo {
+    font-size: 24px;
+  }
+
+  .nav-link {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .user-info h4 {
+    font-size: 14px;
+  }
+
+  .user-info p {
+    font-size: 12px;
+  }
+}
+
+/* Mobile pequeno - 480px e abaixo */
+@media (max-width: 480px) {
+  .menu-toggle {
+    top: 16px;
+    left: 16px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .main-content {
+    padding: 72px 16px 16px;
+  }
+
+  .sidebar {
+    width: 280px;
+    max-width: 85vw;
+  }
+}
+
 .logout-button svg {
   width: 20px;
   height: 20px;
   color: #374151;
-}
-
-/* Conteúdo Principal */
-.main-content {
-  flex: 1;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 2.5rem;
-  max-width: 1280px;
-  margin: 0 auto;
-  margin-left: 260px;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .layout-container {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    min-height: auto;
-    border-right: none;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 16px;
-    position: relative;
-    height: auto;
-  }
-
-  .sidebar-scroll {
-    overflow-y: visible; /* desmonta o scroll no mobile */
-  }
-
-  .sidebar-nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-
-  .nav-link {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .capibas-saldo,
-  .conquistas-card,
-  .sidebar-footer {
-    display: none;
-  }
-
-  .main-content {
-    padding: 1.5rem;
-    margin-left: 0;
-  }
+  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar {

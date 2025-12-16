@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import { useDashboard } from "../context/DashboardContext";
 import { authFetch } from "../../services/api"; // Importar authFetch para chamar o backend
 import qrcodeImg from "../assets/qrcode.svg";
+import Toast from "./Toast";
 
 function QRCode() {
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false); // Estado para loading do botão
+  const [toast, setToast] = useState(null);
   const { addCapibas } = useDashboard();
 
   const handleConfirmDonation = async () => {
@@ -31,13 +33,14 @@ function QRCode() {
       // 2. Se deu certo no banco, atualiza o visual (Context)
       addCapibas(pointsEarned); // Adiciona Capibas baseado na doação
 
-      alert(
-        `Doação confirmada com sucesso! Você ganhou ${pointsEarned} Capibas.`
-      );
+      setToast({ 
+        message: `Doação confirmada com sucesso! Você ganhou ${pointsEarned} Capibas.`, 
+        type: 'success' 
+      });
       setIsOpen(false);
     } catch (error) {
       console.error(error);
-      alert(`Erro: ${error.message}`);
+      setToast({ message: `Erro: ${error.message}`, type: 'error' });
     } finally {
       setIsProcessing(false);
     }
@@ -181,6 +184,14 @@ function QRCode() {
             </button>
           </div>
         </div>
+      )}
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
       )}
     </>
   );

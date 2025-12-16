@@ -1,0 +1,368 @@
+/* ============================================
+   SISTEMA DE ANIMAÇÕES - DoaCin
+   ============================================ */
+
+/* === KEYFRAMES === */
+
+/* Fade In */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide Up */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide Down */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale In */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Pulse */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Shimmer (Loading) */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Bounce */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Rotate */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === CLASSES UTILITÁRIAS === */
+
+/* Fade In */
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-fadeIn-slow {
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* Slide Up */
+.animate-slideUp {
+  animation: slideUp 0.5s ease-out;
+}
+
+.animate-slideUp-delay-1 {
+  animation: slideUp 0.5s ease-out 0.1s both;
+}
+
+.animate-slideUp-delay-2 {
+  animation: slideUp 0.5s ease-out 0.2s both;
+}
+
+.animate-slideUp-delay-3 {
+  animation: slideUp 0.5s ease-out 0.3s both;
+}
+
+/* Slide Down */
+.animate-slideDown {
+  animation: slideDown 0.5s ease-out;
+}
+
+/* Scale In */
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Pulse */
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Shimmer (Skeleton) */
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Bounce */
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+/* Rotate (Spinner) */
+.animate-rotate {
+  animation: rotate 1s linear infinite;
+}
+
+/* === TRANSIÇÕES SUAVES === */
+
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+.transition-fast {
+  transition: all 0.15s ease;
+}
+
+.transition-slow {
+  transition: all 0.5s ease;
+}
+
+/* === HOVER EFFECTS === */
+
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(217, 48, 43, 0.3);
+}
+
+.hover-brightness {
+  transition: filter 0.3s ease;
+}
+
+.hover-brightness:hover {
+  filter: brightness(1.1);
+}
+
+/* === GLASSMORPHISM === */
+
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-white {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* === SKELETON LOADING === */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-text {
+  height: 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 60%;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-rect {
+  border-radius: 8px;
+}
+
+/* === GRADIENTES === */
+
+.gradient-red {
+  background: linear-gradient(135deg, var(--doacin-red) 0%, #b82620 100%);
+}
+
+.gradient-red-soft {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.gradient-overlay {
+  position: relative;
+}
+
+.gradient-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(217, 48, 43, 0.1) 0%, rgba(184, 38, 32, 0.1) 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* === LOADING SPINNER === */
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(217, 48, 43, 0.1);
+  border-top-color: var(--doacin-red);
+  border-radius: 50%;
+  animation: rotate 1s linear infinite;
+}
+
+.spinner-small {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.spinner-white {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+}
+
+/* === MICRO-INTERAÇÕES === */
+
+.button-press {
+  transition: transform 0.1s ease;
+}
+
+.button-press:active {
+  transform: scale(0.95);
+}
+
+.card-interactive {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-interactive:active {
+  transform: translateY(0);
+}
+
+/* === STAGGER ANIMATIONS === */
+
+.stagger-item {
+  opacity: 0;
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.1s; }
+.stagger-item:nth-child(2) { animation-delay: 0.2s; }
+.stagger-item:nth-child(3) { animation-delay: 0.3s; }
+.stagger-item:nth-child(4) { animation-delay: 0.4s; }
+.stagger-item:nth-child(5) { animation-delay: 0.5s; }
+.stagger-item:nth-child(6) { animation-delay: 0.6s; }
+
+/* === BADGE PULSE === */
+
+.badge-notification {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* === SMOOTH SCROLL === */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* === FOCUS VISIBLE (Acessibilidade) === */
+
+*:focus-visible {
+  outline: 2px solid var(--doacin-red);
+  outline-offset: 2px;
+}

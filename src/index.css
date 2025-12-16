@@ -1,15 +1,66 @@
 :root {
+  /* ========== CORES PRINCIPAIS ========== */
+  /* Vermelho DoaCin - Cor Principal */
+  --doacin-red: #d9302b;
+  --doacin-red-hover: #b82620;
+  --doacin-red-light: #fef2f2;
+  --doacin-red-border: #fee2e2;
+  
+  /* Textos */
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  
+  /* Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  
+  /* Bordas */
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+  
+  /* Estados */
+  --success-green: #10b981;
+  --success-green-hover: #059669;
+  --warning-orange: #f59e0b;
+  --error-red: var(--doacin-red);
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  /* ========== CONFIGURAÇÕES GLOBAIS ========== */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(235, 14, 14, 0.87);
-  background-color: #ffffff;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== MELHORIAS GLOBAIS ========== */
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Melhorar seleção de texto */
+::selection {
+  background-color: var(--doacin-red-light);
+  color: var(--doacin-red);
+}
+
+/* Reset básico para box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 

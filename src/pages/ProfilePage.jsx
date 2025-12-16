@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './ProfilePage.css';
-import { authFetch } from '../../services/api'; 
+import { authFetch } from '../../services/api';
+import Toast from '../components/Toast';
+
 function ProfilePage() {
 
   const [nome, setNome] = useState('Carregando...');
@@ -10,12 +12,9 @@ function ProfilePage() {
   const [tipoRed, setTipoSanguineo] = useState(''); 
   const [peso, setPeso] = useState('');
   const [genero, setGenero] = useState('');
-  const [capibas, setCapibas] = useState(0);
-  const [doacoes, setDoacoes] = useState(0);
 
-  
   const [isLoading, setIsLoading] = useState(false);
-
+  const [toast, setToast] = useState(null);
 
   // --- LÓGICA DE DADOS (useEffect) ---
   useEffect(() => {
@@ -34,9 +33,7 @@ function ProfilePage() {
         setTelefone(data.telefone ?? ''); 
         setTipoSanguineo(data.bloodType ?? ''); 
         setPeso(data.weight ?? '');
-        setGenero(data.genero ?? '');           
-        setCapibas(data.capibasBalance ?? 0); 
-        setDoacoes(data.doacoes ?? 0);     
+        setGenero(data.genero ?? '');     
         
         if (data.birthDate) {
           const dateObj = new Date(data.birthDate);
@@ -85,11 +82,11 @@ function ProfilePage() {
       }
 
       await response.json();
-      alert('Perfil salvo com sucesso!');
+      setToast({ message: 'Perfil salvo com sucesso!', type: 'success' });
 
     } catch (error) {
       console.error('Erro no handleSubmit:', error);
-      alert('Erro ao salvar o perfil. Tente novamente.');
+      setToast({ message: 'Erro ao salvar o perfil. Tente novamente.', type: 'error' });
     } finally {
       setIsLoading(false); 
     }
@@ -113,16 +110,6 @@ function ProfilePage() {
 
             <h3 className="profile-user-name">{nome}</h3>
             <p className="profile-user-email">{email}</p>
-
-            <div className="stat-block capibas">
-              <p className="stat-block-title">Capibas</p>
-              <p className="stat-block-value">{capibas}</p> 
-            </div>
-
-            <div className="stat-block doacoes">
-              <p className="stat-block-title">Doações</p>
-              <p className="stat-block-value">{doacoes}</p>
-            </div>
           </div>
         </div>
 
@@ -238,13 +225,28 @@ function ProfilePage() {
 
               {}
               <button type="submit" className="form-button" disabled={isLoading}>
-                {isLoading ? 'Salvando...' : 'Salvar Alterações'}
+                {isLoading ? (
+                  <>
+                    <span className="spinner spinner-small spinner-white"></span>
+                    Salvando...
+                  </>
+                ) : (
+                  'Salvar Alterações'
+                )}
               </button>
             </form>
 
           </div>
         </div>
       </div>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }

@@ -17,11 +17,11 @@ function LocalCard({ local }) {
     <div
       className="local-card"
       style={{
-        border: "1px solid #f3f4f6", 
+        border: "1px solid var(--border-light)", 
         borderRadius: "12px",
         padding: "16px",
-        background: "#fff",
-        boxShadow: "0 2px 5px rgba(0,0,0,0.05)", 
+        background: "var(--bg-primary)",
+        boxShadow: "var(--shadow-sm)", 
         position: "relative",
         display: "flex",
         flexDirection: "column",
@@ -30,7 +30,7 @@ function LocalCard({ local }) {
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "4px" }}>
-        <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#1f2937", fontWeight: "600", lineHeight: "1.2" }}>
+        <h3 style={{ margin: 0, fontSize: "1.1rem", color: "var(--text-primary)", fontWeight: "600", lineHeight: "1.2" }}>
           {name}
         </h3>
         {type && (
@@ -39,8 +39,8 @@ function LocalCard({ local }) {
               fontSize: "0.7rem",
               padding: "4px 10px",
               borderRadius: "20px",
-              background: isEvento ? "#fff7ed" : "#f5f3ff", 
-              color: isEvento ? "#c2410c" : "#4f46e5", 
+              background: isEvento ? "#fff7ed" : "#ede9fe", 
+              color: isEvento ? "#c2410c" : "#7c3aed", 
               fontWeight: "700",
               textTransform: "uppercase",
               letterSpacing: "0.5px",
@@ -55,13 +55,13 @@ function LocalCard({ local }) {
 
       
       {address && (
-        <p style={{ margin: 0, color: "#4b5563", fontSize: "0.9rem", lineHeight: "1.4" }}>
+        <p style={{ margin: 0, color: "var(--text-primary)", fontSize: "0.9rem", lineHeight: "1.4" }}>
           📍 {address}
         </p>
       )}
 
       {hours && (
-        <p style={{ margin: 0, color: "#6b7280", fontSize: "0.9rem" }}>
+        <p style={{ margin: 0, color: "var(--text-secondary)", fontSize: "0.9rem" }}>
           🕒 {hours}
         </p>
       )}
@@ -84,8 +84,8 @@ function LocalCard({ local }) {
       )}
 
       {contact && (
-        <p style={{ margin: 0, fontSize: "0.9rem", color: "#6b7280" }}>
-          📞 <a href={`tel:${contact}`} style={{ color: "#2563eb", textDecoration: "none" }}>{contact}</a>
+        <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-secondary)" }}>
+          📞 <a href={`tel:${contact}`} style={{ color: "var(--doacin-red)", textDecoration: "none" }}>{contact}</a>
         </p>
       )}
 
@@ -99,9 +99,9 @@ function LocalCard({ local }) {
               flex: 1, textAlign: "center",
               padding: "10px", 
               borderRadius: "8px", 
-              background: "#f9fafb", 
-              border: "1px solid #e5e7eb", 
-              color: "#374151", 
+              background: "var(--bg-secondary)", 
+              border: "1px solid var(--border-light)", 
+              color: "var(--text-primary)", 
               textDecoration: "none", 
               fontSize: "0.85rem",
               fontWeight: "500",
@@ -118,14 +118,17 @@ function LocalCard({ local }) {
             flex: 1, textAlign: "center",
             padding: "10px", 
             borderRadius: "8px", 
-            background: "#10b981", 
+            background: "var(--doacin-red)", 
             border: "none", 
             color: "white", 
             textDecoration: "none", 
             fontSize: "0.85rem",
             fontWeight: "600",
-            boxShadow: "0 2px 4px rgba(16, 185, 129, 0.2)" 
+            boxShadow: "var(--shadow-sm)",
+            transition: "background-color 0.2s"
           }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--doacin-red-hover)"}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--doacin-red)"}
         >
           Agendar
         </a>

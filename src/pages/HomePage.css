@@ -1,17 +1,10 @@
-/* Define as cores principais com base no seu design existente */
-:root {
-  --doacin-red: #ee3333;
-  --doacin-red-dark: #d9302b;
-  --doacin-red-light: #fef2f2;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --border-color: #e5e7eb;
-  --bg-light: #f9fafb;
-}
+/* Cores globais definidas em index.css */
 
 /* Layout principal do painel */
 .home-page-container {
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   text-align: left;
 }
 
@@ -20,11 +13,26 @@
 =====================================
 */
 .home-banner-container {
-  background: var(--doacin-red-dark); /* Corrigido para o vermelho principal */
-  border-radius: 12px;
-  padding: 24px;
+  background: linear-gradient(135deg, var(--doacin-red) 0%, #b82620 100%);
+  border-radius: 16px;
+  padding: 28px;
   margin-bottom: 24px;
-  box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.2), 0 4px 6px -2px rgba(239, 68, 68, 0.1);
+  box-shadow: 0 8px 24px rgba(217, 48, 43, 0.25);
+  position: relative;
+  overflow: hidden;
+  animation: slideDown 0.6s ease-out;
+}
+
+/* Overlay sutil para profundidade */
+.home-banner-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 /* Cabeçalho "Olá..." dentro do banner */
@@ -41,16 +49,20 @@
 }
 
 .home-banner-container .welcome-message h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #fff; /* CORRIGIDO: Texto branco */
-  margin: 0 0 4px;
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
 }
 
 .home-banner-container .welcome-message p {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.9); /* CORRIGIDO: Texto branco sutil */
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
   margin: 0;
+  line-height: 1.5;
 }
 
 /* Botões "+ Nova Doação" e "QR Code" DENTRO do banner */
@@ -59,38 +71,31 @@
   gap: 12px;
 }
 
-/* Responsividade para .header-actions em telas pequenas */
-@media (max-width: 600px) {
-  .home-banner-container .header-actions {
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-  }
-  .home-banner-container .header-actions .button-primary,
-  .home-banner-container .header-actions .button-qr-code {
-    width: 100%;
-    justify-content: center;
-    box-sizing: border-box; /* Garante que o padding não estoure a largura */
-  }
-}
-/* Botão "+ Nova Doação" (Branco) */
+/* Botão "+ Nova Doação" (Branco) - CTA Principal */
 .home-banner-container .header-actions .button-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s;
-  background-color: #fff; /* CORRIGIDO: Fundo branco */
-  color: var(--doacin-red); /* CORRIGIDO: Texto vermelho */
-  border: 1px solid #fff;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  color: var(--doacin-red);
+  border: 2px solid #fff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.3px;
 }
 .home-banner-container .header-actions .button-primary:hover {
-  background-color: #f3f4f6;
+  background-color: #f9fafb;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+.home-banner-container .header-actions .button-primary:active {
+  transform: translateY(0);
 }
 
 /* Botão "QR Code" (Translúcido)
@@ -98,16 +103,24 @@
   quando ele estiver dentro do banner.
 */
 .home-banner-container .header-actions .button-qr-code {
-  background-color: rgba(255, 255, 255, 0.15) !important; /*  Fundo translúcido */
+  background-color: rgba(255, 255, 255, 0.15) !important;
   color: #fff !important; 
-  border: 1px solid rgba(255, 255, 255, 0.3) !important; /*  Borda translúcida */
-  padding: 10px 16px !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  padding: 12px 20px !important;
   font-weight: 600 !important;
   font-size: 14px !important;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  transition: all 0.3s ease !important;
 }
 .home-banner-container .header-actions .button-qr-code:hover {
   background-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+.home-banner-container .header-actions .button-qr-code:active {
+  transform: translateY(0) !important;
 }
 
 
@@ -115,7 +128,7 @@
 .home-banner-container .stats-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 0; 
 }
 
@@ -123,42 +136,103 @@
 .home-banner-container .stat-card-new {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background-color: rgba(255, 255, 255, 0.1); /* Fundo translúcido */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Borda translúcida */
-  border-radius: 12px;
-  padding: 20px;
+  gap: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.home-banner-container .stat-card-new:nth-child(1) {
+  animation-delay: 0.1s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.home-banner-container .stat-card-new:nth-child(2) {
+  animation-delay: 0.2s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.home-banner-container .stat-card-new:nth-child(3) {
+  animation-delay: 0.3s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.home-banner-container .stat-card-new:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .home-banner-container .stat-card-new .icon-container {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent; /*  Fundo do ícone transparente */
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.home-banner-container .stat-card-new:hover .icon-container {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
 .home-banner-container .stat-card-new .icon-container svg {
-  width: 28px; /* Aumentei o ícone */
-  height: 28px;
-  color: #fff; /* Ícone branco */
+  width: 36px;
+  height: 36px;
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.home-banner-container .stat-card-new:hover .icon-container svg {
+  transform: rotate(5deg);
+}
+  transition: all 0.3s ease;
+}
+
+.home-banner-container .stat-card-new:hover .icon-container {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.home-banner-container .stat-card-new .icon-container svg {
+  width: 32px;
+  height: 32px;
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.home-banner-container .stat-card-new:hover .icon-container svg {
+  transform: rotate(5deg);
 }
 
 .home-banner-container .stat-card-new .stat-info h3 {
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.9); 
-  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .home-banner-container .stat-card-new .stat-info p {
-  font-size: 28px;
-  font-weight: 700;
-  color: #fff; 
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
   margin: 0;
+  line-height: 1;
+  letter-spacing: -0.5px;
 }
 
 
@@ -191,10 +265,11 @@
 
 /* Card Genérico (para "Informações" e "Atividades") */
 .info-card {
-  background-color: #fff;
-  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
   border-radius: 12px;
   padding: 24px;
+  box-shadow: var(--shadow-sm);
 }
 
 .info-card .card-title {
@@ -248,7 +323,7 @@
   padding: 12px 0;
 }
 .activity-card .activity-item + .activity-item {
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-light);
 }
 .activity-item .location-info h4 {
   font-size: 16px;
@@ -288,10 +363,18 @@
 
 /* Card de Cooldown */
 .cooldown-card-new {
-  background-color: var(--doacin-red-dark);
+  background: linear-gradient(135deg, var(--doacin-red) 0%, #b82620 100%);
   color: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 8px 24px rgba(217, 48, 43, 0.25);
+  animation: slideUp 0.6s ease-out;
+  transition: all 0.3s ease;
+}
+
+.cooldown-card-new:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(217, 48, 43, 0.35);
 }
 .cooldown-card-new h3 {
   font-size: 20px;
@@ -340,31 +423,43 @@
 
 .cooldown-card-new .cooldown-button {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px;
+  border-radius: 10px;
   border: none;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   background-color: #fff;
-  color: var(--doacin-red-dark);
+  color: var(--doacin-red);
   text-decoration: none;
   text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.cooldown-card-new .cooldown-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+.cooldown-card-new .cooldown-button:active:not(:disabled) {
+  transform: scale(0.98);
 }
 .cooldown-card-new .cooldown-button:disabled {
   background-color: rgba(255, 255, 255, 0.5);
   color: rgba(0, 0, 0, 0.4);
   cursor: not-allowed;
+  box-shadow: none;
 }
 /* Estilo para o estado "Pronto para doar" */
 .cooldown-card-new.ready {
-  background-color: #16a34a; /* Verde */
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  animation: slideUp 0.6s ease-out, pulse 2s ease-in-out infinite;
 }
 .cooldown-card-new.ready .cooldown-button {
   color: #16a34a;
+  animation: pulse 2s ease-in-out infinite;
 }
 /* Estilo para o estado "Completar Perfil" */
-.cooldown-card-new.complete-profile {
+.cooldown-card-new.complete-profile );
   background-color: var(--doacin-red-dark); /* Laranja */
 }
 .cooldown-card-new.complete-profile .cooldown-button {
@@ -372,32 +467,73 @@
 }
 
 
-/* Media query para telas menores */
-@media (max-width: 900px) {
-  .home-grid-layout {
-    grid-template-columns: 1fr;
+/* ============================================
+   MEDIA QUERIES - Breakpoints Padronizados
+   ============================================ */
+
+/* Mobile Small - 480px */
+@media (max-width: 480px) {
+  .home-banner-container .header-actions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
   }
+  .home-banner-container .header-actions .button-primary,
+  .home-banner-container .header-actions .button-qr-code {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
   .home-banner-container .stats-row {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 480px) {
-  .activity-card .activity-item {
-    flex-direction: column; /* Empilha os itens */
-    align-items: flex-start; /* Alinha à esquerda */
-    gap: 8px;
+/* Tablet - 768px */
+@media (max-width: 768px) {
+  .home-banner-container {
+    padding: 20px;
+    border-radius: 12px;
   }
 
-  .activity-item .status-info {
-    text-align: left; /* Alinha o status à esquerda também */
-    width: 100%;
-    display: flex;
-    justify-content: space-between; /* Separa o "Confirmada" dos "Pontos" */
-    align-items: center;
+  .home-banner-container .welcome-message h1 {
+    font-size: 28px;
   }
-  
-  .activity-item .status-info .points {
-    margin: 0; /* Remove margem extra */
+
+  .home-banner-container .welcome-message p {
+    font-size: 16px;
+  }
+
+  .home-banner-container .header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .home-banner-container .header-actions .button-primary,
+  .home-banner-container .header-actions .button-qr-code {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .home-banner-container .stats-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .home-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Desktop small - 1024px */
+@media (max-width: 1024px) {
+  .home-banner-container .home-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats-row {
+    gap: 16px;
   }
 }

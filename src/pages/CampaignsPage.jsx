@@ -104,7 +104,7 @@ function CampaignsPage() {
         overflow: "hidden" 
     },
     header: { marginBottom: "15px", flexShrink: 0 },
-    title: { marginTop: "10px", fontSize: "2rem", color: "#d32f2f" },
+    title: { marginTop: "10px", fontSize: "2rem", color: "var(--doacin-red)" },
     filterContainer: { display: "flex", gap: "10px", marginBottom: "15px", flexShrink: 0 },
     
     filterBtn: (isActive, color) => ({
@@ -141,9 +141,9 @@ function CampaignsPage() {
       </div>
 
       <div style={styles.filterContainer}>
-        <button style={styles.filterBtn(filterType === "todos", "#d32f2f")} onClick={() => setFilterType("todos")}>Todos ({locals.length})</button>
-        <button style={styles.filterBtn(filterType === "fixo", "#d32f2f")} onClick={() => setFilterType("fixo")}>Fixos ({countFixos})</button>
-        <button style={styles.filterBtn(filterType === "evento", "#f57c00")} onClick={() => setFilterType("evento")}>Eventos ({countEventos})</button>
+        <button style={styles.filterBtn(filterType === "todos", "var(--doacin-red)")} onClick={() => setFilterType("todos")}>Todos ({locals.length})</button>
+        <button style={styles.filterBtn(filterType === "fixo", "var(--doacin-red)")} onClick={() => setFilterType("fixo")}>Fixos ({countFixos})</button>
+        <button style={styles.filterBtn(filterType === "evento", "var(--warning-orange)")} onClick={() => setFilterType("evento")}>Eventos ({countEventos})</button>
       </div>
 
       {loading ? ( <p>Carregando mapa...</p> ) : error ? ( <p style={{ color: "red" }}>{error}</p> ) : (
@@ -184,7 +184,7 @@ function CampaignsPage() {
                   <div key={local.id} onClick={() => setSelectedLocal(local)}
                       style={{
                         cursor: "pointer", transition: "all 0.2s",
-                        borderLeft: isSelected ? "4px solid #d32f2f" : "4px solid transparent",
+                        borderLeft: isSelected ? "4px solid var(--doacin-red)" : "4px solid transparent",
                         paddingLeft: isSelected ? "8px" : "0",
                         transform: isSelected ? "translateX(5px)" : "none"
                       }}
