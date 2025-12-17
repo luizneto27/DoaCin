@@ -1,6 +1,8 @@
 // src/pages/QuizPage.jsx
 
 import React, { useState } from 'react';
+import Toast from '../components/Toast';
+import './QuizPage.css';
 
 const quizData = [
     {
@@ -43,9 +45,18 @@ function QuizPage() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showInfo, setShowInfo] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
   const currentQuestion = quizData[currentQuestionIndex];
   const progressPercent = Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+  };
+
+  const closeToast = () => {
+    setToast({ ...toast, show: false });
+  };
 
   function startQuiz() {
     setShowIntro(false);
@@ -54,6 +65,7 @@ function QuizPage() {
     setSelectedAnswer(null);
     setShowInfo(false);
     setShowResults(false);
+    showToast('Quiz iniciado! Boa sorte! 🎯', 'info');
   }
 
   function handleSelect(answer) {
@@ -62,6 +74,9 @@ function QuizPage() {
 
     if (answer === currentQuestion.correctAnswer) {
       setScore(s => s + 1);
+      showToast('Resposta correta! Parabéns! 🎉', 'success');
+    } else {
+      showToast('Resposta incorreta. Veja a explicação abaixo.', 'error');
     }
 
     setShowInfo(true);
@@ -75,6 +90,14 @@ function QuizPage() {
     } else {
       // finalizar
       setShowResults(true);
+      const percentage = Math.round((score / totalQuestions) * 100);
+      if (percentage >= 80) {
+        showToast(`Quiz finalizado! Você acertou ${score} de ${totalQuestions}! 🏆`, 'success');
+      } else if (percentage >= 60) {
+        showToast(`Quiz finalizado! Você acertou ${score} de ${totalQuestions}. Continue estudando! 📚`, 'warning');
+      } else {
+        showToast(`Quiz finalizado! Você acertou ${score} de ${totalQuestions}. Tente novamente! 💪`, 'info');
+      }
     }
   }
 
@@ -116,245 +139,54 @@ function QuizPage() {
   // Intro / Rules screen (matches the provided design) rendered before quiz starts
   if (showIntro) {
     return (
-      <div style={{ padding: 40, display: 'flex', justifyContent: 'center' }}>
-        <style>{`
-          .intro-card {
-            width: 100%;
-            max-width: 840px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(16,24,40,0.08);
-            overflow: hidden;
-            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-          }
-          .intro-top {
-            background: linear-gradient(180deg,#ef3b36,#d9302b);
-            color: white;
-            padding: 36px 28px;
-            text-align:center;
-          }
-          .intro-top .icon {
-            width:72px; height:72px; border-radius:50%;
-            background: rgba(255,255,255,0.12); display:inline-flex;
-            align-items:center; justify-content:center; margin-bottom:12px;
-          }
-          .intro-top h1 { margin:6px 0 6px; font-size:24px; font-weight:800; }
-          .intro-top p { margin:0; opacity:0.95; }
-          .intro-body { padding:22px 26px; }
-          .rules-box {
-            background: #fff6f6;
-            border: 1px solid rgba(233, 94, 93, 0.08);
-            border-radius: 10px;
-            padding: 18px;
-            margin-bottom: 18px;
-          }
-          .rules-list { padding:0; margin:0; list-style:none; }
-          .rules-list li { display:flex; gap:12px; align-items:flex-start; margin:12px 0; color:#0f172a; }
-          .rules-list li .bullet { 
-            color: #ef4444; /* MUDANÇA AQUI: Era verde (#16a34a) */
-            font-weight:700; 
-            flex:0 0 22px; 
-          }
-          .start-btn {
-            width:100%;
-            background: linear-gradient(180deg,#ef3b36,#d9302b);
-            color:white;
-            border:none;
-            padding:14px 16px;
-            border-radius:8px;
-            font-weight:700;
-            cursor:pointer;
-            box-shadow: 0 6px 18px rgba(233,59,54,0.18);
-          }
-        `}</style>
-
-        <div className="intro-card" role="region" aria-label="Quiz Capiba - regras">
-          <div className="intro-top">
-            <div className="icon" aria-hidden>
-              {/* simple brain icon using emoji to keep self-contained */}
-              <span style={{fontSize:28}}>🧠</span>
-            </div>
-            <h1>Quiz Capiba</h1>
-            <p>Teste seus conhecimentos sobre doação de sangue!</p>
-          </div>
-
-          <div className="intro-body">
-            <div className="rules-box" aria-hidden>
-              <ul className="rules-list">
-                <li><span className="bullet">🏁</span><div><strong>Como Funciona</strong></div></li>
-                <li><span className="bullet">✅</span><div><strong>{totalQuestions} perguntas</strong> sobre doação de sangue</div></li>
-                <li><span className="bullet">✅</span><div>Aprenda informações importantes sobre doação</div></li>
-                <li><span className="bullet">✅</span><div>Cada pergunta tem apenas uma resposta correta</div></li>
-              </ul>
+      <div className="quiz-page">
+        <div className="quiz-intro">
+          <div className="intro-card" role="region" aria-label="Quiz Capiba - regras">
+            <div className="intro-top">
+              <div className="icon" aria-hidden="true">
+                <span>🧠</span>
+              </div>
+              <h1>Quiz Capiba</h1>
+              <p>Teste seus conhecimentos sobre doação de sangue!</p>
             </div>
 
-            <button className="start-btn" onClick={startQuiz} aria-label="Começar Quiz">
-              ► Começar Quiz
-            </button>
+            <div className="intro-body">
+              <div className="rules-box" aria-hidden="true">
+                <ul className="rules-list">
+                  <li><span className="bullet">🏁</span><div><strong>Como Funciona</strong></div></li>
+                  <li><span className="bullet">✅</span><div><strong>{totalQuestions} perguntas</strong> sobre doação de sangue</div></li>
+                  <li><span className="bullet">✅</span><div>Aprenda informações importantes sobre doação</div></li>
+                  <li><span className="bullet">✅</span><div>Cada pergunta tem apenas uma resposta correta</div></li>
+                </ul>
+              </div>
+
+              <button className="start-btn" onClick={startQuiz} aria-label="Começar Quiz">
+                ► Começar Quiz
+              </button>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  // Quiz UI (unchanged)
+
+  // Quiz UI
   return (
-    <div className="quiz-page" style={{ padding: 40, display: 'flex', justifyContent: 'center' }}>
-      <style>{`
-        .quiz-container {
-          width: 100%;
-          max-width: 840px;
-          background: #ffffff;
-          border-radius: 12px;
-          padding: 36px;
-          box-shadow: 0 8px 20px rgba(16,24,40,0.08);
-          text-align: center;
-          font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-        }
-        .quiz-header {
-          display:flex;
-          align-items:center;
-          gap:12px;
-          margin-bottom: 16px;
-        }
-        #question-counter {
-          font-size: 13px;
-          color: #6b7280;
-          font-weight: 600;
-          flex: 0 0 auto;
-        }
-        .progress {
-          flex:1;
-          display:flex;
-          justify-content:center;
-        }
-        .progress-bar-bg {
-          width: 60%;
-          background: #f3f4f6;
-          height: 8px;
-          border-radius: 999px;
-        }
-        .progress-bar {
-          height: 8px;
-          background: #e53935;
-          border-radius: 999px;
-          width: ${progressPercent}%;
-          transition: width 300ms ease;
-        }
-        #question-title {
-          font-size: 28px;
-          line-height: 1.15;
-          font-weight: 800;
-          margin: 8px 0 22px;
-          color: #0f172a;
-        }
-        .answer-list { padding:0; margin:0 0 12px 0; }
-        .answer-list li { list-style:none; margin: 10px 0; }
-        .quiz-btn {
-          width:100%;
-          text-align:left;
-          padding: 18px 20px;
-          border-radius: 10px;
-          border: 1px solid #e6e6e6;
-          background: #fbfbfb;
-          font-size: 16px;
-          color: #0f172a;
-          box-shadow: none;
-          transition: box-shadow .12s, transform .06s;
-        }
-        .quiz-btn:hover { box-shadow: 0 2px 0 rgba(16,24,40,0.04); cursor: pointer; transform: translateY(-1px); }
-        .quiz-btn.disabled { pointer-events: none; opacity: 0.98; }
-        .quiz-btn.correct { background: #e6f4ea; border: 2px solid #2e7d32; }
-        .quiz-btn.incorrect { background: #fdecea; border: 2px solid #c62828; }
-        
-        .info-box {
-          background: #fff6f6;
-          border: 1px solid #fee2e2;
-          padding: 14px 16px;
-          border-radius: 8px;
-          color: #0f172a;
-          text-align: left;
-          margin-top: 18px;
-        }
-        .info-box strong { font-weight: 700; }
-        .quiz-actions { margin-top: 18px; display:flex; }
-        .next-btn {
-          background: #e53935;
-          color: #fff;
-          border: none;
-          padding: 14px 18px;
-          width: 100%;
-          border-radius: 10px;
-          font-weight: 700;
-          font-size: 16px;
-        }
-
-        .result-modal {
-          position: fixed;
-          inset: 0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: rgba(15, 23, 42, 0.45);
-          z-index: 60;
-          padding: 28px;
-        }
-        .result-card {
-          width: 520px;
-          max-width: 100%;
-          background: #ffffff;
-          border-radius: 12px;
-          padding: 34px 36px;
-          text-align: center;
-          box-shadow: 0 20px 60px rgba(2,6,23,0.18);
-          font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-        }
-        .result-medal {
-          width:64px; height:64px; margin: -60px auto 12px;
-          display:flex; align-items:center; justify-content:center;
-          background: linear-gradient(180deg,#fff6f2,#fff);
-          border-radius: 999px; box-shadow: 0 6px 18px rgba(233,59,54,0.08);
-          font-size:28px;
-        }
-        .result-card h2 { margin: 6px 0 8px; font-size:24px; font-weight:800; color:#0f172a; }
-        .result-card .subtitle { color:#6b7280; margin-bottom:18px; }
-        .score-large { font-size:48px; color:#e53935; font-weight:800; margin: 6px 0; }
-        .percent { font-weight:700; color:#0f172a; margin-bottom:12px; }
-        .feedback { color:#374151; line-height:1.5; margin-bottom:18px; }
-        .again-btn {
-          display:inline-flex;
-          align-items:center;
-          gap:10px;
-          background: linear-gradient(180deg,#ef3b36,#d9302b);
-          color:white;
-          border:none;
-          padding:12px 18px;
-          border-radius:10px;
-          font-weight:700;
-          cursor:pointer;
-          box-shadow: 0 8px 24px rgba(233,59,54,0.16);
-        }
-        .footer-small { margin-top:12px; color:#ef4444; font-weight:700; display:flex; gap:8px; align-items:center; justify-content:center; }
-
-        @media (max-width: 520px) {
-          .result-card { padding: 22px; }
-          .score-large { font-size:40px; }
-        }
-      `}</style>
-
+    <div className="quiz-page">
       <div className={`quiz-container ${showResults ? 'blurred' : ''}`}>
         <div className="quiz-header">
-          <div id="question-counter">Pergunta {currentQuestionIndex + 1} de {totalQuestions}</div>
+          <div className="question-counter">Pergunta {currentQuestionIndex + 1} de {totalQuestions}</div>
           <div className="progress">
-            <div className="progress-bar-bg" aria-hidden>
-              <div id="progress-bar" className="progress-bar" style={{ width: `${progressPercent}%` }} />
+            <div className="progress-bar-bg" aria-hidden="true">
+              <div className="progress-bar" style={{ width: `${progressPercent}%` }} />
             </div>
           </div>
         </div>
 
-        <h2 id="question-title">{currentQuestion.question}</h2>
+        <h2 className="question-title">{currentQuestion.question}</h2>
 
-        <ul id="answer-list" className="answer-list">
+        <ul className="answer-list">
           {currentQuestion.answers.map((ans) => (
             <li key={ans}>
               <button
@@ -365,16 +197,15 @@ function QuizPage() {
               />
             </li>
           ))}
-
         </ul>
 
         {showInfo && (
-          <div id="info-box" className="info-box" dangerouslySetInnerHTML={{ __html: currentQuestion.explanation }} />
+          <div className="info-box" dangerouslySetInnerHTML={{ __html: currentQuestion.explanation }} />
         )}
 
         <div className="quiz-actions">
           {showInfo && (
-            <button id="next-btn" className="next-btn" onClick={handleNext}>
+            <button className="next-btn" onClick={handleNext}>
               {currentQuestionIndex < totalQuestions - 1 ? 'Próxima Pergunta →' : 'Ver Resultado →'}
             </button>
           )}
@@ -386,9 +217,9 @@ function QuizPage() {
           const percentage = Math.round((score / totalQuestions) * 100);
           const feedback = getFeedback(percentage);
           return (
-            <div id="result-modal" className="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
+            <div className="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
               <div className="result-card">
-                <div className="result-medal" aria-hidden>🏅</div>
+                <div className="result-medal" aria-hidden="true">🏅</div>
                 <h2 id="result-title">Quiz Finalizado!</h2>
                 <div className="subtitle">Sua pontuação</div>
                 <div className="score-large">{score}/{totalQuestions}</div>
@@ -402,11 +233,19 @@ function QuizPage() {
                   🔁 Fazer Novamente
                 </button>
 
-                <div className="footer-small">💗 <span style={{marginLeft:6}}>Doe sangue. Doe vida.</span></div>
+                <div className="footer-small">💗 <span>Doe sangue. Doe vida.</span></div>
               </div>
             </div>
           );
         })()
+      )}
+
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={closeToast}
+        />
       )}
     </div>
   );

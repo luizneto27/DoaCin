@@ -1,15 +1,105 @@
 :root {
+  /* ========== CORES PRINCIPAIS ========== */
+  /* Vermelho DoaCin - Cor Principal */
+  --doacin-red: #d9302b;
+  --doacin-red-hover: #b82620;
+  --doacin-red-light: #fef2f2;
+  --doacin-red-border: #fee2e2;
+  
+  /* Textos */
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  
+  /* Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  
+  /* Bordas */
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+  
+  /* Estados */
+  --success-green: #10b981;
+  --success-green-hover: #059669;
+  --success-green-light: #d1fae5;
+  --success-green-dark: #065f46;
+  --success-green-darker: #16a34a;
+  --success-green-darkest: #15803d;
+  --success-green-bg-gradient: linear-gradient(135deg, #e6f4ea 0%, #f0fdf4 100%);
+  
+  --warning-orange: #f59e0b;
+  --warning-orange-hover: #d97706;
+  --warning-orange-light: #ffedd5;
+  --warning-orange-dark: #ea580c;
+  --warning-orange-darker: #c2410c;
+  --warning-orange-darkest: #9a3412;
+  --warning-orange-bg: #fff7ed;
+  --warning-orange-border: #fed7aa;
+  
+  --error-red: var(--doacin-red);
+  --error-red-light: #fecaca;
+  --error-red-bg: #fef2f2;
+  --error-red-dark: #dc2626;
+  --error-red-darker: #b71c1c;
+  --error-red-darkest: #991d18;
+  
+  /* Tons de cinza */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  
+  /* Outras cores */
+  --purple-light-bg: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+  --purple-dark: #6b21a8;
+  --yellow-light-bg: #fff8e1;
+  --yellow-border: #ffe082;
+  --yellow-dark: #d97b00;
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 30px rgba(0, 0, 0, 0.20);
+  
+  /* ========== CONFIGURAÇÕES GLOBAIS ========== */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(235, 14, 14, 0.87);
-  background-color: #ffffff;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== MELHORIAS GLOBAIS ========== */
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Melhorar seleção de texto */
+::selection {
+  background-color: var(--doacin-red-light);
+  color: var(--doacin-red);
+}
+
+/* Reset básico para box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 

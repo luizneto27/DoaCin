@@ -2,20 +2,22 @@
 
 import React, { useState } from "react";
 import { useDashboard } from "../context/DashboardContext";
-import { authFetch } from "../../services/api"; // Importar authFetch para chamar o backend
+import { authFetch } from "../../services/api";
 import qrcodeImg from "../assets/qrcode.svg";
+import Toast from "./Toast";
+import "./QRCode.css";
 
 function QRCode() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false); // Estado para loading do botão
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [toast, setToast] = useState(null);
   const { addCapibas } = useDashboard();
 
   const handleConfirmDonation = async () => {
-    if (isProcessing) return; // Evita duplo clique
+    if (isProcessing) return;
     setIsProcessing(true);
 
     try {
-      // 1. Chama o backend para confirmar a doação pendente
       const response = await authFetch("/api/donations/confirm", {
         method: "POST",
       });
@@ -26,18 +28,18 @@ function QRCode() {
       }
 
       const data = await response.json();
-      const pointsEarned = data.donation?.pointsEarned || 4; // 4 vidas salvas por doação
+      const pointsEarned = data.donation?.pointsEarned || 4;
 
-      // 2. Se deu certo no banco, atualiza o visual (Context)
-      addCapibas(pointsEarned); // Adiciona Capibas baseado na doação
+      addCapibas(pointsEarned);
 
-      alert(
-        `Doação confirmada com sucesso! Você ganhou ${pointsEarned} Capibas.`
-      );
+      setToast({ 
+        message: `Doação confirmada com sucesso! Você ganhou ${pointsEarned} Capibas.`, 
+        type: 'success' 
+      });
       setIsOpen(false);
     } catch (error) {
       console.error(error);
-      alert(`Erro: ${error.message}`);
+      setToast({ message: `Erro: ${error.message}`, type: 'error' });
     } finally {
       setIsProcessing(false);
     }
@@ -53,65 +55,24 @@ function QRCode() {
         QR Code
       </button>
 
-      {/* Popup Modal pra exibir o QR Code */}
       {isOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "24px",
-              borderRadius: "12px",
-              maxWidth: "400px",
-              width: "90%",
-              maxHeight: "90vh",
-              overflow: "auto",
-              position: "relative",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <h1
-              style={{
-                marginBottom: "20px",
-                textAlign: "center",
-                color: "#333",
-              }}
-            >
-              Meu QR Code de Doador
-            </h1>
-            <div
-              className="imprimir-qr-code"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                margin: "24px 0",
-              }}
-            >
+        <div className="qrcode-modal-overlay">
+          <div className="qrcode-modal-content">
+            <h1 className="qrcode-modal-header">Meu QR Code de Doador</h1>
+
+            <div className="qrcode-image-container">
               <img
                 src={qrcodeImg}
                 alt="QR Code"
-                style={{ width: "200px", height: "auto" }}
+                className="qrcode-image"
               />
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
-              <p style={{ marginBottom: "8px", color: "#333" }}>
+            <div className="qrcode-instructions">
+              <p className="qrcode-instructions-title">
                 <strong>Como usar?</strong>
               </p>
-              <ol style={{ margin: 0, paddingLeft: "20px", color: "#555" }}>
+              <ol className="qrcode-instructions-list">
                 <li>Registre sua doação na página de doações</li>
                 <li>Apresente este QR Code no hemocentro</li>
                 <li>O funcionário irá escaneá-lo</li>
@@ -120,25 +81,11 @@ function QRCode() {
               </ol>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: "8px",
-                justifyContent: "center",
-                flexWrap: "wrap",
-              }}
-            >
+            <div className="qrcode-actions">
               <button
                 type="button"
                 onClick={() => window.print()}
-                style={{
-                  backgroundColor: "#fff",
-                  border: "1px solid gray",
-                  padding: "12px 24px",
-                  borderRadius: "8px",
-                  color: "rgba(235, 14, 14, 0.87)",
-                  cursor: "pointer",
-                }}
+                className="qrcode-btn-print"
               >
                 Imprimir QR Code
               </button>
@@ -147,40 +94,30 @@ function QRCode() {
                 type="button"
                 onClick={handleConfirmDonation}
                 disabled={isProcessing}
-                style={{
-                  backgroundColor: isProcessing ? "#9ca3af" : "#16a34a", // Cinza se loading, Verde se normal
-                  border: "none",
-                  padding: "12px 24px",
-                  borderRadius: "8px",
-                  color: "white",
-                  cursor: isProcessing ? "not-allowed" : "pointer",
-                  fontWeight: "bold",
-                }}
+                className={`qrcode-btn-confirm ${isProcessing ? 'loading' : ''}`}
               >
-                {isProcessing ? "Confirmando..." : "Confirmar Doação ✔"}
+                {isProcessing ? '' : 'Confirmar Doação ✔'}
               </button>
             </div>
 
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              style={{
-                position: "absolute",
-                top: "12px",
-                right: "12px",
-                backgroundColor: "transparent",
-                border: "none",
-                color: "#999",
-                cursor: "pointer",
-                fontSize: "24px",
-                lineHeight: 1,
-                padding: "4px",
-              }}
+              className="qrcode-close-btn"
+              aria-label="Fechar"
             >
               ×
             </button>
           </div>
         </div>
+      )}
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
       )}
     </>
   );

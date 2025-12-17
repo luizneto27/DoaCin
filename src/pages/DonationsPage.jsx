@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { authFetch } from "../../services/api";
+import "./DonationsPage.css";
+import Toast from "../components/Toast";
+import LoadingSkeleton from "../components/LoadingSkeleton";
 
 function DonationsPage() {
   const location = useLocation();
@@ -8,6 +11,8 @@ function DonationsPage() {
 
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     donationDate: new Date().toISOString().split("T")[0],
@@ -20,7 +25,7 @@ function DonationsPage() {
     livesSaved: 0,
     pending: 0,
   });
-  const [showNewDonation, setShowNewDonation] = useState(false);
+  const [showNewDonation, setShowNewDonation] = useState(true);
   const [prefillLocalId, setPrefillLocalId] = useState(null);
 
   useEffect(() => {
@@ -89,6 +94,8 @@ function DonationsPage() {
       return;
     }
 
+    setSubmitting(true);
+
     authFetch("/api/donations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -123,13 +130,18 @@ function DonationsPage() {
         setDonations((prev) => [newDonation, ...prev]);
         setStats((prev) => ({
           totalDonations: prev.totalDonations + 1,
-          livesSaved: (prev.totalDonations + 1) * 4, // Multiplica total de doações por 4
+          livesSaved: (prev.totalDonations + 1) * 4,
           pending: prev.pending + (newDonation.status === "pending" ? 1 : 0),
         }));
+
+        setToast({ message: 'Doação registrada com sucesso!', type: 'success' });
       })
       .catch((err) => {
         console.error("Erro ao registrar doação:", err);
-        alert(`Erro: ${err.message}`);
+        setToast({ message: `Erro: ${err.message}`, type: 'error' });
+      })
+      .finally(() => {
+        setSubmitting(false);
       });
   };
 
@@ -148,350 +160,62 @@ function DonationsPage() {
   }, [location?.state?.openModal, navigate, location?.pathname]);
 
   if (loading) {
-    return <div>Carregando histórico...</div>;
+    return (
+      <div className="donations-page">
+        <div className="donations-header">
+          <LoadingSkeleton type="title" />
+        </div>
+        <LoadingSkeleton type="card" count={3} />
+      </div>
+    );
   }
 
   return (
-    <div
-      style={{
-        padding: "40px 20px",
-        maxWidth: "1200px",
-        margin: "0 auto",
-      }}
-    >
+    <div className="donations-page">
       {/* Header */}
-      <div
-        style={{
-          marginBottom: "40px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-        }}
-      >
-        <div>
-          <h1
-            style={{
-              margin: "0 0 8px 0",
-              fontSize: "32px",
-              fontWeight: "bold",
-              color: "#E63946",
-            }}
-          >
-            Minhas Doações
-          </h1>
-          <p
-            style={{
-              margin: 0,
-              color: "#666",
-              fontSize: "14px",
-            }}
-          >
-            Histórico completo das suas doações de sangue
-          </p>
-        </div>
-        <button
-          onClick={() => setShowModal(true)}
-          style={{
-            backgroundColor: "#E63946",
-            color: "white",
-            border: "none",
-            padding: "10px 16px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "14px",
-            fontWeight: "600",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
-          + Nova Doação
-        </button>
-      </div>
-
-      {/* Stat Cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: "24px",
-          marginBottom: "40px",
-        }}
-      >
-        {/* Total de Doações */}
-        <div
-          style={{
-            backgroundColor: "white",
-            borderRadius: "8px",
-            padding: "24px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          }}
-        >
-          <div
-            style={{
-              width: "40px",
-              height: "40px",
-              backgroundColor: "#E63946",
-              borderRadius: "8px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "16px",
-              fontSize: "20px",
-            }}
-          >
-            🩸
-          </div>
-          <p
-            style={{
-              margin: "0 0 8px 0",
-              color: "#666",
-              fontSize: "14px",
-            }}
-          >
-            Total de Doações
-          </p>
-          <p
-            style={{
-              margin: 0,
-              fontSize: "32px",
-              fontWeight: "bold",
-              color: "#1a1a1a",
-            }}
-          >
-            {stats.totalDonations}
-          </p>
-        </div>
-
-        {/* Vidas Salvas */}
-        <div
-          style={{
-            backgroundColor: "white",
-            borderRadius: "8px",
-            padding: "24px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          }}
-        >
-          <div
-            style={{
-              width: "40px",
-              height: "40px",
-              backgroundColor: "#E83E8C",
-              borderRadius: "8px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "16px",
-              fontSize: "20px",
-            }}
-          >
-            ❤️
-          </div>
-          <p
-            style={{
-              margin: "0 0 8px 0",
-              color: "#666",
-              fontSize: "14px",
-            }}
-          >
-            Vidas Salvas
-          </p>
-          <p
-            style={{
-              margin: 0,
-              fontSize: "32px",
-              fontWeight: "bold",
-              color: "#1a1a1a",
-            }}
-          >
-            {stats.livesSaved}
-          </p>
-        </div>
-
-        {/* Pendentes */}
-        <div
-          style={{
-            backgroundColor: "white",
-            borderRadius: "8px",
-            padding: "24px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          }}
-        >
-          <div
-            style={{
-              width: "40px",
-              height: "40px",
-              backgroundColor: "#0D6EFD",
-              borderRadius: "8px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "16px",
-              fontSize: "20px",
-            }}
-          >
-            📈
-          </div>
-          <p
-            style={{
-              margin: "0 0 8px 0",
-              color: "#666",
-              fontSize: "14px",
-            }}
-          >
-            Pendentes
-          </p>
-          <p
-            style={{
-              margin: 0,
-              fontSize: "32px",
-              fontWeight: "bold",
-              color: "#1a1a1a",
-            }}
-          >
-            {stats.pending}
-          </p>
-        </div>
+      <div className="donations-header">
+        <h1 className="donations-title">Minhas Doações</h1>
       </div>
 
       {/* Modal / Registro (aparece acima) */}
       {showModal && (
-        <div
-          style={{
-            backgroundColor: "white",
-            borderRadius: "8px",
-            padding: "24px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-            marginBottom: "24px",
-          }}
-        >
+        <div className="donation-modal">
           {/* Modal Content */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "24px",
-            }}
-          >
-            <h2
-              style={{
-                margin: 0,
-                color: "#E63946",
-                fontSize: "20px",
-                fontWeight: "bold",
-              }}
-            >
-              Registrar Nova Doação
-            </h2>
-            <button
-              onClick={() => setShowModal(false)}
-              style={{
-                background: "none",
-                border: "none",
-                fontSize: "24px",
-                cursor: "pointer",
-                color: "#999",
-                padding: 0,
-              }}
-            >
+          <div className="modal-header">
+            <h2 className="modal-title">Registrar Nova Doação</h2>
+            <button onClick={() => setShowModal(false)} className="close-button">
               ✕
             </button>
           </div>
 
           {/* Form */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "20px",
-              marginBottom: "24px",
-            }}
-          >
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "600",
-                  color: "#1a1a1a",
-                  fontSize: "13px",
-                }}
-              >
-                Data da Doação *
-              </label>
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label">Data da Doação *</label>
               <input
                 type="date"
                 name="donationDate"
                 value={formData.donationDate}
                 onChange={handleInputChange}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  border: `1px solid ${
-                    formErrors.donationDate ? "#E63946" : "#ddd"
-                  }`,
-                  borderRadius: "4px",
-                  fontSize: "14px",
-                  boxSizing: "border-box",
-                  fontFamily: "inherit",
-                }}
+                className={`form-input ${formErrors.donationDate ? 'error' : ''}`}
               />
               {formErrors.donationDate && (
-                <span
-                  style={{
-                    color: "#E63946",
-                    fontSize: "12px",
-                    marginTop: "4px",
-                    display: "block",
-                  }}
-                >
-                  {formErrors.donationDate}
-                </span>
+                <span className="form-error">{formErrors.donationDate}</span>
               )}
             </div>
 
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "600",
-                  color: "#1a1a1a",
-                  fontSize: "13px",
-                }}
-              >
-                Hemocentro *
-              </label>
+            <div className="form-group">
+              <label className="form-label">Hemocentro *</label>
               <input
                 type="text"
                 name="hemocentro"
                 placeholder="Nome do hemocentro"
                 value={formData.hemocentro}
                 onChange={handleInputChange}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  border: `1px solid ${
-                    formErrors.hemocentro ? "#E63946" : "#ddd"
-                  }`,
-                  borderRadius: "4px",
-                  fontSize: "14px",
-                  boxSizing: "border-box",
-                  color: "#999",
-                }}
+                className={`form-input ${formErrors.hemocentro ? 'error' : ''}`}
               />
               {formErrors.hemocentro && (
-                <span
-                  style={{
-                    color: "#E63946",
-                    fontSize: "12px",
-                    marginTop: "4px",
-                    display: "block",
-                  }}
-                >
-                  {formErrors.hemocentro}
-                </span>
+                <span className="form-error">{formErrors.hemocentro}</span>
               )}
             </div>
           </div>
@@ -502,7 +226,7 @@ function DonationsPage() {
                 display: "block",
                 marginBottom: "8px",
                 fontWeight: "600",
-                color: "#1a1a1a",
+                color: "var(--text-primary)",
                 fontSize: "13px",
               }}
             >
@@ -516,74 +240,45 @@ function DonationsPage() {
               style={{
                 width: "100%",
                 padding: "10px",
-                border: "1px solid #ddd",
+                border: "1px solid var(--border-light)",
                 borderRadius: "4px",
                 fontSize: "14px",
                 minHeight: "100px",
                 fontFamily: "inherit",
                 boxSizing: "border-box",
-                color: "#999",
+                color: "var(--gray-400)",
                 resize: "vertical",
               }}
             />
           </div>
 
-          <div
-            style={{
-              backgroundColor: "#FFF8E1",
-              border: "1px solid #FFE082",
-              borderRadius: "4px",
-              padding: "12px",
-              marginBottom: "24px",
-              fontSize: "13px",
-              color: "#D97B00",
-            }}
-          >
-            <strong style={{ color: "#D97B00" }}>Atenção:</strong> Para ganhar
-            suas Capibas, apresente seu QR Code no hemocentro para validação da
-            doação!
+          <div className="alert-warning">
+            <strong>Atenção:</strong> Para ganhar suas Capibas, apresente seu QR Code no hemocentro para validação da doação!
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "12px",
-            }}
-          >
-            <button
-              onClick={() => setShowModal(false)}
-              style={{
-                padding: "12px 24px",
-                border: "1px solid #ddd",
-                backgroundColor: "white",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: "600",
-                color: "#1a1a1a",
-              }}
+          <div className="button-grid">
+            <button 
+              onClick={() => setShowModal(false)} 
+              className="button-cancel"
+              disabled={submitting}
             >
               Cancelar
             </button>
-            <button
-              onClick={handleSubmit}
-              style={{
-                padding: "12px 24px",
-                backgroundColor: "#E63946",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: "600",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-              }}
+            <button 
+              onClick={handleSubmit} 
+              className="button-submit"
+              disabled={submitting}
             >
-              📋 Registrar Doação
+              {submitting ? (
+                <>
+                  <span className="spinner spinner-small spinner-white"></span>
+                  Registrando...
+                </>
+              ) : (
+                <>
+                  Registrar Doação
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -591,314 +286,111 @@ function DonationsPage() {
 
       {/* Novo formulário de doação (controlado por showNewDonation) */}
       {showNewDonation && (
-        <div
-          style={{
-            backgroundColor: "white",
-            borderRadius: "8px",
-            padding: "24px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-            marginBottom: "24px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "24px",
-            }}
-          >
-            <h2
-              style={{
-                margin: 0,
-                color: "#E63946",
-                fontSize: "20px",
-                fontWeight: "bold",
-              }}
-            >
-              Nova Doação
-            </h2>
-            <button
-              onClick={() => setShowNewDonation(false)}
-              style={{
-                background: "none",
-                border: "none",
-                fontSize: "24px",
-                cursor: "pointer",
-                color: "#999",
-                padding: 0,
-              }}
-            >
+        <div className="donation-modal">
+          <div className="modal-header">
+            <h2 className="modal-title">Registrar Nova Doação</h2>
+            <button onClick={() => setShowNewDonation(false)} className="close-button">
               ✕
             </button>
           </div>
 
-          <p>
-            Criar nova doação{" "}
-            {prefillLocalId ? `(local id: ${prefillLocalId})` : ""}
-          </p>
-
-          {/* Aqui você pode colocar o formulário específico para a nova doação */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "20px",
-              marginBottom: "24px",
-            }}
-          >
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "600",
-                  color: "#1a1a1a",
-                  fontSize: "13px",
-                }}
-              >
-                Data da Doação
-              </label>
+          {/* Form */}
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label">Data da Doação *</label>
               <input
                 type="date"
                 name="donationDate"
                 value={formData.donationDate}
                 onChange={handleInputChange}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  fontSize: "14px",
-                  boxSizing: "border-box",
-                  fontFamily: "inherit",
-                }}
+                className={`form-input ${formErrors.donationDate ? 'error' : ''}`}
               />
+              {formErrors.donationDate && (
+                <span className="form-error">{formErrors.donationDate}</span>
+              )}
             </div>
 
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "600",
-                  color: "#1a1a1a",
-                  fontSize: "13px",
-                }}
-              >
-                Hemocentro
-              </label>
+            <div className="form-group">
+              <label className="form-label">Hemocentro *</label>
               <input
                 type="text"
                 name="hemocentro"
                 placeholder="Nome do hemocentro"
                 value={formData.hemocentro}
                 onChange={handleInputChange}
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  fontSize: "14px",
-                  boxSizing: "border-box",
-                  color: "#999",
-                }}
+                className={`form-input ${formErrors.hemocentro ? 'error' : ''}`}
               />
+              {formErrors.hemocentro && (
+                <span className="form-error">{formErrors.hemocentro}</span>
+              )}
             </div>
           </div>
 
-          <div style={{ marginBottom: "24px" }}>
-            <label
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                fontWeight: "600",
-                color: "#1a1a1a",
-                fontSize: "13px",
-              }}
-            >
-              Observações (opcional)
-            </label>
+          <div className="form-group-full">
+            <label className="form-label">Observações (opcional)</label>
             <textarea
               name="observacoes"
               placeholder="Adicione detalhes sobre sua doação..."
               value={formData.observacoes}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
-                fontSize: "14px",
-                minHeight: "100px",
-                fontFamily: "inherit",
-                boxSizing: "border-box",
-                color: "#999",
-                resize: "vertical",
-              }}
+              className="form-textarea"
             />
           </div>
 
-          <div
-            style={{
-              backgroundColor: "#FFF8E1",
-              border: "1px solid #FFE082",
-              borderRadius: "4px",
-              padding: "12px",
-              marginBottom: "24px",
-              fontSize: "13px",
-              color: "#D97B00",
-            }}
-          >
-            <strong style={{ color: "#D97B00" }}>Atenção:</strong> Para ganhar
-            suas Capibas, apresente seu QR Code no hemocentro para validação da
-            doação!
+          <div className="alert-warning">
+            <strong>Atenção:</strong> Para ganhar suas Capibas, apresente seu QR Code no hemocentro para validação da doação!
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "12px",
-            }}
-          >
-            <button
-              onClick={() => setShowNewDonation(false)}
-              style={{
-                padding: "12px 24px",
-                border: "1px solid #ddd",
-                backgroundColor: "white",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: "600",
-                color: "#1a1a1a",
-              }}
+          <div className="button-grid">
+            <button 
+              onClick={() => setShowNewDonation(false)} 
+              className="button-cancel"
+              disabled={submitting}
             >
               Cancelar
             </button>
-            <button
-              onClick={handleSubmit}
-              style={{
-                padding: "12px 24px",
-                backgroundColor: "#E63946",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: "600",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-              }}
+            <button 
+              onClick={handleSubmit} 
+              className="button-submit"
+              disabled={submitting}
             >
-              📋 Registrar Doação
+              {submitting ? (
+                <>
+                  <span className="spinner spinner-small spinner-white"></span>
+                  Registrando...
+                </>
+              ) : (
+                <>
+                 Registrar Doação
+                </>
+              )}
             </button>
           </div>
         </div>
       )}
 
       {/* Histórico (sempre visível abaixo) */}
-      <div
-        style={{
-          backgroundColor: "white",
-          borderRadius: "12px",
-          padding: "24px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          border: "1px solid #e5e7eb",
-        }}
-      >
-        <h2
-          style={{
-            margin: "0 0 16px 0",
-            color: "#E63946",
-            fontSize: "18px",
-            fontWeight: "600",
-            paddingBottom: "12px",
-            borderBottom: "1px solid #e5e7eb",
-          }}
-        >
-          Histórico de Doações
-        </h2>
+      <div className="history-card">
+        <h2 className="history-title">Histórico de Doações</h2>
 
         {donations.length > 0 ? (
-          <ul
-            style={{
-              listStyle: "none",
-              padding: 0,
-              margin: 0,
-            }}
-          >
+          <ul className="donation-list">
             {donations.map((donation, index) => (
-              <li
-                key={donation.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "12px 0",
-                  borderTop: index > 0 ? "1px solid #e5e7eb" : "none",
-                }}
-              >
-                <div
-                  style={{
-                    flex: 1,
-                  }}
-                >
-                  <h4
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: "600",
-                      color: "#1a1a1a",
-                      margin: 0,
-                    }}
-                  >
+              <li key={donation.id} className="donation-item">
+                <div className="donation-info">
+                  <h4 className="donation-location">
                     {donation.location?.name || donation.hemocentro || "-"}
                   </h4>
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      color: "#6b7280",
-                      margin: "4px 0 0",
-                    }}
-                  >
-                    {new Date(donation.donationDate).toLocaleDateString(
-                      "pt-BR"
-                    )}
+                  <p className="donation-date">
+                    {new Date(donation.donationDate).toLocaleDateString("pt-BR")}
                   </p>
                 </div>
-                <div
-                  style={{
-                    textAlign: "right",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      padding: "4px 8px",
-                      borderRadius: "6px",
-                      color:
-                        donation.status === "confirmed" ? "#065f46" : "#9a3412",
-                      backgroundColor:
-                        donation.status === "confirmed" ? "#d1fae5" : "#ffedd5",
-                    }}
-                  >
-                    {donation.status === "confirmed"
-                      ? "Confirmada"
-                      : "Pendente"}
+                <div className="donation-status-container">
+                  <span className={`donation-status ${donation.status === "confirmed" ? "confirmed" : "pending"}`}>
+                    {donation.status === "confirmed" ? "Confirmada" : "Pendente"}
                   </span>
                   {donation.status === "confirmed" && (
-                    <p
-                      style={{
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        color: "#065f46",
-                        margin: "4px 0 0",
-                      }}
-                    >
+                    <p className="donation-points">
                       +{donation.pointsEarned} Capibas
                     </p>
                   )}
@@ -907,32 +399,23 @@ function DonationsPage() {
             ))}
           </ul>
         ) : (
-          <div style={{ textAlign: "center", padding: "60px 20px" }}>
-            <div
-              style={{
-                fontSize: "48px",
-                marginBottom: "16px",
-                opacity: 0.3,
-              }}
-            >
-              🩸
-            </div>
-            <p
-              style={{
-                margin: "0 0 8px 0",
-                fontSize: "18px",
-                fontWeight: "600",
-                color: "#1a1a1a",
-              }}
-            >
-              Nenhuma doação registrada
-            </p>
-            <p style={{ margin: 0, color: "#666", fontSize: "14px" }}>
+          <div className="empty-state">
+            <div className="empty-icon">🩸</div>
+            <p className="empty-title">Nenhuma doação registrada</p>
+            <p className="empty-description">
               Registre sua primeira doação e comece a acumular Capibas!
             </p>
           </div>
         )}
       </div>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }
