@@ -1,14 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "./LocalCard.css";
 
 function LocalCard({ local }) {
   if (!local) return null;
 
   const navigate = useNavigate();
 
+  // Dados do local
   const { id, name, address, hours, contact, type, LinkMaps } = local;
 
-
+  // Formatação de datas
   const rawInicio = local.dataInicio || local.eventStartDate;
   const rawFim    = local.dataFim    || local.eventEndDate;
   const dataInicioFormatada = rawInicio ? new Date(rawInicio).toLocaleDateString('pt-BR') : null;
@@ -17,86 +19,75 @@ function LocalCard({ local }) {
   const tipoLimpo = (type || "").toLowerCase();
   const isEvento = tipoLimpo.includes("event") || tipoLimpo.includes("evento");
 
- 
+  // --- LÓGICA DO MAPA CORRIGIDA ---
+  // Se tiver link pronto no banco, usa ele.
+  // Se não, usa o link oficial de busca do Google Maps (www.google.com/maps)
   const googleMapsUrl = LinkMaps 
     ? LinkMaps 
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || "")}`;
 
   return (
-    <div
-      className="local-card"
-      style={{
-        border: "1px solid #f3f4f6",
-        borderRadius: "12px",
-        padding: "16px",
-        background: "#fff",
-        boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-        fontFamily: "system-ui, -apple-system, sans-serif"
-      }}
-    >
-      {/* TÍTULO E TIPO */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#1f2937", fontWeight: "600" }}>
-          {name}
-        </h3>
+    <div className="local-card">
+      <div className="local-card-header">
+        <h3 className="local-card-title">{name}</h3>
         {type && (
-          <span style={{
-              fontSize: "0.7rem", padding: "4px 10px", borderRadius: "20px",
-              background: isEvento ? "#fff7ed" : "#f5f3ff",
-              color: isEvento ? "#c2410c" : "#4f46e5", fontWeight: "700"
-            }}>
-            {isEvento ? 'EVENTO' : 'FIXO'}
+          <span className={`local-card-badge ${isEvento ? 'event' : 'fixed'}`}>
+            {isEvento ? 'Evento' : 'Fixo'}
           </span>
         )}
       </div>
 
-      {/* ENDEREÇO E INFO */}
-      {address && <p style={{ margin: 0, color: "#4b5563", fontSize: "0.9rem" }}>📍 {address}</p>}
-      {hours && <p style={{ margin: 0, color: "#6b7280", fontSize: "0.9rem" }}>🕒 {hours}</p>}
-      
-      {isEvento && dataInicioFormatada && (
-        <div style={{ color: "#ea580c", fontSize: "0.9rem", fontWeight: "500" }}>
-           📅 {dataInicioFormatada} {dataFimFormatada ? `até ${dataFimFormatada}` : ''}
-        </div>
-      )}
+      <div className="local-card-info">
+        {address && (
+          <p className="local-card-address">
+            <span className="icon">📍</span>
+            {address}
+          </p>
+        )}
 
-      {contact && (
-        <p style={{ margin: 0, fontSize: "0.9rem", color: "#6b7280" }}>
-          📞 <a href={`tel:${contact}`} style={{ color: "#2563eb", textDecoration: "none" }}>{contact}</a>
-        </p>
-      )}
+        {hours && (
+          <p className="local-card-hours">
+            <span className="icon">🕒</span>
+            {hours}
+          </p>
+        )}
 
-      {/* BOTÕES DE AÇÃO */}
-      <div style={{ marginTop: "12px", display: "flex", gap: "10px" }}>
-        
-        {/* BOTÃO MAPA */}
+        {isEvento && dataInicioFormatada && (
+          <p className="local-card-date">
+            <span className="icon">📅</span>
+            <span>
+              {dataInicioFormatada} {dataFimFormatada ? ` até ${dataFimFormatada}` : ''}
+            </span>
+          </p>
+        )}
+
+        {contact && (
+          <p className="local-card-contact">
+            <span className="icon">📞</span>
+            <a href={`tel:${contact}`}>{contact}</a>
+          </p>
+        )}
+      </div>
+
+      <div className="local-card-actions">
+        {/* BOTÃO MAPA: Agora com o link certo (google.com) */}
         <a
             href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              flex: 1, textAlign: "center", padding: "10px", borderRadius: "8px",
-              background: "#fff", border: "1px solid #e5e7eb", color: "#374151",
-              textDecoration: "none", fontSize: "0.9rem", cursor: "pointer"
-            }}
+            className="local-card-button secondary"
         >
           Ver no mapa
         </a>
 
-        {/* BOTÃO AGENDAR (Corrigido para /doacoes) */}
+        {/* BOTÃO AGENDAR: Redireciona para /doacoes */}
         <button
           onClick={(e) => {
-             e.stopPropagation(); // Impede cliques acidentais no container
+             e.stopPropagation(); 
              navigate('/doacoes'); 
           }}
-          style={{
-            flex: 1, textAlign: "center", padding: "10px", borderRadius: "8px",
-            background: "#10b981", border: "none", color: "white",
-            fontWeight: "600", cursor: "pointer"
-          }}
+          className="local-card-button primary"
+          style={{ cursor: "pointer", border: "none" }}
         >
           Agendar
         </button>

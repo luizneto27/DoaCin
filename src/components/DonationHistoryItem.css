@@ -1,0 +1,119 @@
+/* ===========================
+   DONATION HISTORY ITEM - DESIGN SYSTEM
+   =========================== */
+
+.donation-history-item {
+  background: #ffffff;
+  border: 2px solid var(--border-light);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 12px 0;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.donation-history-item:hover {
+  border-color: #e5e7eb;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Item Content */
+.donation-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.donation-item-row:first-child {
+  margin-top: 0;
+}
+
+.donation-item-row:last-child {
+  margin-bottom: 0;
+}
+
+.donation-item-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.donation-item-value {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+/* Status Badges */
+.donation-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.donation-status.confirmed {
+  background: var(--success-green-bg-gradient);
+  color: var(--success-green-darker);
+  border: 1px solid var(--success-green-light);
+}
+
+.donation-status.pending {
+  background: linear-gradient(135deg, var(--warning-orange-bg) 0%, var(--warning-orange-light) 100%);
+  color: var(--warning-orange-dark);
+  border: 1px solid var(--warning-orange-border);
+}
+
+.donation-status.rejected {
+  background: linear-gradient(135deg, var(--error-red-bg) 0%, var(--doacin-red-border) 100%);
+  color: var(--doacin-red);
+  border: 1px solid var(--error-red-light);
+}
+
+/* Points Display */
+.donation-points {
+  font-weight: 700;
+  color: var(--doacin-red);
+  font-size: 15px;
+}
+
+/* ===========================
+   RESPONSIVIDADE
+   =========================== */
+
+/* Mobile */
+@media (max-width: 480px) {
+  .donation-history-item {
+    padding: 14px 16px;
+    border-radius: 10px;
+  }
+
+  .donation-item-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin: 10px 0;
+  }
+
+  .donation-item-label {
+    font-size: 13px;
+  }
+
+  .donation-item-value {
+    font-size: 14px;
+  }
+
+  .donation-status {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .donation-points {
+    font-size: 14px;
+  }
+}

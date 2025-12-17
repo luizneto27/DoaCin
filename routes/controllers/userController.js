@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '../../config/database.js';
 
 
 function parseDate(dateString) {
@@ -20,7 +19,7 @@ function parseDate(dateString) {
 
 
 export const updateUserProfile = async (req, res) => {
-  const userId = req.userData.userId;
+  const userId = req.user.userId;
   
   // 1. ADICIONAMOS 'genero' AQUI
   const { telefone, dataNascimento, tipoRed, peso, genero } = req.body;

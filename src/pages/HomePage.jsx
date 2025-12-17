@@ -2,19 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDashboard } from "../context/DashboardContext.jsx";
 import { authFetch } from "../../services/api";
-
-// Importar o CSS
 import "./HomePage.css";
-
-// Importar os componentes
 import StatCard from "../components/StatCard.jsx";
 import QRCode from "../components/QRCode.jsx";
 import DonationCooldown from "../components/DonationCooldown.jsx";
-import DonationInfoSide from "../components/DonationInfoSide.jsx";
-import RecentActivity from "../components/RecentActivity.jsx";
+import LoadingSkeleton from "../components/LoadingSkeleton.jsx";
 
 // --- Ícones para os StatCards (Definidos inline) ---
-const IconCapiba = () => (
+const IconPendente = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -22,8 +17,12 @@ const IconCapiba = () => (
     strokeWidth={1.5}
     stroke="currentColor"
   >
-    {/* Este é o ícone de gota de sangue do seu MainLayout, mas branco */}
-    <path d="M12 21.35l-1.45-1.45C5.4 15.35 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.85-8.55 11.4L12 21.35z" />
+    {/* Ícone de relógio para Pendentes */}
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+    />
   </svg>
 );
 const IconDoacao = () => (
@@ -62,14 +61,12 @@ const IconVidas = () => (
 
 function HomePage() {
   const { dashboardData, setDashboardData } = useDashboard();
-  const [latestDonation, setLatestDonation] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let dashboardMounted = true;
-    let activityMounted = true;
 
-    // 1. Carregar dados do Dashboard
+    // Carregar dados do Dashboard
     const loadDashboardData = async () => {
       try {
         const saved = localStorage.getItem("dashboardData");
@@ -86,37 +83,28 @@ function HomePage() {
       }
     };
 
-    // 2. Carregar Atividade Recente
-    const loadRecentActivity = async () => {
-      try {
-        const historyData = await authFetch("/api/donations").then((res) =>
-          res.json()
-        );
-        if (activityMounted && historyData && historyData.length > 0) {
-          setLatestDonation(historyData[0]);
-        }
-      } catch (err) {
-        console.error("Erro ao buscar histórico de doações:", err);
-      }
-    };
-
     loadDashboardData();
-    loadRecentActivity();
 
     return () => {
       dashboardMounted = false;
-      activityMounted = false;
     };
   }, [setDashboardData]);
 
   if (loading) {
-    return <div>Carregando painel...</div>;
+    return (
+      <div className="home-page-container">
+        <LoadingSkeleton type="banner" />
+        <div style={{ marginTop: '24px' }}>
+          <LoadingSkeleton type="card" />
+        </div>
+      </div>
+    );
   }
 
   const {
-    capibasBalance = 0,
     donationCountLastYear = 0,
     nome = "Doador",
+    pendingDonations = 0,
   } = dashboardData || {};
 
   const vidasSalvas = donationCountLastYear * 4;
@@ -128,12 +116,15 @@ function HomePage() {
         {/* --- CABEÇALHO --- */}
         <div className="home-header">
           <div className="welcome-message">
-            {/* Adicionei o emoji '👋' da imagem de destino */}
-            <h1>Olá, {nome}! 👋</h1>
-            <p>Sua próxima doação pode salvar até 4 vidas ❤️</p>
+            <h1>Olá, {nome}! </h1>
+
           </div>
           <div className="header-actions">
-            <Link to="/doacoes" className="button-primary">
+            <Link 
+              to="/doacoes" 
+              state={{ openNew: true }}
+              className="button-primary"
+            >
               + Nova Doação
             </Link>
             {/* O QRCode é renderizado aqui, mas os estilos em CSS
@@ -145,14 +136,13 @@ function HomePage() {
         {/* --- LINHA DE STATS --- */}
         <div className="stats-row">
           <StatCard
-            title="Capibas"
-            value={capibasBalance}
-            icon={<IconCapiba />}
+            title="Doações Pendentes"
+            value={pendingDonations}
+            icon={<IconPendente />}
           />
           <StatCard
-            title="Doações"
+            title="Doações este Ano"
             value={donationCountLastYear}
-            /* Removi o 'unit' para bater com a imagem de destino */
             icon={<IconDoacao />}
           />
           <StatCard
@@ -164,29 +154,14 @@ function HomePage() {
       </div>
       {/* --- FIM DO CONTÊINER DO BANNER VERMELHO --- */}
 
-      {/* --- LAYOUT EM GRID (RESTO DA PÁGINA) --- */}
-      <div className="home-grid-layout">
-        {/* Coluna Principal (Esquerda) */}
-        <div className="main-column">
-          {/* Card de Cooldown */}
-          <DonationCooldown
-            lastDonationDate={dashboardData.lastDonationDate}
-            genero={dashboardData.genero}
-            donationCountLastYear={dashboardData.donationCountLastYear}
-            birthDate={dashboardData.birthDate}
-            weight={dashboardData.weight}
-          />
-
-          {/* Card de Atividades Recentes */}
-          <RecentActivity latestDonation={latestDonation} />
-        </div>
-
-        {/* Coluna Lateral (Direita) */}
-        <div className="sidebar-column">
-          {/* Card de Informações */}
-          <DonationInfoSide />
-        </div>
-      </div>
+      {/* --- CARD DE COOLDOWN --- */}
+      <DonationCooldown
+        lastDonationDate={dashboardData.lastDonationDate}
+        genero={dashboardData.genero}
+        donationCountLastYear={dashboardData.donationCountLastYear}
+        birthDate={dashboardData.birthDate}
+        weight={dashboardData.weight}
+      />
     </div>
   );
 }

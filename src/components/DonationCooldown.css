@@ -1,0 +1,190 @@
+/* ===========================
+   DONATION COOLDOWN COMPONENT - DESIGN SYSTEM
+   =========================== */
+
+/* Card de Cooldown */
+.cooldown-card-new {
+  background: linear-gradient(135deg, var(--doacin-red) 0%, #b82620 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(217, 48, 43, 0.35);
+  animation: slideUp 0.6s ease-out;
+  transition: all 0.3s ease;
+}
+
+.cooldown-card-new:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(217, 48, 43, 0.45);
+}
+
+.cooldown-card-new h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.cooldown-card-new .cooldown-message {
+  font-size: 16px;
+  opacity: 0.9;
+  margin: 0 0 20px;
+}
+
+.cooldown-card-new .cooldown-message.warning {
+  color: white;
+  font-weight: 600;
+}
+
+.cooldown-card-new .cooldown-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.cooldown-details .detail-item {
+  flex: 1 1 80px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.cooldown-details .detail-item h4 {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.8;
+  margin: 0 0 4px;
+}
+
+.cooldown-details .detail-item p {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cooldown-card-new .cooldown-button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: var(--bg-primary);
+  color: var(--doacin-red);
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: block;
+}
+
+.cooldown-card-new .cooldown-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.cooldown-card-new .cooldown-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.cooldown-card-new .cooldown-button:disabled {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.4);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Estado "Pronto para doar" */
+.cooldown-card-new.ready {
+  background: linear-gradient(135deg, var(--success-green-darker) 0%, var(--success-green-darkest) 100%);
+  box-shadow: 0 10px 30px rgba(22, 163, 74, 0.35);
+}
+
+.cooldown-card-new.ready:hover {
+  box-shadow: 0 16px 40px rgba(22, 163, 74, 0.45);
+}
+
+.cooldown-card-new.ready .cooldown-button {
+  background-color: var(--bg-primary);
+  color: var(--success-green-darker);
+}
+
+/* ===========================
+   RESPONSIVIDADE
+   =========================== */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .cooldown-card-new {
+    padding: 24px;
+  }
+
+  .cooldown-card-new h3 {
+    font-size: 18px;
+  }
+
+  .cooldown-card-new .cooldown-message {
+    font-size: 15px;
+  }
+
+  .cooldown-card-new .cooldown-details {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .cooldown-details .detail-item h4 {
+    font-size: 13px;
+  }
+
+  .cooldown-details .detail-item p {
+    font-size: 15px;
+  }
+
+  .cooldown-card-new .cooldown-button {
+    padding: 12px;
+    font-size: 15px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .cooldown-card-new {
+    padding: 20px;
+  }
+
+  .cooldown-card-new h3 {
+    font-size: 17px;
+  }
+
+  .cooldown-card-new .cooldown-message {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .cooldown-card-new .cooldown-details {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .cooldown-details .detail-item {
+    flex: 1 1 70px;
+    min-width: 70px;
+  }
+
+  .cooldown-details .detail-item h4 {
+    font-size: 12px;
+  }
+
+  .cooldown-details .detail-item p {
+    font-size: 14px;
+  }
+
+  .cooldown-card-new .cooldown-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}

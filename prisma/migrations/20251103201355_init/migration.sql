@@ -18,6 +18,9 @@ CREATE TABLE "User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
+-- AddColumn: capibas to User
+ALTER TABLE "User" ADD COLUMN "capibas" INTEGER NOT NULL DEFAULT 0;
+
 -- CreateTable
 CREATE TABLE "PontoColeta" (
     "id" TEXT NOT NULL,

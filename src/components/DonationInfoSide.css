@@ -1,0 +1,56 @@
+/* ===========================
+   DONATION INFO SIDE COMPONENT - DESIGN SYSTEM
+   =========================== */
+
+/* Info Sidebar já usa .info-card do HomePage.css para o container */
+
+.info-sidebar .info-item {
+  margin-bottom: 16px;
+}
+
+.info-sidebar .info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-sidebar .info-item h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin: 0 0 4px;
+}
+
+.info-sidebar .info-item p {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Capitaliza o tipo sanguíneo */
+.info-sidebar .info-item p.blood-type {
+  text-transform: uppercase;
+}
+
+.info-sidebar .info-item p.not-informed {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ===========================
+   RESPONSIVIDADE
+   =========================== */
+
+/* Mobile */
+@media (max-width: 480px) {
+  .info-sidebar .info-item {
+    margin-bottom: 14px;
+  }
+
+  .info-sidebar .info-item h4 {
+    font-size: 13px;
+  }
+
+  .info-sidebar .info-item p {
+    font-size: 15px;
+  }
+}

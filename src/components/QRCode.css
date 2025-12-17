@@ -1,0 +1,343 @@
+/* ===========================
+   QR CODE COMPONENT - DESIGN SYSTEM
+   =========================== */
+
+/* QR Code Button */
+.button-qr-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(180deg, #ef3b36, var(--doacin-red));
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.2s ease;
+}
+
+.button-qr-code:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.button-qr-code:active {
+  transform: translateY(0);
+}
+
+/* Modal Overlay */
+.qrcode-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 24px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Modal Content */
+.qrcode-modal-content {
+  background-color: white;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: var(--shadow-xl);
+  animation: slideUp 0.4s ease-out;
+}
+
+/* Modal Header */
+.qrcode-modal-header {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 0 0 32px 0;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+/* QR Code Image Container */
+.qrcode-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 32px 0;
+  padding: 24px;
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+  border-radius: 16px;
+  border: 2px solid #fee2e2;
+}
+
+.qrcode-image {
+  width: 220px;
+  height: auto;
+  display: block;
+}
+
+/* Instructions Section */
+.qrcode-instructions {
+  margin-bottom: 28px;
+}
+
+.qrcode-instructions-title {
+  font-weight: 700;
+  font-size: 16px;
+  margin: 0 0 12px 0;
+  color: var(--text-primary);
+}
+
+.qrcode-instructions-list {
+  margin: 0;
+  padding-left: 24px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.qrcode-instructions-list li {
+  margin: 8px 0;
+  font-size: 15px;
+}
+
+/* Action Buttons */
+.qrcode-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.qrcode-btn-print {
+  background: #ffffff;
+  border: 2px solid var(--border-light);
+  padding: 14px 24px;
+  border-radius: 12px;
+  color: var(--doacin-red);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.qrcode-btn-print:hover {
+  border-color: var(--doacin-red);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.qrcode-btn-print:active {
+  transform: translateY(0);
+}
+
+.qrcode-btn-confirm {
+  background: linear-gradient(180deg, #22c55e, #16a34a);
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.2s ease;
+}
+
+.qrcode-btn-confirm:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.qrcode-btn-confirm:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.qrcode-btn-confirm:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.qrcode-btn-confirm.loading {
+  position: relative;
+  color: transparent;
+}
+
+.qrcode-btn-confirm.loading::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  left: 50%;
+  margin-left: -9px;
+  margin-top: -9px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Close Button */
+.qrcode-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 28px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.qrcode-close-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+}
+
+/* ===========================
+   RESPONSIVIDADE
+   =========================== */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .qrcode-modal-overlay {
+    padding: 20px;
+  }
+
+  .qrcode-modal-content {
+    padding: 32px 28px;
+    border-radius: 16px;
+  }
+
+  .qrcode-modal-header {
+    font-size: 28px;
+    margin-bottom: 28px;
+  }
+
+  .qrcode-image-container {
+    margin: 28px 0;
+    padding: 20px;
+  }
+
+  .qrcode-image {
+    width: 200px;
+  }
+
+  .qrcode-actions {
+    gap: 10px;
+  }
+
+  .qrcode-btn-print,
+  .qrcode-btn-confirm {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .qrcode-modal-overlay {
+    padding: 16px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+
+  .qrcode-modal-content {
+    padding: 28px 24px;
+    border-radius: 12px;
+  }
+
+  .qrcode-modal-header {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .qrcode-image-container {
+    margin: 24px 0;
+    padding: 16px;
+  }
+
+  .qrcode-image {
+    width: 180px;
+  }
+
+  .qrcode-instructions-title {
+    font-size: 15px;
+  }
+
+  .qrcode-instructions-list {
+    padding-left: 20px;
+  }
+
+  .qrcode-instructions-list li {
+    font-size: 14px;
+    margin: 6px 0;
+  }
+
+  .qrcode-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .qrcode-btn-print,
+  .qrcode-btn-confirm {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .qrcode-close-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+    top: 12px;
+    right: 12px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .qrcode-modal-overlay {
+    background: white;
+    backdrop-filter: none;
+  }
+
+  .qrcode-actions,
+  .qrcode-close-btn,
+  .qrcode-instructions {
+    display: none !important;
+  }
+
+  .qrcode-modal-content {
+    box-shadow: none;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .qrcode-image-container {
+    border: 2px solid #000;
+    page-break-inside: avoid;
+  }
+}

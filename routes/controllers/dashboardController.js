@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '../../config/database.js';
 
 export const getDashboardStats = async (req, res) => {
-  const userId = req.userData.userId; 
+  const userId = req.user.userId; 
 
   try {
     // 1. Buscar dados do usuário
@@ -60,7 +59,15 @@ export const getDashboardStats = async (req, res) => {
       },
     });
 
-    // 7. Retornar todos os dados para o frontend
+    // 7. Contar doações pendentes
+    const pendingDonations = await prisma.donation.count({
+      where: {
+        userId: userId,
+        status: 'pending',
+      },
+    });
+
+    // 8. Retornar todos os dados para o frontend
     res.status(200).json({
       capibasBalance: capibasBalance,
       lastDonationDate: lastDonation ? lastDonation.donationDate : null,
@@ -72,7 +79,8 @@ export const getDashboardStats = async (req, res) => {
       email: user ? user.email : null,
       bloodType: user ? user.bloodType : null,
       telefone: user ? user.phone : null, 
-      doacoes: totalDonations
+      doacoes: totalDonations,
+      pendingDonations: pendingDonations
     });
     
   } catch (error) {

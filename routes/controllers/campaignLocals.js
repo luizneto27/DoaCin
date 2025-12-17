@@ -1,5 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "../../config/database.js";
 
 export const getLocalsCampaign = async (req, res) => {
   // Retorna os locais.
@@ -65,7 +64,8 @@ export const createLocalCampaign = async (req, res) => {
       data: {
         nome: name,
         endereco: address,
-        horarioAbertura: hours || null,
+        horarioAbertura: hours ? hours.split(' - ')[0] : null,
+        horarioFechamento: hours ? hours.split(' - ')[1] : null,
         telefone: contact || null,
         tipo: type || "fixed",
         latitude: latitude ? parseFloat(latitude) : null,

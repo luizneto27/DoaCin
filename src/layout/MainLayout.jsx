@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'; 
 import { useAuth } from '../context/AuthContext';
 import { useDashboard } from '../context/DashboardContext';
@@ -52,9 +52,9 @@ const IconSair = () => (
 function MainLayout() {
   const { logout } = useAuth();
   const { dashboardData } = useDashboard();
-  const { capibasBalance = 0, donationCountLastYear = 0, nome, email } = dashboardData || {};
-  const vidasSalvas = donationCountLastYear * 4;
+  const { capibasBalance = 0, nome, email } = dashboardData || {};
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -65,9 +65,33 @@ function MainLayout() {
   const getNavLinkClass = ({ isActive }) =>
     isActive ? 'nav-link active' : 'nav-link';
 
+  const handleNavClick = () => {
+    // Fecha a sidebar no mobile após clicar em um link
+    setIsSidebarOpen(false);
+  };
+
   return (
     <div className="layout-container">
-      <nav className="sidebar">
+      {/* Botão hambúrguer mobile */}
+      <button 
+        className="menu-toggle" 
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        aria-label="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      {/* Overlay para fechar sidebar no mobile */}
+      {isSidebarOpen && (
+        <div 
+          className="sidebar-overlay" 
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <nav className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
 
         {/* Cabeçalho */}
         <div className="sidebar-header">
@@ -92,28 +116,13 @@ function MainLayout() {
           {/* Navegação */}
           <div className="sidebar-nav">
             <ul>
-              <li><NavLink to="/" className={getNavLinkClass} end><IconHome /> Início</NavLink></li>
-              <li><NavLink to="/doacoes" className={getNavLinkClass}><IconDoacoes /> Minhas Doações</NavLink></li>
-              <li><NavLink to="/campanhas" className={getNavLinkClass}><IconCampanhas /> Campanhas</NavLink></li>
-              <li><NavLink to="/quiz" className={getNavLinkClass}><IconQuiz /> Quiz</NavLink></li>
-              <li><NavLink to="/regras" className={getNavLinkClass}><IconRegras /> Regras</NavLink></li>
-              <li><NavLink to="/perfil" className={getNavLinkClass}><IconPerfil /> Perfil</NavLink></li>
+              <li><NavLink to="/" className={getNavLinkClass} onClick={handleNavClick} end><IconHome /> Início</NavLink></li>
+              <li><NavLink to="/doacoes" className={getNavLinkClass} onClick={handleNavClick}><IconDoacoes /> Minhas Doações</NavLink></li>
+              <li><NavLink to="/campanhas" className={getNavLinkClass} onClick={handleNavClick}><IconCampanhas /> Campanhas</NavLink></li>
+              <li><NavLink to="/quiz" className={getNavLinkClass} onClick={handleNavClick}><IconQuiz /> Quiz</NavLink></li>
+              <li><NavLink to="/regras" className={getNavLinkClass} onClick={handleNavClick}><IconRegras /> Regras</NavLink></li>
+              <li><NavLink to="/perfil" className={getNavLinkClass} onClick={handleNavClick}><IconPerfil /> Perfil</NavLink></li>
             </ul>
-          </div>
-
-          {/* Conquistas */}
-          <div className="conquistas-card">
-            <h3>Suas Conquistas</h3>
-            <div className="conquistas-stats">
-              <div>
-                <p>Doações:</p>
-                <span className="stat-number">{donationCountLastYear}</span>
-              </div>
-              <div>
-                <p>Vidas Salvas:</p>
-                <span className="stat-number">{vidasSalvas}</span>
-              </div>
-            </div>
           </div>
 
         </div>

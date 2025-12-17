@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-// O CSS para 'cooldown-card-new' está em HomePage.css
+import '../animations.css';
+import './DonationCooldown.css';
 
 // --- Funções Helpers (movidas para o topo) ---
 
@@ -57,7 +57,8 @@ function DonationCooldown({
   genero, 
   donationCountLastYear,
   birthDate,
-  weight
+  weight,
+  latestDonation
 }) {
   
   // 0. Verifica se o perfil está completo

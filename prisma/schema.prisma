@@ -20,6 +20,7 @@ model User {
   endereco          String?   // NOVO
   genero            String?   // NOVO (M, F, Outro)
   foto              String?   // NOVO (URL da foto)
+  capibas           Int       @default(0)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   
