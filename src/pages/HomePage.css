@@ -17,7 +17,7 @@
   border-radius: 16px;
   padding: 28px;
   margin-bottom: 24px;
-  box-shadow: 0 8px 24px rgba(217, 48, 43, 0.25);
+  box-shadow: 0 10px 30px rgba(217, 48, 43, 0.35);
   position: relative;
   overflow: hidden;
   animation: slideDown 0.6s ease-out;
@@ -235,6 +235,17 @@
   letter-spacing: -0.5px;
 }
 
+.home-banner-container .stat-card-new .stat-info .stat-value {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.home-banner-container .stat-card-new .stat-info .stat-unit {
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
 
 /* =====================================================
 === 2. ESTILOS DOS CARDS FORA DO BANNER (RESTANTE) ===
@@ -279,191 +290,6 @@
   margin: 0 0 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border-color);
-}
-
-/* Card "Informações" (Lateral) */
-.info-sidebar .info-item {
-  margin-bottom: 16px;
-}
-.info-sidebar .info-item:last-child {
-  margin-bottom: 0;
-}
-.info-sidebar .info-item h4 {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin: 0 0 4px;
-}
-.info-sidebar .info-item p {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-}
-/* Capitaliza o tipo sanguíneo */
-.info-sidebar .info-item p.blood-type {
-  text-transform: uppercase;
-}
-.info-sidebar .info-item p.not-informed {
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-
-/* Card "Atividades Recentes" (Principal) */
-.activity-card .activity-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.activity-card .activity-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-}
-.activity-card .activity-item + .activity-item {
-  border-top: 1px solid var(--border-light);
-}
-.activity-item .location-info h4 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-}
-.activity-item .location-info p {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin: 4px 0 0;
-}
-.activity-item .status-info {
-  text-align: right;
-}
-.activity-item .status-info .status {
-  font-size: 14px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 6px;
-}
-.activity-item .status-info .status-confirmed {
-  color: #065f46;
-  background-color: #d1fae5;
-}
-.activity-item .status-info .status-pending {
-  color: #9a3412;
-  background-color: #ffedd5;
-}
-.activity-item .status-info .points {
-  font-size: 14px;
-  font-weight: 600;
-  color: #065f46;
-  margin: 4px 0 0;
-}
-
-
-/* Card de Cooldown */
-.cooldown-card-new {
-  background: linear-gradient(135deg, var(--doacin-red) 0%, #b82620 100%);
-  color: white;
-  border-radius: 16px;
-  padding: 28px;
-  box-shadow: 0 8px 24px rgba(217, 48, 43, 0.25);
-  animation: slideUp 0.6s ease-out;
-  transition: all 0.3s ease;
-}
-
-.cooldown-card-new:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(217, 48, 43, 0.35);
-}
-.cooldown-card-new h3 {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 8px;
-}
-.cooldown-card-new .cooldown-message {
-  font-size: 16px;
-  opacity: 0.9;
-  margin: 0 0 20px;
-}
-.cooldown-card-new .cooldown-message.warning {
-  color: white; 
-  font-weight: 600;
-}
-
-.cooldown-card-new .cooldown-details {
-  display: flex;
-  flex-wrap: wrap; /* Permite que os itens pulem para a linha de baixo */
-  gap: 16px;
-  justify-content: space-between; /* Distribui o espaço */
-  background-color: rgba(0,0,0,0.1);
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 20px;
-}
-
-/* Garante que cada item tenha um tamanho mínimo confortável */
-.cooldown-details .detail-item {
-  flex: 1 1 80px; /* Cresce, encolhe, base mínima de 80px */
-  min-width: 80px; 
-  text-align: center; /* Centraliza o texto para ficar mais bonito se empilhar */
-}
-
-.cooldown-details .detail-item h4 {
-  font-size: 14px;
-  font-weight: 500;
-  opacity: 0.8;
-  margin: 0 0 4px;
-}
-.cooldown-details .detail-item p {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.cooldown-card-new .cooldown-button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: none;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  background-color: #fff;
-  color: var(--doacin-red);
-  text-decoration: none;
-  text-align: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-.cooldown-card-new .cooldown-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-.cooldown-card-new .cooldown-button:active:not(:disabled) {
-  transform: scale(0.98);
-}
-.cooldown-card-new .cooldown-button:disabled {
-  background-color: rgba(255, 255, 255, 0.5);
-  color: rgba(0, 0, 0, 0.4);
-  cursor: not-allowed;
-  box-shadow: none;
-}
-/* Estilo para o estado "Pronto para doar" */
-.cooldown-card-new.ready {
-  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-  animation: slideUp 0.6s ease-out, pulse 2s ease-in-out infinite;
-}
-.cooldown-card-new.ready .cooldown-button {
-  color: #16a34a;
-  animation: pulse 2s ease-in-out infinite;
-}
-/* Estilo para o estado "Completar Perfil" */
-.cooldown-card-new.complete-profile );
-  background-color: var(--doacin-red-dark); /* Laranja */
-}
-.cooldown-card-new.complete-profile .cooldown-button {
-  color: var(--doacin-red);
 }
 
 

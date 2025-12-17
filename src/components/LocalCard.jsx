@@ -1,4 +1,5 @@
 import React from "react";
+import "./LocalCard.css";
 
 function LocalCard({ local }) {
   if (!local) return null;
@@ -14,99 +15,55 @@ function LocalCard({ local }) {
   const isEvento = tipoLimpo.includes("event") || tipoLimpo.includes("evento");
 
   return (
-    <div
-      className="local-card"
-      style={{
-        border: "1px solid var(--border-light)", 
-        borderRadius: "12px",
-        padding: "16px",
-        background: "var(--bg-primary)",
-        boxShadow: "var(--shadow-sm)", 
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-        fontFamily: "system-ui, -apple-system, sans-serif" 
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "4px" }}>
-        <h3 style={{ margin: 0, fontSize: "1.1rem", color: "var(--text-primary)", fontWeight: "600", lineHeight: "1.2" }}>
-          {name}
-        </h3>
+    <div className="local-card">
+      <div className="local-card-header">
+        <h3 className="local-card-title">{name}</h3>
         {type && (
-          <span
-            style={{
-              fontSize: "0.7rem",
-              padding: "4px 10px",
-              borderRadius: "20px",
-              background: isEvento ? "#fff7ed" : "#ede9fe", 
-              color: isEvento ? "#c2410c" : "#7c3aed", 
-              fontWeight: "700",
-              textTransform: "uppercase",
-              letterSpacing: "0.5px",
-              flexShrink: 0,
-              marginLeft: "8px"
-            }}
-          >
+          <span className={`local-card-badge ${isEvento ? 'event' : 'fixed'}`}>
             {isEvento ? 'Evento' : 'Fixo'}
           </span>
         )}
       </div>
 
-      
-      {address && (
-        <p style={{ margin: 0, color: "var(--text-primary)", fontSize: "0.9rem", lineHeight: "1.4" }}>
-          📍 {address}
-        </p>
-      )}
-
-      {hours && (
-        <p style={{ margin: 0, color: "var(--text-secondary)", fontSize: "0.9rem" }}>
-          🕒 {hours}
-        </p>
-      )}
-
-      {isEvento && dataInicioFormatada && (
-        <div style={{ 
-            marginTop: "4px",
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '6px', 
-            color: "#ea580c", 
-            fontSize: "0.9rem",
-            fontWeight: "500"
-        }}>
-           <span>📅</span>
-           <span>
-              {dataInicioFormatada} {dataFimFormatada ? ` até ${dataFimFormatada}` : ''}
-           </span>
-        </div>
-      )}
-
-      {contact && (
-        <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-secondary)" }}>
-          📞 <a href={`tel:${contact}`} style={{ color: "var(--doacin-red)", textDecoration: "none" }}>{contact}</a>
-        </p>
-      )}
-
-      <div style={{ marginTop: "12px", display: "flex", gap: "10px" }}>
+      <div className="local-card-info">
         {address && (
-           <a
+          <p className="local-card-address">
+            <span className="icon">📍</span>
+            {address}
+          </p>
+        )}
+
+        {hours && (
+          <p className="local-card-hours">
+            <span className="icon">🕒</span>
+            {hours}
+          </p>
+        )}
+
+        {isEvento && dataInicioFormatada && (
+          <p className="local-card-date">
+            <span className="icon">📅</span>
+            <span>
+              {dataInicioFormatada} {dataFimFormatada ? ` até ${dataFimFormatada}` : ''}
+            </span>
+          </p>
+        )}
+
+        {contact && (
+          <p className="local-card-contact">
+            <span className="icon">📞</span>
+            <a href={`tel:${contact}`}>{contact}</a>
+          </p>
+        )}
+      </div>
+
+      <div className="local-card-actions">
+        {address && (
+          <a
             href={`http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(address)}`}
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              flex: 1, textAlign: "center",
-              padding: "10px", 
-              borderRadius: "8px", 
-              background: "var(--bg-secondary)", 
-              border: "1px solid var(--border-light)", 
-              color: "var(--text-primary)", 
-              textDecoration: "none", 
-              fontSize: "0.85rem",
-              fontWeight: "500",
-              transition: "0.2s"
-            }}
+            className="local-card-button secondary"
           >
             Ver no mapa
           </a>
@@ -114,21 +71,7 @@ function LocalCard({ local }) {
 
         <a
           href={`/agendar?localId=${id}`}
-          style={{
-            flex: 1, textAlign: "center",
-            padding: "10px", 
-            borderRadius: "8px", 
-            background: "var(--doacin-red)", 
-            border: "none", 
-            color: "white", 
-            textDecoration: "none", 
-            fontSize: "0.85rem",
-            fontWeight: "600",
-            boxShadow: "var(--shadow-sm)",
-            transition: "background-color 0.2s"
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--doacin-red-hover)"}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--doacin-red)"}
+          className="local-card-button primary"
         >
           Agendar
         </a>

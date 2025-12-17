@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../animations.css';
-
-// O CSS para 'cooldown-card-new' está em HomePage.css
+import './DonationCooldown.css';
 
 // --- Funções Helpers (movidas para o topo) ---
 

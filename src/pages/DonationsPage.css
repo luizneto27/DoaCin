@@ -59,7 +59,7 @@
   background-color: var(--bg-primary);
   border-radius: 16px;
   padding: 28px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(0, 0, 0, 0.05);
   margin-bottom: 24px;
   animation: slideDown 0.5s ease-out;
@@ -85,12 +85,12 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #999;
+  color: var(--gray-400);
   padding: 0;
 }
 
 .close-button:hover {
-  color: #666;
+  color: var(--text-secondary);
 }
 
 /* Form Grid */
@@ -158,17 +158,17 @@
 
 /* Alert Box */
 .alert-warning {
-  background-color: #FFF8E1;
-  border: 1px solid #FFE082;
+  background-color: var(--yellow-light-bg);
+  border: 1px solid var(--yellow-border);
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 24px;
   font-size: 13px;
-  color: #D97B00;
+  color: var(--yellow-dark);
 }
 
 .alert-warning strong {
-  color: #D97B00;
+  color: var(--yellow-dark);
 }
 
 /* Button Grid */
@@ -233,14 +233,14 @@
   background-color: var(--bg-primary);
   border-radius: 16px;
   padding: 28px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
   border: 1px solid rgba(0, 0, 0, 0.05);
   animation: slideUp 0.6s ease-out 0.2s both;
   transition: all 0.3s ease;
 }
 
 .history-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
 }
 
@@ -303,19 +303,19 @@
 }
 
 .donation-status.confirmed {
-  color: #065f46;
-  background-color: #d1fae5;
+  color: var(--success-green-dark);
+  background-color: var(--success-green-light);
 }
 
 .donation-status.pending {
-  color: #9a3412;
-  background-color: #ffedd5;
+  color: var(--warning-orange-darkest);
+  background-color: var(--warning-orange-light);
 }
 
 .donation-points {
   font-size: 14px;
   font-weight: 600;
-  color: #065f46;
+  color: var(--success-green-dark);
   margin: 4px 0 0;
 }
 

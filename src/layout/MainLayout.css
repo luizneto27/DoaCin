@@ -131,13 +131,13 @@
   padding: 20px;
   margin-bottom: 24px;
   text-align: left;
-  box-shadow: 0 4px 12px rgba(217, 48, 43, 0.1);
+  box-shadow: 0 6px 16px rgba(217, 48, 43, 0.15);
   transition: all 0.3s ease;
   animation: scaleIn 0.5s ease-out 0.2s both;
 }
 
 .capibas-saldo:hover {
-  box-shadow: 0 6px 16px rgba(217, 48, 43, 0.15);
+  box-shadow: 0 8px 20px rgba(217, 48, 43, 0.25);
   transform: translateY(-2px);
 }
 

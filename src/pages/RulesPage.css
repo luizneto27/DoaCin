@@ -1,0 +1,212 @@
+/* ===========================
+   RULES PAGE - DESIGN SYSTEM
+   =========================== */
+
+.rules-page {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px;
+  color: var(--text-secondary);
+  background: #f9fafb;
+  box-sizing: border-box;
+}
+
+/* Header */
+.rules-page-header {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--doacin-red);
+  text-align: left;
+  margin: 0 0 8px 0;
+}
+
+.rules-page-subheader {
+  font-size: 18px;
+  color: var(--text-secondary);
+  text-align: left;
+  margin: 0 0 32px 0;
+  font-weight: 500;
+}
+
+/* Section Card */
+.rules-section-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.4s ease-out;
+}
+
+.rules-section-title {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 700;
+  padding: 20px 28px;
+  border-bottom: 2px solid #e5e7eb;
+  margin: 0;
+}
+
+.rules-title-icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+/* Title Colors */
+.rules-section-title.green {
+  color: #16a34a;
+}
+
+.rules-section-title.red {
+  color: var(--doacin-red);
+}
+
+/* List */
+.rules-list {
+  padding: 24px 28px;
+  margin: 0;
+  list-style: none;
+}
+
+.rules-list-item {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: var(--text-primary);
+  padding: 12px 0;
+  line-height: 1.6;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.rules-list-item:last-child {
+  border-bottom: none;
+}
+
+.rules-list-text {
+  margin-left: 12px;
+  line-height: 1.6;
+}
+
+/* Icons */
+.rules-icon-check {
+  width: 24px;
+  height: 24px;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.rules-icon-block {
+  width: 24px;
+  height: 24px;
+  color: var(--doacin-red);
+  flex-shrink: 0;
+}
+
+/* ===========================
+   RESPONSIVIDADE
+   =========================== */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .rules-page {
+    padding: 32px 24px;
+  }
+
+  .rules-page-header {
+    font-size: 32px;
+  }
+
+  .rules-page-subheader {
+    font-size: 16px;
+    margin-bottom: 28px;
+  }
+
+  .rules-section-card {
+    border-radius: 12px;
+  }
+
+  .rules-section-title {
+    font-size: 22px;
+    padding: 18px 24px;
+  }
+
+  .rules-title-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .rules-list {
+    padding: 20px 24px;
+  }
+
+  .rules-list-item {
+    font-size: 15px;
+    padding: 10px 0;
+  }
+
+  .rules-icon-check,
+  .rules-icon-block {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .rules-page {
+    padding: 24px 16px;
+    background: #ffffff;
+  }
+
+  .rules-page-header {
+    font-size: 28px;
+  }
+
+  .rules-page-subheader {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+
+  .rules-section-card {
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+
+  .rules-section-title {
+    font-size: 20px;
+    padding: 16px 20px;
+  }
+
+  .rules-title-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+  }
+
+  .rules-list {
+    padding: 18px 20px;
+  }
+
+  .rules-list-item {
+    font-size: 14px;
+    padding: 10px 0;
+    align-items: flex-start;
+  }
+
+  .rules-list-text {
+    margin-left: 10px;
+  }
+
+  .rules-icon-check,
+  .rules-icon-block {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+  }
+}

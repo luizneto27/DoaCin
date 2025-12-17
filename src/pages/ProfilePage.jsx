@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './ProfilePage.css';
 import { authFetch } from '../../services/api';
 import Toast from '../components/Toast';
+import LoadingSkeleton from '../components/LoadingSkeleton';
 
 function ProfilePage() {
 
@@ -14,6 +15,7 @@ function ProfilePage() {
   const [genero, setGenero] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [toast, setToast] = useState(null);
 
   // --- LÓGICA DE DADOS (useEffect) ---
@@ -46,6 +48,8 @@ function ProfilePage() {
         }
       } catch (error) {
         console.error("Erro no useEffect:", error);
+      } finally {
+        setInitialLoading(false);
       }
     };
 
@@ -101,21 +105,22 @@ function ProfilePage() {
         <p className="profile-subtitle">Gerencie suas informações pessoais</p>
       </div>
 
-      <div className="profile-container">
-
-        <div className="profile-sidebar">
-          <div className="profile-card profile-info-card">
-            
-            <div className="profile-avatar"></div>
-
-            <h3 className="profile-user-name">{nome}</h3>
-            <p className="profile-user-email">{email}</p>
-          </div>
+      {initialLoading ? (
+        <div className="profile-loading-container">
+          <LoadingSkeleton type="profile" />
         </div>
-
-        <div className="profile-content">
-          <div className="profile-card">
+      ) : (
+        <div className="profile-container">
+          <div className="profile-card profile-form-card">
             
+            <div className="profile-form-header">
+              <div className="profile-avatar-large"></div>
+              <div className="profile-header-info">
+                <h3 className="profile-user-name">{nome}</h3>
+                <p className="profile-user-email">{email}</p>
+              </div>
+            </div>
+
             <h3 className="profile-form-title">Informações Pessoais</h3>
 
             <form onSubmit={handleSubmit}>
@@ -238,7 +243,7 @@ function ProfilePage() {
 
           </div>
         </div>
-      </div>
+      )}
 
       {toast && (
         <Toast

@@ -1,20 +1,49 @@
 /* --- Layout Principal --- */
 .profile-page {
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
   animation: fadeIn 0.6s ease-out;
 }
 
 .profile-container {
   display: flex;
-  flex-direction: row;
-  gap: 40px;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.profile-sidebar {
-  flex-basis: 300px;
+.profile-form-header {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: 32px;
+}
+
+.profile-avatar-large {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--doacin-red) 0%, var(--doacin-red-hover) 100%);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(217, 48, 43, 0.25);
+}
+
+.profile-header-info {
+  flex: 1;
+}
+
+.profile-header-info .profile-user-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.profile-header-info .profile-user-email {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0;
 }
 
 .profile-content .form-label {
@@ -29,14 +58,14 @@
   background-color: var(--bg-primary);
   border-radius: 16px;
   padding: 28px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
   border: 1px solid rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   animation: slideUp 0.5s ease-out;
 }
 
 .profile-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
 }
 
@@ -58,47 +87,14 @@
   line-height: 1.5;
 }
 
-/* --- Card da Sidebar --- */
-.profile-info-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.profile-avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--doacin-red) 0%, #b82620 100%);
-  margin-bottom: 24px;
-  box-shadow: 0 8px 16px rgba(217, 48, 43, 0.3);
-  transition: all 0.3s ease;
-  animation: scaleIn 0.5s ease-out;
-}
-
-.profile-avatar:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 24px rgba(217, 48, 43, 0.4);
-}
-
-.profile-user-name {
+/* --- Formulário --- */
+.profile-form-title {
   font-size: 24px;
   font-weight: 800;
-  color: var(--text-primary);
-  margin: 0;
+  color: var(--doacin-red);
+  margin-bottom: 32px;
   letter-spacing: -0.3px;
 }
-
-.profile-user-email {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-top: 6px;
-  margin-bottom: 28px;
-}
-
-/* --- Formulário (Conteúdo da Direita) --- */
-.profile-form-title {
   font-size: 24px;
   font-weight: 800;
   color: var(--doacin-red);
@@ -209,13 +205,13 @@
   cursor: pointer;
   margin-top: 24px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(217, 48, 43, 0.3);
+  box-shadow: 0 6px 16px rgba(217, 48, 43, 0.40);
 }
 
 .form-button:hover {
   background: linear-gradient(135deg, #b82620 0%, #991d18 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(217, 48, 43, 0.4);
+  box-shadow: 0 8px 20px rgba(217, 48, 43, 0.50);
 }
 
 .form-button:active {
@@ -294,13 +290,23 @@
     font-size: 14px;
   }
 
-  .profile-avatar {
-    width: 80px;
-    height: 80px;
+  .profile-avatar-large {
+    width: 60px;
+    height: 60px;
   }
 
-  .profile-user-name {
+  .profile-form-header {
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+  }
+
+  .profile-header-info .profile-user-name {
     font-size: 18px;
+  }
+
+  .profile-header-info .profile-user-email {
+    font-size: 14px;
   }
 
   .form-label {
@@ -318,10 +324,6 @@
   .form-grid.three-cols {
     grid-template-columns: 1fr !important;
   }
-}
-
-.profile-sidebar .profile-card {
-  flex-grow: 1; 
 }
 
 /* Torna o grid de formulário responsivo */

@@ -3,7 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import LocalCard from "../components/LocalCard"; 
+import LoadingSkeleton from "../components/LoadingSkeleton";
+import Toast from "../components/Toast";
 import { authFetch } from "../../services/api.js";
+import "./CampaignsPage.css";
 
 // --- ÍCONES ---
 const redIcon = new L.Icon({
@@ -40,6 +43,15 @@ function CampaignsPage() {
   const [error, setError] = useState(null);
   const [filterType, setFilterType] = useState("todos");
   const [selectedLocal, setSelectedLocal] = useState(null);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+  };
+
+  const closeToast = () => {
+    setToast({ ...toast, show: false });
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -79,6 +91,7 @@ function CampaignsPage() {
         if (!mounted) return;
         setError("Erro ao carregar locais.");
         setLoading(false);
+        showToast('Erro ao carregar locais de doação. Tente novamente.', 'error');
       });
 
     return () => { mounted = false; };
@@ -92,64 +105,75 @@ function CampaignsPage() {
   const countFixos = locals.filter(l => l.type === "fixo").length;
   const countEventos = locals.filter(l => l.type === "evento").length;
 
-  const styles = {
-    
-    container: { 
-        padding: "20px", 
-        maxWidth: "1400px", 
-        margin: "0 auto", 
-        height: "100vh", 
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden" 
-    },
-    header: { marginBottom: "15px", flexShrink: 0 },
-    title: { marginTop: "10px", fontSize: "2rem", color: "var(--doacin-red)" },
-    filterContainer: { display: "flex", gap: "10px", marginBottom: "15px", flexShrink: 0 },
-    
-    filterBtn: (isActive, color) => ({
-      padding: "8px 16px", borderRadius: "20px", border: "none", cursor: "pointer", fontWeight: "bold",
-      backgroundColor: isActive ? color : "#e0e0e0", color: isActive ? "#fff" : "#333", transition: "0.3s"
-    }),
+  if (loading) {
+    return (
+      <div className="campaigns-page">
+        <div className="campaigns-header">
+          <LoadingSkeleton type="title" />
+        </div>
+        <div className="campaigns-loading">
+          <div className="spinner"></div>
+          <p>Carregando mapa e locais...</p>
+        </div>
+      </div>
+    );
+  }
 
-    
-    gridLayout: {
-      display: "grid",
-      gridTemplateColumns: "2fr 1fr", 
-      gap: "20px",
-      height: "calc(100vh - 180px)", 
-      minHeight: "400px"
-    },
-
-    mapWrapper: {
-      borderRadius: "15px", overflow: "hidden", border: "1px solid #ddd", height: "100%", position: "relative"
-    },
-    
-    listWrapper: {
-      overflowY: "auto", 
-      paddingRight: "10px", 
-      height: "100%", 
-      paddingBottom: "20px"
-    }
-  };
+  if (error) {
+    return (
+      <div className="campaigns-page">
+        <div className="campaigns-header">
+          <h1 className="campaigns-title">Campanhas de Doação em Recife</h1>
+        </div>
+        <div className="campaigns-error">
+          <p>⚠️ {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={styles.container} className="page-container">
-      <div style={styles.header}>
-        <h1 style={styles.title}>Campanhas de Doação em Recife</h1>
-        <p style={{ color: "#666", marginTop: "5px" }}>Encontre o hemocentro ou evento mais próximo.</p>
+    <div className="campaigns-page">
+      <div className="campaigns-header">
+        <h1 className="campaigns-title">Campanhas de Doação em Recife</h1>
+        <p className="campaigns-subtitle">Encontre o hemocentro ou evento mais próximo de você.</p>
       </div>
 
-      <div style={styles.filterContainer}>
-        <button style={styles.filterBtn(filterType === "todos", "var(--doacin-red)")} onClick={() => setFilterType("todos")}>Todos ({locals.length})</button>
-        <button style={styles.filterBtn(filterType === "fixo", "var(--doacin-red)")} onClick={() => setFilterType("fixo")}>Fixos ({countFixos})</button>
-        <button style={styles.filterBtn(filterType === "evento", "var(--warning-orange)")} onClick={() => setFilterType("evento")}>Eventos ({countEventos})</button>
+      <div className="filter-container">
+        <button 
+          className={`filter-button ${filterType === "todos" ? "active" : ""}`}
+          onClick={() => setFilterType("todos")}
+        >
+          Todos
+          <span className="count">{locals.length}</span>
+        </button>
+        <button 
+          className={`filter-button ${filterType === "fixo" ? "active" : ""}`}
+          onClick={() => setFilterType("fixo")}
+        >
+          Fixos
+          <span className="count">{countFixos}</span>
+        </button>
+        <button 
+          className={`filter-button ${filterType === "evento" ? "active orange" : ""}`}
+          onClick={() => setFilterType("evento")}
+        >
+          Eventos
+          <span className="count">{countEventos}</span>
+        </button>
       </div>
 
-      {loading ? ( <p>Carregando mapa...</p> ) : error ? ( <p style={{ color: "red" }}>{error}</p> ) : (
-        <div style={styles.gridLayout} className="map-layout">
-          {/* MAPA */}
-          <div style={styles.mapWrapper} className="map-wrapper">
+      {filteredLocals.length === 0 ? (
+        <div className="campaigns-empty">
+          <div className="empty-icon">🗺️</div>
+          <p className="empty-title">Nenhum local encontrado</p>
+          <p className="empty-description">
+            Não há {filterType === "todos" ? "locais" : filterType === "fixo" ? "pontos fixos" : "eventos"} disponíveis no momento.
+          </p>
+        </div>
+      ) : (
+        <div className="campaigns-grid">
+          <div className="map-wrapper">
             <MapContainer center={[-8.05428, -34.8813]} zoom={13} style={{ height: "100%", width: "100%" }}>
               <TileLayer attribution='&copy; OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               <FlyToLocation activeLocal={selectedLocal} />
@@ -163,7 +187,7 @@ function CampaignsPage() {
                       <span style={{color: local.type === 'evento' ? 'orange' : 'red', fontWeight: 'bold'}}>{local.type === 'evento' ? 'Evento Temporário' : 'Ponto Fixo'}</span> <br/>
                       {local.address}
                       {local.type === 'evento' && local.dataInicio && (
-                        <div style={{ marginTop: '5px', fontSize: '0.9em', borderTop: '1px solid #eee', paddingTop: '5px' }}>
+                        <div style={{ marginTop: '5px', fontSize: '0.9em', borderTop: '1px solid var(--border-light)', paddingTop: '5px' }}>
                           📅 Início: {new Date(local.dataInicio).toLocaleDateString('pt-BR')} <br/>
                           {local.dataFim && <>🏁 Fim: {new Date(local.dataFim).toLocaleDateString('pt-BR')}</>}
                         </div>
@@ -175,66 +199,33 @@ function CampaignsPage() {
             </MapContainer>
           </div>
 
-          {/* LISTA LATERAL */}
-          <div style={styles.listWrapper} className="list-wrapper custom-scroll">
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              {filteredLocals.map((local) => {
-                const isSelected = selectedLocal?.id === local.id;
-                return (
-                  <div key={local.id} onClick={() => setSelectedLocal(local)}
-                      style={{
-                        cursor: "pointer", transition: "all 0.2s",
-                        borderLeft: isSelected ? "4px solid var(--doacin-red)" : "4px solid transparent",
-                        paddingLeft: isSelected ? "8px" : "0",
-                        transform: isSelected ? "translateX(5px)" : "none"
-                      }}
-                  >
-                      <LocalCard local={local} />
-                  </div>
-                );
-              })}
-            </div>
+          <div className="locals-list">
+            {filteredLocals.map((local) => {
+              const isSelected = selectedLocal?.id === local.id;
+              return (
+                <div 
+                  key={local.id} 
+                  onClick={() => {
+                    setSelectedLocal(local);
+                    showToast(`📍 Local selecionado: ${local.name}`, 'info');
+                  }}
+                  className={`local-item-wrapper ${isSelected ? 'selected' : ''}`}
+                >
+                  <LocalCard local={local} />
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
-      
-      {/* --- CORREÇÃO DO SCROLL MOBILE E SCROLLBAR --- */}
-      <style>{`
-        /* Scrollbar Desktop */
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background-color: #d1d5db; border-radius: 10px; }
-        
-        /* === CORREÇÃO PARA CELULAR (O pulo do gato) === */
-        @media (max-width: 768px) { 
-          /* 1. Destrava a altura da página para permitir rolagem */
-          .page-container {
-             height: auto !important;
-             overflow: visible !important;
-             display: block !important;
-          }
 
-          /* 2. Coloca o Mapa em cima e a Lista embaixo */
-          .map-layout { 
-             display: flex !important;
-             flex-direction: column;
-             height: auto !important; 
-          }
-          
-          /* 3. Mapa com altura fixa no celular */
-          .map-wrapper { 
-             height: 400px !important; 
-             margin-bottom: 20px;
-             flex-shrink: 0;
-          }
-
-          /* 4. Lista com altura livre (para você poder descer a página) */
-          .list-wrapper {
-             height: auto !important;
-             overflow: visible !important;
-          }
-        }
-      `}</style>
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={closeToast}
+        />
+      )}
     </div>
   );
 }

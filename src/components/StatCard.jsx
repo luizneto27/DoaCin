@@ -10,8 +10,8 @@ function StatCard({ title, value, unit, icon }) {
       <div className="stat-info">
         <h3>{title}</h3>
         <p>
-          {value} 
-          {unit && <span style={{ fontSize: '16px', fontWeight: 'normal' }}> {unit}</span>}
+          <span className="stat-value">{value}</span>
+          {unit && <span className="stat-unit"> {unit}</span>}
         </p>
       </div>
     </div>

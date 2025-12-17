@@ -25,7 +25,7 @@ function DonationsPage() {
     livesSaved: 0,
     pending: 0,
   });
-  const [showNewDonation, setShowNewDonation] = useState(false);
+  const [showNewDonation, setShowNewDonation] = useState(true);
   const [prefillLocalId, setPrefillLocalId] = useState(null);
 
   useEffect(() => {
@@ -226,7 +226,7 @@ function DonationsPage() {
                 display: "block",
                 marginBottom: "8px",
                 fontWeight: "600",
-                color: "#1a1a1a",
+                color: "var(--text-primary)",
                 fontSize: "13px",
               }}
             >
@@ -240,13 +240,13 @@ function DonationsPage() {
               style={{
                 width: "100%",
                 padding: "10px",
-                border: "1px solid #ddd",
+                border: "1px solid var(--border-light)",
                 borderRadius: "4px",
                 fontSize: "14px",
                 minHeight: "100px",
                 fontFamily: "inherit",
                 boxSizing: "border-box",
-                color: "#999",
+                color: "var(--gray-400)",
                 resize: "vertical",
               }}
             />
@@ -276,7 +276,7 @@ function DonationsPage() {
                 </>
               ) : (
                 <>
-                  📋 Registrar Doação
+                  Registrar Doação
                 </>
               )}
             </button>
@@ -361,7 +361,7 @@ function DonationsPage() {
                 </>
               ) : (
                 <>
-                  📋 Registrar Doação
+                 Registrar Doação
                 </>
               )}
             </button>
