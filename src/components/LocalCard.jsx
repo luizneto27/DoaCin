@@ -20,8 +20,6 @@ function LocalCard({ local }) {
   const isEvento = tipoLimpo.includes("event") || tipoLimpo.includes("evento");
 
   // --- LÓGICA DO MAPA CORRIGIDA ---
-  // Se tiver link pronto no banco, usa ele.
-  // Se não, usa o link oficial de busca do Google Maps (www.google.com/maps)
   const googleMapsUrl = LinkMaps 
     ? LinkMaps 
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || "")}`;
@@ -70,7 +68,7 @@ function LocalCard({ local }) {
       </div>
 
       <div className="local-card-actions">
-        {/* BOTÃO MAPA: Agora com o link certo (google.com) */}
+        
         <a
             href={googleMapsUrl}
             target="_blank"
@@ -80,7 +78,7 @@ function LocalCard({ local }) {
           Ver no mapa
         </a>
 
-        {/* BOTÃO AGENDAR: Redireciona para /doacoes */}
+  
         <button
           onClick={(e) => {
              e.stopPropagation(); 
