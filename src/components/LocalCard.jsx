@@ -1,9 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function LocalCard({ local }) {
   if (!local) return null;
 
-  const { id, name, address, hours, contact, type } = local;
+  const navigate = useNavigate();
+
+  const { id, name, address, hours, contact, type, LinkMaps } = local;
+
 
   const rawInicio = local.dataInicio || local.eventStartDate;
   const rawFim    = local.dataFim    || local.eventEndDate;
@@ -13,73 +17,49 @@ function LocalCard({ local }) {
   const tipoLimpo = (type || "").toLowerCase();
   const isEvento = tipoLimpo.includes("event") || tipoLimpo.includes("evento");
 
+ 
+  const googleMapsUrl = LinkMaps 
+    ? LinkMaps 
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || "")}`;
+
   return (
     <div
       className="local-card"
       style={{
-        border: "1px solid #f3f4f6", 
+        border: "1px solid #f3f4f6",
         borderRadius: "12px",
         padding: "16px",
         background: "#fff",
-        boxShadow: "0 2px 5px rgba(0,0,0,0.05)", 
-        position: "relative",
+        boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
         display: "flex",
         flexDirection: "column",
         gap: "8px",
-        fontFamily: "system-ui, -apple-system, sans-serif" 
+        fontFamily: "system-ui, -apple-system, sans-serif"
       }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "4px" }}>
-        <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#1f2937", fontWeight: "600", lineHeight: "1.2" }}>
+      {/* TÍTULO E TIPO */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <h3 style={{ margin: 0, fontSize: "1.1rem", color: "#1f2937", fontWeight: "600" }}>
           {name}
         </h3>
         {type && (
-          <span
-            style={{
-              fontSize: "0.7rem",
-              padding: "4px 10px",
-              borderRadius: "20px",
-              background: isEvento ? "#fff7ed" : "#f5f3ff", 
-              color: isEvento ? "#c2410c" : "#4f46e5", 
-              fontWeight: "700",
-              textTransform: "uppercase",
-              letterSpacing: "0.5px",
-              flexShrink: 0,
-              marginLeft: "8px"
-            }}
-          >
-            {isEvento ? 'Evento' : 'Fixo'}
+          <span style={{
+              fontSize: "0.7rem", padding: "4px 10px", borderRadius: "20px",
+              background: isEvento ? "#fff7ed" : "#f5f3ff",
+              color: isEvento ? "#c2410c" : "#4f46e5", fontWeight: "700"
+            }}>
+            {isEvento ? 'EVENTO' : 'FIXO'}
           </span>
         )}
       </div>
 
+      {/* ENDEREÇO E INFO */}
+      {address && <p style={{ margin: 0, color: "#4b5563", fontSize: "0.9rem" }}>📍 {address}</p>}
+      {hours && <p style={{ margin: 0, color: "#6b7280", fontSize: "0.9rem" }}>🕒 {hours}</p>}
       
-      {address && (
-        <p style={{ margin: 0, color: "#4b5563", fontSize: "0.9rem", lineHeight: "1.4" }}>
-          📍 {address}
-        </p>
-      )}
-
-      {hours && (
-        <p style={{ margin: 0, color: "#6b7280", fontSize: "0.9rem" }}>
-          🕒 {hours}
-        </p>
-      )}
-
       {isEvento && dataInicioFormatada && (
-        <div style={{ 
-            marginTop: "4px",
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '6px', 
-            color: "#ea580c", 
-            fontSize: "0.9rem",
-            fontWeight: "500"
-        }}>
-           <span>📅</span>
-           <span>
-              {dataInicioFormatada} {dataFimFormatada ? ` até ${dataFimFormatada}` : ''}
-           </span>
+        <div style={{ color: "#ea580c", fontSize: "0.9rem", fontWeight: "500" }}>
+           📅 {dataInicioFormatada} {dataFimFormatada ? `até ${dataFimFormatada}` : ''}
         </div>
       )}
 
@@ -89,46 +69,37 @@ function LocalCard({ local }) {
         </p>
       )}
 
+      {/* BOTÕES DE AÇÃO */}
       <div style={{ marginTop: "12px", display: "flex", gap: "10px" }}>
-        {address && (
-           <a
-            href={`http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(address)}`}
+        
+        {/* BOTÃO MAPA */}
+        <a
+            href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              flex: 1, textAlign: "center",
-              padding: "10px", 
-              borderRadius: "8px", 
-              background: "#f9fafb", 
-              border: "1px solid #e5e7eb", 
-              color: "#374151", 
-              textDecoration: "none", 
-              fontSize: "0.85rem",
-              fontWeight: "500",
-              transition: "0.2s"
+              flex: 1, textAlign: "center", padding: "10px", borderRadius: "8px",
+              background: "#fff", border: "1px solid #e5e7eb", color: "#374151",
+              textDecoration: "none", fontSize: "0.9rem", cursor: "pointer"
             }}
-          >
-            Ver no mapa
-          </a>
-        )}
+        >
+          Ver no mapa
+        </a>
 
-        <a
-          href={`/agendar?localId=${id}`}
+        {/* BOTÃO AGENDAR (Corrigido para /doacoes) */}
+        <button
+          onClick={(e) => {
+             e.stopPropagation(); // Impede cliques acidentais no container
+             navigate('/doacoes'); 
+          }}
           style={{
-            flex: 1, textAlign: "center",
-            padding: "10px", 
-            borderRadius: "8px", 
-            background: "#10b981", 
-            border: "none", 
-            color: "white", 
-            textDecoration: "none", 
-            fontSize: "0.85rem",
-            fontWeight: "600",
-            boxShadow: "0 2px 4px rgba(16, 185, 129, 0.2)" 
+            flex: 1, textAlign: "center", padding: "10px", borderRadius: "8px",
+            background: "#10b981", border: "none", color: "white",
+            fontWeight: "600", cursor: "pointer"
           }}
         >
           Agendar
-        </a>
+        </button>
       </div>
     </div>
   );
