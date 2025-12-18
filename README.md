@@ -89,8 +89,7 @@
 ## ⚙️ Slide 5: Arquitetura Técnica
 
 **Frontend:**
-- ⚛️ **React 19** + **Vite** - Interface moderna e responsiva
-- 🗺️ **Leaflet/React-Leaflet** - Mapas interativos
+- ⚛️ **React ** + **Vite** - Interface moderna e responsiva
 - 🎨 **CSS3** - Animações e design customizado
 
 **Backend:**
