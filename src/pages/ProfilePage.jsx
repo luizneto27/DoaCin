@@ -117,7 +117,6 @@ function ProfilePage() {
               <div className="profile-avatar-large"></div>
               <div className="profile-header-info">
                 <h3 className="profile-user-name">{nome}</h3>
-                <p className="profile-user-email">{email}</p>
               </div>
             </div>
 

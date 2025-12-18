@@ -182,7 +182,7 @@ function DonationsPage() {
         <div className="donation-modal">
           {/* Modal Content */}
           <div className="modal-header">
-            <h2 className="modal-title">Registrar Nova Doação</h2>
+            <h2 className="modal-title">Agendar Nova Doação</h2>
             <button onClick={() => setShowModal(false)} className="close-button">
               ✕
             </button>
@@ -220,16 +220,8 @@ function DonationsPage() {
             </div>
           </div>
 
-          <div style={{ marginBottom: "24px" }}>
-            <label
-              style={{
-                display: "block",
-                marginBottom: "8px",
-                fontWeight: "600",
-                color: "var(--text-primary)",
-                fontSize: "13px",
-              }}
-            >
+          <div className="form-group-full">
+            <label className="form-label">
               Observações (opcional)
             </label>
             <textarea
@@ -237,18 +229,7 @@ function DonationsPage() {
               placeholder="Adicione detalhes sobre sua doação..."
               value={formData.observacoes}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid var(--border-light)",
-                borderRadius: "4px",
-                fontSize: "14px",
-                minHeight: "100px",
-                fontFamily: "inherit",
-                boxSizing: "border-box",
-                color: "var(--gray-400)",
-                resize: "vertical",
-              }}
+              className="form-textarea"
             />
           </div>
 
@@ -272,11 +253,11 @@ function DonationsPage() {
               {submitting ? (
                 <>
                   <span className="spinner spinner-small spinner-white"></span>
-                  Registrando...
+                  Agendando...
                 </>
               ) : (
                 <>
-                  Registrar Doação
+                  Agendar Doação
                 </>
               )}
             </button>
@@ -288,7 +269,7 @@ function DonationsPage() {
       {showNewDonation && (
         <div className="donation-modal">
           <div className="modal-header">
-            <h2 className="modal-title">Registrar Nova Doação</h2>
+            <h2 className="modal-title">Agendar Nova Doação</h2>
             <button onClick={() => setShowNewDonation(false)} className="close-button">
               ✕
             </button>
@@ -357,11 +338,11 @@ function DonationsPage() {
               {submitting ? (
                 <>
                   <span className="spinner spinner-small spinner-white"></span>
-                  Registrando...
+                  Agendando...
                 </>
               ) : (
                 <>
-                 Registrar Doação
+                 Agendar Doação
                 </>
               )}
             </button>

@@ -123,6 +123,7 @@
   font-size: 14px;
   box-sizing: border-box;
   font-family: inherit;
+  background-color: var(--bg-secondary);
   transition: all 0.3s ease;
 }
 
@@ -149,6 +150,7 @@
 .form-textarea {
   min-height: 100px;
   resize: vertical;
+  background-color: var(--bg-secondary);
 }
 
 /* Full Width Form Group */
