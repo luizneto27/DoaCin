@@ -12,47 +12,228 @@
 * `npm run dev`
 * Pra usar o prisma studio, split o terminal e rode `npx prisma studio`
 
-## Funcionalidades Principais
+# 🩸 DoaCin - Apresentação do Projeto
 
-* **Painel do Doador:** Visualização do saldo de Capibas e acompanhamento do período para a próxima doação.
+---
 
-* **Histórico de Doações:** Exibe todas as doações com status( confirmada, pendente) e local.
+## 📋 Slide 1: O Problema
 
-* **Campanhas:** Exibe locais de doação fixos ou itenerários próximos ao doador.
+### A Doação de Sangue no Brasil
 
-* **Quiz:** Um quiz educativo e desafiador para testar as mentes curiosas.
+**Desafios Identificados:**
 
-* **Regras para Doação de Sangue:** Exibe os requisitos básicos, impedimentos temporários e impedimentos definitivos.
+- 📉 **Baixa adesão contínua**: Muitos doadores doam apenas uma vez
+- ❓ **Falta de informação**: Desconhecimento sobre requisitos e elegibilidade
+- 🗺️ **Dificuldade de localização**: Doadores não sabem onde doar próximo a eles
+- 📊 **Ausência de acompanhamento**: Não há um registro pessoal e gamificado das doações
+- ⏰ **Esquecimento dos prazos**: Doadores não lembram quando podem doar novamente
 
-## 🏛️ Estrutura do Projeto
+**Impacto:**
+- Estoques de sangue frequentemente baixos nos hemocentros
+- Uma única doação pode salvar até **4 vidas**
 
-O projeto segue uma arquitetura unificada, onde o frontend (React) e o backend (Express) coexistem no mesmo diretório raiz.
+---
 
-### Frontend (`src/`)
+## 💡 Slide 2: A Solução - DoaCin
 
-O frontend é uma aplicação de página única (SPA) construída com **React** e **Vite**. A estrutura de pastas é:
+### Uma Plataforma para Engajar e Facilitar a Doação
 
-* `src/pages/`: Contém os componentes de nível superior que são mapeados para as rotas. Cada arquivo aqui representa uma "tela" da aplicação (ex: `HomePage.jsx`, `DonationsPage.jsx`).
-* `src/components/`: Armazena componentes React reutilizáveis que são usados em múltiplas páginas (ex: `StatCard.jsx`, `DonationHistoryItem.jsx`).
-* `src/layout/`: Componentes responsáveis pela estrutura visual da aplicação, como `MainLayout.jsx`, que renderiza a navegação lateral e utiliza o `<Outlet />` do React Router para exibir a página ativa.
-* `src/services/`: Camada de abstração da API. Centraliza a lógica de comunicação (`fetch`) com o backend (ex: `authService.js`, `donationsService.js`).
-* `src/App.jsx`: Ponto de entrada do React onde o `BrowserRouter` e as rotas da aplicação são configurados.
+**DoaCin** é uma aplicação web que transforma a experiência de doação de sangue através de:
 
-### Backend (Pastas `routes/` e `server.js`)
+✅ **Gamificação**: Sistema de pontos (Capibas) para incentivar doações regulares  
+✅ **Informação**: Educação sobre requisitos e elegibilidade  
+✅ **Localização**: Mapa interativo de hemocentros e campanhas  
+✅ **Acompanhamento**: Controle pessoal do histórico e próximas doações  
+✅ **Validação Digital**: QR Code para confirmar doações e ganhar recompensas
 
-O backend é uma API RESTful construída com **Node.js** e **Express**. A arquitetura segue o padrão de Route-Controller.
+**Objetivo**: Aumentar a frequência e regularidade das doações de sangue
 
-* `server.js`: Ponto de entrada do servidor Express. Ele inicializa a instância do Express, aplica middlewares globais (como `cors()` e `express.json()`) e monta os módulos de rotas principais (ex: `/api/auth`, `/api/dashboard`).
-* `routes/`: Contém os arquivos que definem os endpoints (URLs) da API.
-    * `routes/auth.js`: Define as rotas públicas de autenticação, como `POST /api/auth/login` e `POST /api/auth/register`.
-    * `routes/dashboard.js`: Define as rotas relacionadas aos dados do painel, como `GET /api/dashboard`.
-    * `routes/donations.js`: Define as rotas para o histórico de doações.
-* `routes/controllers/`: Contém a lógica de negócio (handler functions) desacoplada das definições de rota.
-    * `authController.js`: Contém as funções `login` e `register` que lidam com a lógica de autenticação.
-    * `dashboardController.js`: Contém a função `getDashboardStats` que busca os dados no banco.
-* `routes/controllers/middleware/`: Contém funções de middleware que processam requisições antes de chegarem aos controladores.
-    * `auth.js`: Este é o **middleware de autenticação JWT**. Ele é injetado nas rotas protegidas (como em `dashboard.js`) para verificar o `Authorization` header, validar o token e anexar os dados do usuário (`req.userData`) à requisição, ou retornar um erro 401 se a autenticação falhar.
+---
 
-### Banco de Dados (`prisma/`)
+## 🎯 Slide 3: Funcionalidades Principais
 
-* `prisma/schema.prisma`: Arquivo de definição do **Prisma ORM**. Descreve os modelos de dados (tabelas) como `User`, `Donation` e `Location`, suas colunas e os relacionamentos entre eles.
+### 1. 📊 Painel do Doador (Dashboard)
+- Visualização do saldo de **Capibas** (100 por doação confirmada)
+- Cálculo automático do período de cooldown para próxima doação
+- Estatísticas: doações realizadas, vidas salvas, doações pendentes
+- Informações do doador: tipo sanguíneo, última doação
+
+### 2. 🩸 Gestão de Doações
+- **Registro de novas doações** com data e local
+- **Histórico completo** com status (confirmada/pendente)
+- **QR Code pessoal** para validação no hemocentro
+- Confirmação automática ao escanear o QR Code
+
+### 3. 🗺️ Campanhas e Localização
+- **Mapa interativo** (Leaflet) com locais de doação em Recife
+- Filtros por tipo: **Fixos** (hemocentros) e **Eventos** (campanhas temporárias)
+- Informações detalhadas: endereço, horário, telefone
+- Navegação direta para agendamento de doação
+
+---
+
+## 🎮 Slide 4: Funcionalidades de Engajamento
+
+### 4. 🧠 Quiz Educativo
+- Perguntas sobre doação de sangue
+- **Explicações educativas** após cada resposta
+- Feedback personalizado baseado no desempenho
+- Incentiva o aprendizado sobre o processo de doação
+
+### 5. 📋 Regras de Elegibilidade
+- **Requisitos básicos**: idade, peso, condições de saúde
+- **Impedimentos temporários**: gripe, tatuagem recente, medicamentos
+- **Impedimentos definitivos**: doenças transmissíveis
+- Interface clara com código de cores (verde/amarelo/vermelho)
+
+### 6. 👤 Perfil do Usuário
+- Gestão de dados pessoais
+- Visualização do tipo sanguíneo
+- Controle de doações e recompensas
+
+---
+
+## ⚙️ Slide 5: Arquitetura Técnica (Resumo)
+
+### Stack Tecnológico
+
+**Frontend:**
+- ⚛️ **React 19** + **Vite** - Interface moderna e responsiva
+- 🗺️ **Leaflet/React-Leaflet** - Mapas interativos
+- 🎨 **CSS3** - Animações e design customizado
+
+**Backend:**
+- 🟢 **Node.js + Express** - API RESTful
+- 🔐 **JWT** - Autenticação segura
+- 🔒 **bcryptjs** - Hash de senhas
+
+**Banco de Dados:**
+- 🗄️ **PostgreSQL** (via Docker)
+- 🔧 **Prisma ORM** - Migrations e queries type-safe
+
+**DevOps:**
+- 🐳 **Docker Compose** - Containerização do banco
+- 📦 **npm** - Gerenciamento de dependências
+
+---
+
+## 🏗️ Slide 6: Padrões de Projeto (Resumo)
+
+### Arquitetura Unificada (Fullstack Monorepo)
+
+```
+📁 Estrutura:
+├── src/              → Frontend React (SPA)
+│   ├── pages/        → Rotas principais
+│   ├── components/   → Componentes reutilizáveis
+│   └── services/     → Camada de API (authFetch)
+├── routes/           → Backend Express (API REST)
+│   └── controllers/  → Lógica de negócio
+└── prisma/           → Schema e migrations do DB
+```
+
+**Padrões Aplicados:**
+- ✅ **Route-Controller Pattern** (Backend)
+- ✅ **Context API** (Estado global no React)
+- ✅ **Protected Routes** (Middleware JWT)
+- ✅ **Service Layer** (Abstração de API calls)
+
+---
+
+## 📈 Slide 7: Fluxo do Usuário - Doação Completa
+
+### Jornada do Doador
+
+1. **Login/Cadastro** → Autenticação com JWT
+2. **Dashboard** → Visualiza elegibilidade e estatísticas
+3. **Campanhas** → Encontra hemocentro mais próximo no mapa
+4. **Nova Doação** → Registra agendamento com data e local
+5. **QR Code** → Apresenta no hemocentro para validação
+6. **Confirmação** → Funcionário escaneia, doação é confirmada
+7. **Recompensa** → **+100 Capibas** creditados automaticamente
+8. **Cooldown** → Sistema calcula próxima data elegível
+
+**Resultado:** Doador engajado com histórico completo e incentivos para continuar doando
+
+---
+
+## 🎯 Slide 8: Impacto e Diferenciais
+
+### Por que DoaCin se destaca?
+
+**🏆 Diferenciais Competitivos:**
+- 🎮 **Gamificação** com sistema de pontos (Capibas)
+- 🗺️ **Geolocalização** intuitiva de locais de doação
+- 📱 **QR Code** para validação rápida e digital
+- 📊 **Dashboard personalizado** com cálculo automático de elegibilidade
+- 🧠 **Educação integrada** (Quiz + Regras)
+
+**💪 Impacto Esperado:**
+- ⬆️ Aumento na frequência de doações
+- 🔄 Maior retenção de doadores regulares
+- 📈 Melhoria na gestão de estoque dos hemocentros
+- 🌟 Experiência positiva e engajadora
+
+---
+
+## 🚀 Slide 9: Demonstração
+
+### Principais Telas
+
+**1. Dashboard:**
+- Saldo de Capibas, próxima doação elegível, vidas salvas
+
+**2. Campanhas:**
+- Mapa interativo, filtros, detalhes de locais
+
+**3. Doações:**
+- Formulário de registro, histórico com status, QR Code
+
+**4. Quiz:**
+- Perguntas educativas com feedback imediato
+
+**5. Regras:**
+- Requisitos e impedimentos com código de cores
+
+---
+
+## 💭 Slide 10: Próximos Passos e Melhorias
+
+### Roadmap Futuro
+
+**🔜 Funcionalidades Planejadas:**
+- 🔔 **Notificações**: Alertas quando o doador estiver elegível novamente
+- 🏪 **Loja de Recompensas**: Trocar Capibas por benefícios reais
+- 📱 **App Mobile**: Versão nativa para iOS/Android
+- 🤝 **Parcerias**: Integração com redes de hemocentros
+- 📊 **Analytics**: Dashboard para gestores de hemocentros
+- 🌐 **Expansão**: Suporte a outras cidades além de Recife
+
+**🎯 Meta Final:**
+Tornar DoaCin a principal plataforma de engajamento de doadores de sangue no Brasil
+
+---
+
+## 🙏 Slide 11: Obrigado!
+
+### 🩸 DoaCin - Doe sangue, salve vidas, ganhe recompensas
+
+**Repositório:**  
+📁 github.com/luizneto27/DoaCin
+
+**Tecnologias:**  
+⚛️ React | 🟢 Node.js | 🗄️ PostgreSQL | 🔧 Prisma | 🗺️ Leaflet
+
+**Contato:**  
+💬 Dúvidas e sugestões são bem-vindas!
+
+---
+
+### 📊 Estatísticas do Projeto
+
+- **16** páginas/componentes React
+- **5** módulos de rotas no backend
+- **4** modelos de dados (Prisma)
+- **1** objetivo: salvar vidas através da tecnologia
+
+**Uma doação pode salvar até 4 vidas. DoaCin multiplica esse impacto! 🩸**
