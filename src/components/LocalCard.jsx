@@ -74,6 +74,9 @@ function LocalCard({ local }) {
             target="_blank"
             rel="noopener noreferrer"
             className="local-card-button secondary"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
         >
           Ver no mapa
         </a>
