@@ -1,9 +1,8 @@
 # 🩸 DoaCIn
 
-## Pra rodar (por enquanto) 
+## Como Rodar o programa:
 
- Execute o dockerdesktop no seu pc (baixe, se for preciso)
-
+* Execute o dockerdesktop no seu pc (baixe, se for preciso)
 * `docker-compose up -d`
 * `npm install`
 * `npm install -D tsx` 
