@@ -1,11 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./LocalCard.css";
 
 function LocalCard({ local }) {
   if (!local) return null;
 
-  const { id, name, address, hours, contact, type } = local;
+  const navigate = useNavigate();
 
+  // Dados do local
+  const { id, name, address, hours, contact, type, LinkMaps } = local;
+
+  // Formatação de datas
   const rawInicio = local.dataInicio || local.eventStartDate;
   const rawFim    = local.dataFim    || local.eventEndDate;
   const dataInicioFormatada = rawInicio ? new Date(rawInicio).toLocaleDateString('pt-BR') : null;
@@ -13,6 +18,11 @@ function LocalCard({ local }) {
 
   const tipoLimpo = (type || "").toLowerCase();
   const isEvento = tipoLimpo.includes("event") || tipoLimpo.includes("evento");
+
+  // --- LÓGICA DO MAPA CORRIGIDA ---
+  const googleMapsUrl = LinkMaps 
+    ? LinkMaps 
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || "")}`;
 
   return (
     <div className="local-card">
@@ -58,23 +68,27 @@ function LocalCard({ local }) {
       </div>
 
       <div className="local-card-actions">
-        {address && (
-          <a
-            href={`http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(address)}`}
+        
+        <a
+            href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="local-card-button secondary"
-          >
-            Ver no mapa
-          </a>
-        )}
+        >
+          Ver no mapa
+        </a>
 
-        <a
-          href={`/agendar?localId=${id}`}
+  
+        <button
+          onClick={(e) => {
+             e.stopPropagation(); 
+             navigate('/doacoes'); 
+          }}
           className="local-card-button primary"
+          style={{ cursor: "pointer", border: "none" }}
         >
           Agendar
-        </a>
+        </button>
       </div>
     </div>
   );
