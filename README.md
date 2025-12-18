@@ -30,7 +30,6 @@
 
 **Impacto:**
 - Estoques de sangue frequentemente baixos nos hemocentros
-- Uma única doação pode salvar até **4 vidas**
 
 ---
 
@@ -38,12 +37,10 @@
 
 ### Uma Plataforma para Engajar e Facilitar a Doação
 
-**DoaCin** é uma aplicação web que transforma a experiência de doação de sangue através de:
-
 ✅ **Gamificação**: Sistema de pontos (Capibas) para incentivar doações regulares  
 ✅ **Informação**: Educação sobre requisitos e elegibilidade  
-✅ **Localização**: Mapa interativo de hemocentros e campanhas  
-✅ **Acompanhamento**: Controle pessoal do histórico e próximas doações  
+✅ **Localização**: Mapa de hemocentros e campanhas  
+✅ **Acompanhamento**: Histórico de Doações e controle das próximas 
 ✅ **Validação Digital**: QR Code para confirmar doações e ganhar recompensas
 
 **Objetivo**: Aumentar a frequência e regularidade das doações de sangue
@@ -53,7 +50,7 @@
 ## 🎯 Slide 3: Funcionalidades Principais
 
 ### 1. 📊 Painel do Doador (Dashboard)
-- Visualização do saldo de **Capibas** (100 por doação confirmada)
+- Visualização do saldo de **Capibas**
 - Cálculo automático do período de cooldown para próxima doação
 - Estatísticas: doações realizadas, vidas salvas, doações pendentes
 - Informações do doador: tipo sanguíneo, última doação
@@ -65,7 +62,7 @@
 - Confirmação automática ao escanear o QR Code
 
 ### 3. 🗺️ Campanhas e Localização
-- **Mapa interativo** (Leaflet) com locais de doação em Recife
+- **Mapa de Campanhas** locais de doação em Recife
 - Filtros por tipo: **Fixos** (hemocentros) e **Eventos** (campanhas temporárias)
 - Informações detalhadas: endereço, horário, telefone
 - Navegação direta para agendamento de doação
@@ -77,19 +74,16 @@
 ### 4. 🧠 Quiz Educativo
 - Perguntas sobre doação de sangue
 - **Explicações educativas** após cada resposta
-- Feedback personalizado baseado no desempenho
 - Incentiva o aprendizado sobre o processo de doação
 
 ### 5. 📋 Regras de Elegibilidade
 - **Requisitos básicos**: idade, peso, condições de saúde
 - **Impedimentos temporários**: gripe, tatuagem recente, medicamentos
 - **Impedimentos definitivos**: doenças transmissíveis
-- Interface clara com código de cores (verde/amarelo/vermelho)
 
 ### 6. 👤 Perfil do Usuário
 - Gestão de dados pessoais
-- Visualização do tipo sanguíneo
-- Controle de doações e recompensas
+
 
 ---
 
@@ -109,7 +103,7 @@
 
 **Banco de Dados:**
 - 🗄️ **PostgreSQL** (via Docker)
-- 🔧 **Prisma ORM** - Migrations e queries type-safe
+- 🔧 **Prisma ORM** 
 
 **DevOps:**
 - 🐳 **Docker Compose** - Containerização do banco
