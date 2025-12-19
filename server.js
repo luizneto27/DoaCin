@@ -7,7 +7,7 @@ dotenv.config(); // carrega as variaveis do arquivo .env
 const app = express();
 const PORT = process.env.PORT || 3000; // define a porta
 
-app.use(cors()); // permite requisiçoes de origens diferentes (do seu frontend Vite)
+app.use(cors()); // permite requisiçoes de origens diferentes
 app.use(express.json()); // permite que o Express entenda JSON no corpo das requisições
 
 // importaçao das rotas
@@ -17,7 +17,7 @@ import donationRoutes from "./routes/donations.js";
 import campaignsRoutes from "./routes/campaigns.js";
 import userRoutes from './routes/user.js';
 
-// 5. Registro das Rotas na API
+// Registro das Rotas na API
 // Todas as rotas de autenticação ficarão sob /api/auth
 app.use("/api/auth", authRoutes);
 // Todas as rotas do dashboard ficarão sob /api/dashboard
@@ -29,8 +29,7 @@ app.use("/api/campaigns", campaignsRoutes);
 // rota do perfil
 app.use('/api/user', userRoutes); 
 
-// inicia o server na porta definida
-app.listen(PORT, async () => { // <--- 2. Transforme em async
+app.listen(PORT, async () => {
   console.log(`Backend Express rodando na porta ${PORT}`);
 
   // Inicializa a autenticação com o Conecta Recife ao subir o servidor

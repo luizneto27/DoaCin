@@ -1,4 +1,4 @@
-/* --- Layout Principal --- */
+/* Layout Principal */
 .profile-page {
   max-width: 900px;
   margin: 0 auto;
@@ -87,7 +87,7 @@
   line-height: 1.5;
 }
 
-/* --- Formulário --- */
+/* Formulário */
 .profile-form-title {
   font-size: 24px;
   font-weight: 800;
@@ -229,9 +229,7 @@
   box-shadow: 0 4px 12px rgba(217, 48, 43, 0.3);
 }
 
-/* =====================================
-   RESPONSIVIDADE - MEDIA QUERIES
-===================================== */
+/* Responsividade - Media Queries */
 
 @media (max-width: 1024px) {
   .profile-container {

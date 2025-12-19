@@ -7,7 +7,6 @@ function LocalCard({ local }) {
 
   const navigate = useNavigate();
 
-  // Dados do local
   const { id, name, address, hours, contact, type, LinkMaps } = local;
 
   // Formatação de datas
@@ -19,7 +18,7 @@ function LocalCard({ local }) {
   const tipoLimpo = (type || "").toLowerCase();
   const isEvento = tipoLimpo.includes("event") || tipoLimpo.includes("evento");
 
-  // --- LÓGICA DO MAPA CORRIGIDA ---
+  // Gera URL do Google Maps a partir do link fornecido ou do endereço
   const googleMapsUrl = LinkMaps 
     ? LinkMaps 
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || "")}`;

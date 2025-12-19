@@ -1,6 +1,4 @@
-/* ===========================
-   RULES PAGE - DESIGN SYSTEM
-   =========================== */
+/* Rules Page */
 
 .rules-page {
   max-width: 900px;
@@ -108,9 +106,7 @@
   flex-shrink: 0;
 }
 
-/* ===========================
-   RESPONSIVIDADE
-   =========================== */
+/* Responsividade */
 
 /* Tablets */
 @media (max-width: 768px) {

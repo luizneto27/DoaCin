@@ -1,8 +1,6 @@
-/* ============================================
-   SISTEMA DE ANIMAÇÕES - DoaCin
-   ============================================ */
+/* Sistema de Animações - DoaCin */
 
-/* === KEYFRAMES === */
+/* Keyframes */
 
 /* Fade In */
 @keyframes fadeIn {
@@ -90,7 +88,7 @@
   }
 }
 
-/* === CLASSES UTILITÁRIAS === */
+/* Classes Utilitárias */
 
 /* Fade In */
 .animate-fadeIn {
@@ -155,7 +153,7 @@
   animation: rotate 1s linear infinite;
 }
 
-/* === TRANSIÇÕES SUAVES === */
+/* Transições Suaves */
 
 .transition-all {
   transition: all 0.3s ease;
@@ -169,7 +167,7 @@
   transition: all 0.5s ease;
 }
 
-/* === HOVER EFFECTS === */
+/* Hover Effects */
 
 .hover-lift {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -204,7 +202,7 @@
   filter: brightness(1.1);
 }
 
-/* === GLASSMORPHISM === */
+/* Glassmorphism */
 
 .glass {
   background: rgba(255, 255, 255, 0.1);
@@ -227,7 +225,7 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* === SKELETON LOADING === */
+/* Skeleton Loading */
 
 .skeleton {
   background: linear-gradient(
@@ -262,7 +260,7 @@
   border-radius: 8px;
 }
 
-/* === GRADIENTES === */
+/* Gradientes */
 
 .gradient-red {
   background: linear-gradient(135deg, var(--doacin-red) 0%, #b82620 100%);
@@ -288,7 +286,7 @@
   border-radius: inherit;
 }
 
-/* === LOADING SPINNER === */
+/* Loading Spinner */
 
 .spinner {
   width: 40px;
@@ -310,7 +308,7 @@
   border-top-color: white;
 }
 
-/* === MICRO-INTERAÇÕES === */
+/* Micro-interações */
 
 .button-press {
   transition: transform 0.1s ease;
@@ -334,7 +332,7 @@
   transform: translateY(0);
 }
 
-/* === STAGGER ANIMATIONS === */
+/* Stagger Animations */
 
 .stagger-item {
   opacity: 0;
@@ -348,19 +346,19 @@
 .stagger-item:nth-child(5) { animation-delay: 0.5s; }
 .stagger-item:nth-child(6) { animation-delay: 0.6s; }
 
-/* === BADGE PULSE === */
+/* Badge Pulse */
 
 .badge-notification {
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* === SMOOTH SCROLL === */
+/* Smooth Scroll */
 
 html {
   scroll-behavior: smooth;
 }
 
-/* === FOCUS VISIBLE (Acessibilidade) === */
+/* Focus Visible (Acessibilidade) */
 
 *:focus-visible {
   outline: 2px solid var(--doacin-red);

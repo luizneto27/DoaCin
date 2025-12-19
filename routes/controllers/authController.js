@@ -18,14 +18,13 @@ export const register = async (req, res) => {
     });
 
     if (existingUser) {
-      // se ja existir, retorna message
-      return res.status(400).json({ message: "Email ou CPF já cadastrado." });
+      return res.status(400).json({ message: 'Usuário já cadastrado' });
     }
 
     //criptografar a senha
     const hashedPassword = await bcrypt.hash(password, 12); // aumentar os rounds (cost) torna ataques de força bruta muito mais custosos para o atacante, porque cada tentativa exige mais tempo CPU. Também aumenta o tempo de autenticação/registro no seu servidor. Um cost muito alto pode degradar a experiência do usuário ou permitir DoS (ataques que exauram CPU).
 
-    //criar o usuário no banco
+    // Cria o usuário no banco de dados
     const user = await prisma.user.create({
       data: {
         nome: nome,
@@ -84,11 +83,4 @@ export const login = async (req, res) => {
       .json({ message: "Erro ao fazer login", error: error.message });
   }
 
-  // melhorias que se aplicam a esse arquivo:
-
-  // 1. Normalizacao de email(lowercase)
-
-  // 2. Tratar Unique Contraint do DB: Adicionar constraints unique no schema.prisma (email e cpf) e tratar erro Prisma P2002 para retornar 409 Conflict com mensagem apropriada.
-
-  // 3. UX do registro: Enviar e-mail de verificação antes de ativar conta; evitar que usuários usem a aplicação sem confirmar e-mail.
 };

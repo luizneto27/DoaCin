@@ -51,23 +51,21 @@ export const getDashboardStats = async (req, res) => {
       },
     });
 
-    // 6. Contar o TOTAL de doações (para o card da sidebar)
-    const totalDonations = await prisma.donation.count({
+    const totalDonationCount = await prisma.donation.count({
       where: {
-        userId: userId,
+        userId,
         status: 'confirmed',
       },
     });
 
-    // 7. Contar doações pendentes
-    const pendingDonations = await prisma.donation.count({
+    const pendingCount = await prisma.donation.count({
       where: {
-        userId: userId,
+        userId,
         status: 'pending',
       },
     });
 
-    // 8. Retornar todos os dados para o frontend
+    // Retorna os dados do dashboard
     res.status(200).json({
       capibasBalance: capibasBalance,
       lastDonationDate: lastDonation ? lastDonation.donationDate : null,
@@ -88,12 +86,3 @@ export const getDashboardStats = async (req, res) => {
   }
 };
 
-// melhorias que se aplicam a esse arquivo:
-  // 1.findFirst para lastDonation retorna todo o objeto — melhor selecionar apenas donationDate.
-
-  // 2. Normalização e formatação de datas: Converter datas para ISO e/ou especificar timezone (ou adicionar campo lastDonationDateUtc) para evitar ambiguidade no frontend
-
-  // 3. Paralelizar queries independentes: user, aggregate, lastDonation e count podem ser executados em paralelo (Promise.all) para reduzir latência total:
-    // Ex.: fetchUserPromise + fetchAggregatePromise + fetchLastDonationPromise + fetchCountPromise.
-
-  // 4. Revisar quais campos realmente precisam ser enviados (mostrar email/birthDate só quando necessário)

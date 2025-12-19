@@ -8,7 +8,7 @@ import QRCode from "../components/QRCode.jsx";
 import DonationCooldown from "../components/DonationCooldown.jsx";
 import LoadingSkeleton from "../components/LoadingSkeleton.jsx";
 
-// --- Ícones para os StatCards (Definidos inline) ---
+// Ícones SVG para os cards de estatísticas
 const IconPendente = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,6 @@ const IconVidas = () => (
     />
   </svg>
 );
-// --- Fim dos Ícones ---
 
 function HomePage() {
   const { dashboardData, setDashboardData } = useDashboard();

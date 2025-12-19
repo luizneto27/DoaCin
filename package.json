@@ -8,7 +8,13 @@
     "server": "nodemon server.js",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "cross-env DATABASE_URL=postgresql://test_user:test_pass@localhost:5433/doacin_test vitest run --config vitest.config.integration.js",
+    "test:watch": "cross-env DATABASE_URL=postgresql://test_user:test_pass@localhost:5433/doacin_test vitest --config vitest.config.integration.js",
+    "test:ui": "cross-env DATABASE_URL=postgresql://test_user:test_pass@localhost:5433/doacin_test vitest --ui --config vitest.config.integration.js",
+    "test:coverage": "cross-env DATABASE_URL=postgresql://test_user:test_pass@localhost:5433/doacin_test vitest run --coverage --config vitest.config.integration.js",
+    "test:setup": "powershell -ExecutionPolicy Bypass -File ./scripts/run-tests.ps1",
+    "test:cleanup": "powershell -ExecutionPolicy Bypass -File ./scripts/cleanup-tests.ps1"
   },
   "dependencies": {
     "@prisma/client": "^6.18.0",
@@ -31,15 +37,20 @@
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
+    "@vitest/ui": "^4.0.16",
+    "c8": "^10.1.3",
     "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
     "nodemon": "^3.1.10",
     "prisma": "^6.18.0",
+    "supertest": "^7.1.4",
     "tsx": "^4.21.0",
-    "vite": "^7.1.7"
+    "vite": "^7.1.7",
+    "vitest": "^4.0.16"
   },
   "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
   "main": "eslint.config.js",

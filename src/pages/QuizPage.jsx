@@ -9,31 +9,31 @@ const quizData = [
         question: "Com que frequência um homem pode doar sangue?",
         answers: ["A cada 2 meses", "A cada 6 meses", "Uma vez por ano", "A cada 4 meses"],
         correctAnswer: "A cada 2 meses",
-        explanation: "💡 <strong>Você sabia?</strong> Homens podem doar sangue a cada 2 meses (60 dias), até 4 vezes por ano. Mulheres podem doar a cada 3 meses (90 dias), até 3 doações por ano."
+        explanation: "<strong>Você sabia?</strong> Homens podem doar sangue a cada 2 meses (60 dias), até 4 vezes por ano. Mulheres podem doar a cada 3 meses (90 dias), até 3 doações por ano."
     },
     {
         question: "Com que frequência uma mulher pode doar sangue?",
         answers: ["A cada 2 meses", "A cada 3 meses", "A cada 6 meses", "Uma vez por ano"],
         correctAnswer: "A cada 3 meses",
-        explanation: "💡 <strong>Você sabia?</strong> O intervalo para mulheres é de 3 meses (90 dias), permitindo até 3 doações por ano. Isso se deve à reposição dos estoques de ferro, que é mais lenta."
+        explanation: "<strong>Você sabia?</strong> O intervalo para mulheres é de 3 meses (90 dias), permitindo até 3 doações por ano. Isso se deve à reposição dos estoques de ferro, que é mais lenta."
     },
     {
         question: "Qual é a faixa de idade geral para ser um doador de sangue no Brasil?",
         answers: ["16 a 69 anos", "18 a 60 anos", "21 a 65 anos", "Apenas maiores de 21"],
         correctAnswer: "16 a 69 anos",
-        explanation: "💡 <strong>Você sabia?</strong> É preciso ter entre 16 e 69 anos. Menores (16 e 17 anos) precisam de autorização dos responsáveis. A primeira doação deve ser feita antes dos 60 anos."
+        explanation: "<strong>Você sabia?</strong> É preciso ter entre 16 e 69 anos. Menores (16 e 17 anos) precisam de autorização dos responsáveis. A primeira doação deve ser feita antes dos 60 anos."
     },
     {
         question: "O que é necessário fazer ANTES de doar sangue?",
         answers: ["Estar em jejum total", "Ter dormido pelo menos 6 horas", "Tomar um analgésico", "Beber álcool na noite anterior"],
         correctAnswer: "Ter dormido pelo menos 6 horas",
-        explanation: "💡 <strong>Você sabia?</strong> É fundamental estar descansado (mínimo 6h de sono), bem alimentado (evitar gorduras nas 3h anteriores) e hidratado. O jejum total NÃO é recomendado."
+        explanation: "<strong>Você sabia?</strong> É fundamental estar descansado (mínimo 6h de sono), bem alimentado (evitar gorduras nas 3h anteriores) e hidratado. O jejum total NÃO é recomendado."
     },
     {
         question: "Doar sangue interfere no peso?",
         answers: ["Sim, engorda", "Sim, emagrece", "Não interfere no peso", "Depende do tipo sanguíneo"],
         correctAnswer: "Não interfere no peso",
-        explanation: "💡 <strong>Você sabia?</strong> Doar sangue não engorda nem emagrece. O volume de líquido é reposto em 24h e as células em algumas semanas, sem impacto calórico ou no peso."
+        explanation: "<strong>Você sabia?</strong> Doar sangue não engorda nem emagrece. O volume de líquido é reposto em 24h e as células em algumas semanas, sem impacto calórico ou no peso."
     }
 ];
 
@@ -65,16 +65,16 @@ function QuizPage() {
     setSelectedAnswer(null);
     setShowInfo(false);
     setShowResults(false);
-    showToast('Quiz iniciado! Boa sorte! 🎯', 'info');
+    showToast('Quiz iniciado! Boa sorte!', 'info');
   }
 
   function handleSelect(answer) {
-    if (selectedAnswer !== null) return; // já respondido
+    if (selectedAnswer !== null) return;
     setSelectedAnswer(answer);
 
     if (answer === currentQuestion.correctAnswer) {
       setScore(s => s + 1);
-      showToast('Resposta correta! Parabéns! 🎉', 'success');
+      showToast('Resposta correta! Parabéns!', 'success');
     } else {
       showToast('Resposta incorreta. Veja a explicação abaixo.', 'error');
     }
@@ -88,15 +88,14 @@ function QuizPage() {
       setSelectedAnswer(null);
       setShowInfo(false);
     } else {
-      // finalizar
       setShowResults(true);
       const percentage = Math.round((score / totalQuestions) * 100);
       if (percentage >= 80) {
-        showToast(`Quiz finalizado! Você acertou ${score} de ${totalQuestions}! 🏆`, 'success');
+        showToast(`Quiz finalizado! Você acertou ${score} de ${totalQuestions}!`, 'success');
       } else if (percentage >= 60) {
-        showToast(`Quiz finalizado! Você acertou ${score} de ${totalQuestions}. Continue estudando! 📚`, 'warning');
+        showToast(`Quiz finalizado! Você acertou ${score} de ${totalQuestions}. Continue estudando!`, 'warning');
       } else {
-        showToast(`Quiz finalizado! Você acertou ${score} de ${totalQuestions}. Tente novamente! 💪`, 'info');
+        showToast(`Quiz finalizado! Você acertou ${score} de ${totalQuestions}. Tente novamente!`, 'info');
       }
     }
   }
@@ -121,17 +120,17 @@ function QuizPage() {
     if (percentage >= 80) {
       return {
         title: 'Excelente!',
-        text: '👏 Parabéns! Você conhece muito bem o assunto sobre doação de sangue.'
+        text: 'Parabéns! Você conhece muito bem o assunto sobre doação de sangue.'
       };
     } else if (percentage >= 50) {
       return {
         title: 'Bom trabalho!',
-        text: '💪 Você já sabe bastante, mas ainda há mais a aprender sobre esse gesto tão importante!'
+        text: 'Você já sabe bastante, mas ainda há mais a aprender sobre esse gesto tão importante!'
       };
     } else {
       return {
         title: 'Continue aprendendo',
-        text: '🙂 Boa tentativa! Aproveite para ler as explicações e aprender mais sobre doação de sangue.'
+        text: 'Boa tentativa! Aproveite para ler as explicações e aprender mais sobre doação de sangue.'
       };
     }
   }
@@ -144,7 +143,7 @@ function QuizPage() {
           <div className="intro-card" role="region" aria-label="Quiz Capiba - regras">
             <div className="intro-top">
               <div className="icon" aria-hidden="true">
-                <span>🧠</span>
+                <span>💡</span>
               </div>
               <h1>Quiz Capiba</h1>
               <p>Teste seus conhecimentos sobre doação de sangue!</p>
@@ -153,10 +152,10 @@ function QuizPage() {
             <div className="intro-body">
               <div className="rules-box" aria-hidden="true">
                 <ul className="rules-list">
-                  <li><span className="bullet">🏁</span><div><strong>Como Funciona</strong></div></li>
-                  <li><span className="bullet">✅</span><div><strong>{totalQuestions} perguntas</strong> sobre doação de sangue</div></li>
-                  <li><span className="bullet">✅</span><div>Aprenda informações importantes sobre doação</div></li>
-                  <li><span className="bullet">✅</span><div>Cada pergunta tem apenas uma resposta correta</div></li>
+                  <li><div><strong>Como Funciona</strong></div></li>
+                  <li><div><strong>{totalQuestions} perguntas</strong> sobre doação de sangue</div></li>
+                  <li><div>Aprenda informações importantes sobre doação</div></li>
+                  <li><div>Cada pergunta tem apenas uma resposta correta</div></li>
                 </ul>
               </div>
 
@@ -219,7 +218,7 @@ function QuizPage() {
           return (
             <div className="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
               <div className="result-card">
-                <div className="result-medal" aria-hidden="true">🏅</div>
+                <div className="result-medal" aria-hidden="true">�</div>
                 <h2 id="result-title">Quiz Finalizado!</h2>
                 <div className="subtitle">Sua pontuação</div>
                 <div className="score-large">{score}/{totalQuestions}</div>
@@ -230,10 +229,10 @@ function QuizPage() {
                 </div>
 
                 <button className="again-btn" onClick={handleRestart} aria-label="Fazer Novamente">
-                  🔁 Fazer Novamente
+                  Fazer Novamente
                 </button>
 
-                <div className="footer-small">💗 <span>Doe sangue. Doe vida.</span></div>
+                <div className="footer-small">❤️ <span>Doe sangue. Doe vida.</span></div>
               </div>
             </div>
           );

@@ -33,7 +33,7 @@ async function registrarGamificacao(userCpf, latitude, longitude) {
   }
 }
 
-// --- HISTÓRICO ---
+// Histórico de Doações
 export const getDonationHistory = async (req, res) => {
   const userId = req.user.userId;
 
@@ -46,7 +46,7 @@ export const getDonationHistory = async (req, res) => {
       },
     });
 
-    //mapeando os dados para corresponder ao que o frontend espera (location.name)
+
     const formattedDonations = donations.map((donation) => {
       return {
         id: donation.id,
@@ -70,7 +70,7 @@ export const getDonationHistory = async (req, res) => {
   }
 };
 
-// --- Criar Doação Manual ---
+// Criar Doação Manual
 export const createDonation = async (req, res) => {
   const userId = req.user.userId;
   const { donationDate, hemocentro, observacoes } = req.body;
@@ -119,7 +119,6 @@ export const createDonation = async (req, res) => {
       },
     });
 
-    // Formatar resposta
     const formattedDonation = {
       id: newDonation.id,
       donationDate: newDonation.donationDate,
@@ -139,18 +138,17 @@ export const createDonation = async (req, res) => {
   }
 };
 
-// --- CONTROLLER: Confirmar doação ---
 export const confirmDonation = async (req, res) => {
   const userId = req.user.userId;
 
   try {
-    // 1. Buscar a primeira doação com status 'pending' do usuário
+    // Buscar a doação pendente mais recente do usuário
     const pendingDonation = await prisma.donation.findFirst({
       where: {
         userId: userId,
         status: "pending",
       },
-      orderBy: { createdAt: "desc" }, // Pega a mais recente
+      orderBy: { createdAt: "desc" },
     });
 
     if (!pendingDonation) {
@@ -160,7 +158,7 @@ export const confirmDonation = async (req, res) => {
       });
     }
 
-    // 2. Atualizar a doação de 'pending' para 'confirmed'
+    // Atualizar a doação de 'pending' para 'confirmed'
     const confirmedDonation = await prisma.donation.update({
       where: { id: pendingDonation.id },
       data: {
@@ -173,7 +171,7 @@ export const confirmDonation = async (req, res) => {
       },
     });
 
-    // 3. Registrar pontos no sistema de gamificação Conecta
+    // Registrar pontos no sistema de gamificação Conecta
     await registrarGamificacao(
       confirmedDonation.user.cpf,
       confirmedDonation.pontoColeta.latitude,

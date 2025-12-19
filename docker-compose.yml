@@ -15,8 +15,23 @@ services:
     networks:
       - doacin-net
 
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: doacin-db-test
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass
+      POSTGRES_DB: doacin_test
+    ports:
+      - "5433:5432"  # Porta diferente para não conflitar
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    networks:
+      - doacin-net
+
 volumes:
   postgres_data:
+  postgres_test_data:
 
 networks:
   doacin-net:

@@ -66,7 +66,6 @@ function MainLayout() {
     isActive ? 'nav-link active' : 'nav-link';
 
   const handleNavClick = () => {
-    // Fecha a sidebar no mobile após clicar em um link
     setIsSidebarOpen(false);
   };
 
@@ -110,7 +109,6 @@ function MainLayout() {
           <span className="saldo">{capibasBalance}</span>
         </div>
 
-        {/* 🔥 SCROLL APENAS NESSA ÁREA */}
         <div className="sidebar-scroll">
 
           {/* Navegação */}
