@@ -1,7 +1,5 @@
 # Testes de Integração - DoaCin 🩸
 
-## Apresentação Técnica
-
 ## Slide 1: Arquitetura de Testes
 
 ### 🏗️ Estrutura Implementada
@@ -19,7 +17,14 @@ tests/integration/
 └── basic.test.js     → Health checks (2 testes)
 ```
 
-#### Aspectos Validados em TODOS os Módulos:
+### 🔧 Stack Técnica
+
+- **Vitest** - Framework de testes
+- **Supertest** - HTTP assertions
+- **Docker** - Banco de dados isolado (PostgreSQL)
+- **Prisma** - ORM para controle de dados
+
+#### Aspectos Validados nos Módulos:
 
 1. **Autenticação & Autorização**
    - Token JWT obrigatório
@@ -39,14 +44,6 @@ tests/integration/
    - Estrutura consistente
    - Campos esperados pelo frontend
    - Tipos corretos
-
-
-### 🔧 Stack Técnica
-
-- **Vitest** - Framework de testes
-- **Supertest** - HTTP assertions
-- **Docker** - Banco de dados isolado (PostgreSQL)
-- **Prisma** - ORM para controle de dados
 
 ---
 
