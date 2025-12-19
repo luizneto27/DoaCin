@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../animations.css';
 import './DonationCooldown.css';
 
-// --- Funções Helpers (movidas para o topo) ---
+// Funções auxiliares para cálculos de datas
 
 function addDays(date, days) {
   const result = new Date(date);
@@ -30,7 +30,7 @@ function daysBetween(date1, date2) {
 }
 
 
-// --- Card de Detalhes Estático (reutilizável) ---
+// Componente de detalhes do cooldown (reutilizável)
 
 const CooldownDetails = ({ interval, reward }) => (
   <div className="cooldown-details">
@@ -50,7 +50,7 @@ const CooldownDetails = ({ interval, reward }) => (
 );
 
 
-// --- Componente Principal ---
+// Componente principal DonationCooldown
 
 function DonationCooldown({ 
   lastDonationDate, 
@@ -89,7 +89,7 @@ function DonationCooldown({
   // 1. Verifica regras de elegibilidade (idade)
   const age = getAge(birthDate);
   const isMale = (genero === 'M');
-  const minAge = 16; // Geral
+  const minAge = 16;
   
   if (age < minAge || age > 69) {
      return (

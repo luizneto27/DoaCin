@@ -2,7 +2,7 @@ import React from 'react';
 import { useDashboard } from '../context/DashboardContext';
 import './DonationInfoSide.css';
 
-// Hook simples para formatar a data (opcional, mas útil)
+
 function useFormattedDate(dateString) {
   if (!dateString) return null;
   return new Date(dateString).toLocaleDateString('pt-BR', {

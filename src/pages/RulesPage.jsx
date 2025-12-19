@@ -44,7 +44,7 @@ const RuleSection = ({ title, icon, children, titleColorClass }) => {
   );
 };
 
-// --- Ícones SVG para os Títulos das Seções ---
+// Ícones SVG para os títulos das seções
 const IconCheckCircle = () => (
   <svg className="rules-title-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -58,10 +58,9 @@ const IconBlockCircle = () => (
 );
 
 
-// --- Página Principal de Regras ---
+// Página de regras para doação de sangue
 
 function RulesPage() {
-  // Conteúdo extraído das capturas de tela
   const requisitosBasicos = [
     "Apresentar documento de identificação com foto, emitido por órgão oficial.",
     "Ter entre 16 e 69 anos. (Menores de 18 anos precisam de autorização).",

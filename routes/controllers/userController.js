@@ -21,7 +21,6 @@ function parseDate(dateString) {
 export const updateUserProfile = async (req, res) => {
   const userId = req.user.userId;
   
-  // 1. ADICIONAMOS 'genero' AQUI
   const { telefone, dataNascimento, tipoRed, peso, genero } = req.body;
 
   try {
@@ -30,7 +29,7 @@ export const updateUserProfile = async (req, res) => {
       bloodType: tipoRed,
       weight: peso ? parseFloat(peso) : null,
       birthDate: parseDate(dataNascimento),
-      genero: genero // 2. ADICIONAMOS AO OBJETO DO PRISMA
+      genero: genero
     };
 
     const userAtualizado = await prisma.user.update({

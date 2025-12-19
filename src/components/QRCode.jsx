@@ -77,7 +77,7 @@ function QRCode() {
                 <li>Apresente este QR Code no hemocentro</li>
                 <li>O funcionário irá escaneá-lo</li>
                 <li>Sua doação será confirmada automaticamente</li>
-                <li>Você ganhará 100 Capibas! 🎉</li>
+                <li>Você ganhará 100 Capibas!</li>
               </ol>
             </div>
 
@@ -96,7 +96,7 @@ function QRCode() {
                 disabled={isProcessing}
                 className={`qrcode-btn-confirm ${isProcessing ? 'loading' : ''}`}
               >
-                {isProcessing ? '' : 'Confirmar Doação ✔'}
+                {isProcessing ? '' : 'Confirmar Doação'}
               </button>
             </div>
 

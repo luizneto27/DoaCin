@@ -1,6 +1,4 @@
-/* ===========================
-   LOGIN PAGE - DESIGN SYSTEM
-   =========================== */
+/* Login Page */
 
 .login-page {
   display: flex;
@@ -164,9 +162,7 @@
   text-decoration: underline;
 }
 
-/* ===========================
-   RESPONSIVIDADE
-   =========================== */
+/* Responsividade */
 
 /* Tablets */
 @media (max-width: 768px) {

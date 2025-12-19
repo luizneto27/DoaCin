@@ -1,6 +1,4 @@
-/* ===========================
-   DONATION COOLDOWN COMPONENT - DESIGN SYSTEM
-   =========================== */
+/* Donation Cooldown Component */
 
 /* Card de Cooldown */
 .cooldown-card-new {
@@ -113,9 +111,7 @@
   color: var(--success-green-darker);
 }
 
-/* ===========================
-   RESPONSIVIDADE
-   =========================== */
+/* Responsividade */
 
 /* Tablets */
 @media (max-width: 768px) {

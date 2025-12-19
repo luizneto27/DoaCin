@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id                String    @id @default(uuid())
-  cpf               String    @unique // NOVO
+  cpf               String    @unique
   nome              String
   email             String    @unique
   password          String    // Hash bcrypt
@@ -17,9 +17,9 @@ model User {
   birthDate         DateTime?
   bloodType         String?
   weight            Float?
-  endereco          String?   // NOVO
-  genero            String?   // NOVO (M, F, Outro)
-  foto              String?   // NOVO (URL da foto)
+  endereco          String?
+  genero            String?   // (M, F, Outro)
+  foto              String?   // (URL da foto)
   capibas           Int       @default(0)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
@@ -32,14 +32,14 @@ model User {
 model PontoColeta {
   id                String    @id @default(uuid())
   nome              String
-  email             String?   // NOVO
-  telefone          String?   // NOVO
+  email             String?
+  telefone          String?
   endereco          String
   latitude          Float?
   longitude         Float?
-  linkMaps          String?   // NOVO
-  horarioAbertura   String?   // NOVO (Ex: "08:00")
-  horarioFechamento String?   // NOVO (Ex: "18:00")
+  linkMaps          String?
+  horarioAbertura   String?   // (Ex: "08:00")
+  horarioFechamento String?   // (Ex: "18:00")
   tipo              String    @default("fixed") // 'fixed', 'event'
   eventStartDate    DateTime?
   eventEndDate      DateTime?

@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { URLSearchParams } from 'url';
 
-// --- CONFIGURAÇÕES ---
+// Configurações de autenticação e API
 const AUTH_URL = 'https://loginteste.recife.pe.gov.br/auth/realms/recife/protocol/openid-connect/token';
-// Alteramos a URL para buscar os desafios do próprio usuário
 const API_CHALLENGES_URL = 'https://gamificacao.homolog.app.emprel.gov.br/api/self/challenges';
 
 const CREDENTIALS = {
@@ -17,7 +16,7 @@ async function getChallengeIds() {
     console.log('1. Autenticando...');
     
     try {
-        // --- PASSO 1: LOGIN ---
+        // Passo 1: Autenticação
         const params = new URLSearchParams();
         for (const [key, value] of Object.entries(CREDENTIALS)) {
             params.append(key, value);
@@ -28,9 +27,9 @@ async function getChallengeIds() {
         });
 
         const token = authResponse.data.access_token;
-        console.log('✅ Login realizado! Token novo gerado.');
+        console.log('Login realizado! Token novo gerado.');
 
-        // --- PASSO 2: BUSCAR DESAFIOS ---
+        // Passo 2: Buscar desafios disponíveis
         console.log('2. Buscando desafios em /api/self/challenges ...');
         
         const apiResponse = await axios.get(API_CHALLENGES_URL, {
@@ -38,21 +37,20 @@ async function getChallengeIds() {
                 'Authorization': `Bearer ${token}` 
             },
             params: {
-                size: 50 // Traz até 50 desafios para garantir que achamos o de doação
+                size: 50
             }
         });
 
         const desafios = apiResponse.data;
         
-        console.log(`\n✅ SUCESSO! Encontrados ${desafios.length} desafios.`);
+        console.log(`\nSUCESSO! Encontrados ${desafios.length} desafios.`);
         console.log('---------------------------------------------------');
         
-        // Filtra e exibe de forma legível para você achar o ID
         desafios.forEach(d => {
-            console.log(`\n🏆 DESAFIO: [ID: ${d.id}] ${d.name}`);
+            console.log(`\nDESAFIO: [ID: ${d.id}] ${d.name}`);
             if (d.requirements && d.requirements.length > 0) {
                 d.requirements.forEach(r => {
-                    console.log(`   🔸 REQUISITO: [ID: ${r.id}] ${r.name}`);
+                    console.log(`   REQUISITO: [ID: ${r.id}] ${r.name}`);
                 });
             } else {
                 console.log('   (Sem requisitos visíveis)');
@@ -62,7 +60,7 @@ async function getChallengeIds() {
         console.log('Copie o ID do Desafio de Doação e do Requisito correspondente.');
 
     } catch (error) {
-        console.error('\n❌ ERRO:');
+        console.error('\nERRO:');
         if (error.response) {
             console.error(`   Status: ${error.response.status}`);
             console.error('   Msg:', JSON.stringify(error.response.data, null, 2));

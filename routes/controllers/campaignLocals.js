@@ -1,7 +1,6 @@
 import prisma from "../../config/database.js";
 
 export const getLocalsCampaign = async (req, res) => {
-  // Retorna os locais.
   try {
     const where = {};
     const locals = await prisma.pontoColeta.findMany({
@@ -37,7 +36,6 @@ export const getLocalsCampaign = async (req, res) => {
       
       eventStartDate: l.eventStartDate,
       eventEndDate: l.eventEndDate,
-      // --------------------------------
     }));
 
     return res.status(200).json({ data: normalized });

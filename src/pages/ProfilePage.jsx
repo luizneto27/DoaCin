@@ -18,7 +18,7 @@ function ProfilePage() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [toast, setToast] = useState(null);
 
-  // --- LÓGICA DE DADOS (useEffect) ---
+  // Carrega dados do perfil do usuário
   useEffect(() => {
     
     
@@ -65,7 +65,7 @@ function ProfilePage() {
   
   const handleSubmit = async (event) => {
     event.preventDefault(); 
-    setIsLoading(true); // Trava o botão
+    setIsLoading(true);
 
     const dadosParaEnviar = {
       telefone: telefone,
@@ -96,7 +96,6 @@ function ProfilePage() {
     }
   };
 
-  // --- RENDERIZAÇÃO (Visual) ---
   return (
     <div className="profile-page">
       

@@ -63,8 +63,6 @@ function DonationsPage() {
     if (location?.state?.openNew) {
       setPrefillLocalId(location.state.prefillLocalId ?? null);
       setShowNewDonation(true);
-      // opcional: limpar o state para evitar reabrir ao navegar back/forward
-      // history.replaceState pode ser usado se necessário
     }
   }, [location]);
 
@@ -102,7 +100,7 @@ function DonationsPage() {
       body: JSON.stringify({
         donationDate: formData.donationDate,
         hemocentro: formData.hemocentro,
-        observacoes: formData.observacoes || null, // garante que seja null se vazio
+        observacoes: formData.observacoes || null, 
       }),
     })
       .then((res) => {
@@ -116,9 +114,8 @@ function DonationsPage() {
       .then((newDonation) => {
         console.log("Doação criada com sucesso:", newDonation);
 
-        // fecha modal e limpa form
         setShowModal(false);
-        setShowNewDonation(false); // fecha também o outro formulário se estiver aberto
+        setShowNewDonation(false);
         setFormData({
           donationDate: new Date().toISOString().split("T")[0],
           hemocentro: "",
@@ -126,7 +123,6 @@ function DonationsPage() {
         });
         setFormErrors({});
 
-        // atualiza lista e estatísticas sem reload
         setDonations((prev) => [newDonation, ...prev]);
         setStats((prev) => ({
           totalDonations: prev.totalDonations + 1,
@@ -145,16 +141,13 @@ function DonationsPage() {
       });
   };
 
-  // handler público para abrir o modal (usado pela navegação)
   const handleNewDonationClick = () => {
     setShowModal(true);
   };
 
-  // Abre o modal quando a página é acessada com state.openModal === true
   useEffect(() => {
     if (location?.state?.openModal) {
       handleNewDonationClick();
-      // limpa o state da navegação para não reabrir ao voltar
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location?.state?.openModal, navigate, location?.pathname]);

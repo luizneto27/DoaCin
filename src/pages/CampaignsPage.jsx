@@ -8,7 +8,7 @@ import Toast from "../components/Toast";
 import { authFetch } from "../../services/api.js";
 import "./CampaignsPage.css";
 
-// --- ÍCONES ---
+// Ícones para marcadores do mapa
 const redIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -81,7 +81,6 @@ function CampaignsPage() {
             type: tipoTraduzido 
           };
         });
-        // ---------------------------------------------
 
         setLocals(realData);
         setLoading(false);
@@ -126,7 +125,7 @@ function CampaignsPage() {
           <h1 className="campaigns-title">Campanhas de Doação em Recife</h1>
         </div>
         <div className="campaigns-error">
-          <p>⚠️ {error}</p>
+          <p>{error}</p>
         </div>
       </div>
     );
@@ -188,8 +187,8 @@ function CampaignsPage() {
                       {local.address}
                       {local.type === 'evento' && local.dataInicio && (
                         <div style={{ marginTop: '5px', fontSize: '0.9em', borderTop: '1px solid var(--border-light)', paddingTop: '5px' }}>
-                          📅 Início: {new Date(local.dataInicio).toLocaleDateString('pt-BR')} <br/>
-                          {local.dataFim && <>🏁 Fim: {new Date(local.dataFim).toLocaleDateString('pt-BR')}</>}
+                          Início: {new Date(local.dataInicio).toLocaleDateString('pt-BR')} <br/>
+                          {local.dataFim && <>Fim: {new Date(local.dataFim).toLocaleDateString('pt-BR')}</>}
                         </div>
                       )}
                     </Popup>
@@ -207,7 +206,7 @@ function CampaignsPage() {
                   key={local.id} 
                   onClick={() => {
                     setSelectedLocal(local);
-                    showToast(`📍 Local selecionado: ${local.name}`, 'info');
+                    showToast(`Local selecionado: ${local.name}`, 'info');
                   }}
                   className={`local-item-wrapper ${isSelected ? 'selected' : ''}`}
                 >

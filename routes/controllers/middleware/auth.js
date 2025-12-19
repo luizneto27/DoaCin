@@ -14,8 +14,3 @@ export default (req, res, next) => {
   }
 };
 
-// melhorias praticas que se aplicam a este arquivo:
-  // 1. Melhorar mensagens de erro: Evitar retornar o objeto de erro completo ao cliente por razões de segurança. Em vez disso, retornar uma mensagem genérica como "Autenticação falhou" e logar o erro detalhado no servidor.
-
-  // 2. Padronizar req.user vs req.userData: Usar um nome consistente como req.user para armazenar dados do usuário autenticado, alinhando-se com convenções comuns.
-

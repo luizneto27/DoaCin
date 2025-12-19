@@ -1,6 +1,4 @@
-/* ===========================
-   QUIZ PAGE - DESIGN SYSTEM
-   =========================== */
+/* Quiz Page */
 
 /* Container principal */
 .quiz-page {
@@ -10,9 +8,7 @@
   min-height: calc(100vh - 80px);
 }
 
-/* ===========================
-   INTRO SCREEN
-   =========================== */
+/* Intro Screen */
 
 .quiz-intro {
   width: 100%;
@@ -138,9 +134,7 @@
   transform: translateY(0);
 }
 
-/* ===========================
-   QUIZ CONTAINER
-   =========================== */
+/* Quiz Container */
 
 .quiz-container {
   width: 100%;
@@ -313,9 +307,7 @@
   transform: translateY(0);
 }
 
-/* ===========================
-   MODAL DE RESULTADO
-   =========================== */
+/* Modal de Resultado */
 
 .result-modal {
   position: fixed;
@@ -435,9 +427,7 @@
   justify-content: center;
 }
 
-/* ===========================
-   RESPONSIVIDADE
-   =========================== */
+/* Responsividade */
 
 /* Tablets */
 @media (max-width: 768px) {

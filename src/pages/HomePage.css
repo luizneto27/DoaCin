@@ -8,10 +8,7 @@
   text-align: left;
 }
 
-/* =====================================
-=== 1. ESTILOS DO BANNER VERMELHO ===
-=====================================
-*/
+/* 1. Estilos do Banner Vermelho */
 .home-banner-container {
   background: linear-gradient(135deg, var(--doacin-red) 0%, #b82620 100%);
   border-radius: 16px;
@@ -247,10 +244,7 @@
 }
 
 
-/* =====================================================
-=== 2. ESTILOS DOS CARDS FORA DO BANNER (RESTANTE) ===
-=====================================================
-*/
+/* 2. Estilos dos Cards Fora do Banner (Restante) */
 
 /* Layout de duas colunas (principal e lateral) */
 .home-grid-layout {
@@ -293,9 +287,7 @@
 }
 
 
-/* ============================================
-   MEDIA QUERIES - Breakpoints Padronizados
-   ============================================ */
+/* Media Queries - Breakpoints Padronizados */
 
 /* Mobile Small - 480px */
 @media (max-width: 480px) {

@@ -6,7 +6,6 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Efeito para carregar o token do localStorage na inicialização
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     if (storedToken) {
@@ -30,7 +29,7 @@ export function AuthProvider({ children }) {
       const data = await response.json();
       setToken(data.token);
       setIsAuthenticated(true);
-      localStorage.setItem('token', data.token); // Persiste o token
+      localStorage.setItem('token', data.token);
       return true;
     } catch (error) {
       console.error(error);
@@ -42,7 +41,7 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setToken(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('token'); // Remove o token
+    localStorage.removeItem('token');
   };
 
   return (

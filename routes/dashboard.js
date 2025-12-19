@@ -9,5 +9,3 @@ router.get('/', authMiddleware, getDashboardStats); // primeiro passa pelo authM
 
 export default router; // exporta o router para ser usado em server.js onde sera montado em /api/dashboard
 
-// melhorias praticas que se aplicam a este arquivo:
-    // 1. Resiliência e performance das queries: No controller, executar consultas em paralelo quando independentes (Promise.all) para reduzir latência total.

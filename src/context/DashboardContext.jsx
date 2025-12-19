@@ -34,7 +34,7 @@ export function DashboardProvider({ children }) {
   }, [dashboardData]);
 
   const addCapibas = (amount) => {
-    // Atualiza o estado local para refletir a mudança imediatamente (Optimistic UI)
+    // Atualiza o estado local para refletir a mudança imediatamente
     setDashboardData((prev) => ({
       ...prev,
       capibasBalance: (prev.capibasBalance || 0) + amount, // Soma os pontos
