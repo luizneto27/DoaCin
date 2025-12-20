@@ -13,8 +13,9 @@
     "test:watch": "cross-env DATABASE_URL=postgresql://test_user:test_pass@localhost:5433/doacin_test vitest --config vitest.config.integration.js",
     "test:ui": "cross-env DATABASE_URL=postgresql://test_user:test_pass@localhost:5433/doacin_test vitest --ui --config vitest.config.integration.js",
     "test:coverage": "cross-env DATABASE_URL=postgresql://test_user:test_pass@localhost:5433/doacin_test vitest run --coverage --config vitest.config.integration.js",
-    "test:setup": "powershell -ExecutionPolicy Bypass -File ./scripts/run-tests.ps1",
-    "test:cleanup": "powershell -ExecutionPolicy Bypass -File ./scripts/cleanup-tests.ps1"
+    "test:unit": "vitest run --config vitest.config.unit.js",
+    "test:unit:watch": "vitest --config vitest.config.unit.js",
+    "test:unit:coverage": "vitest run --coverage --config vitest.config.unit.js",
   },
   "dependencies": {
     "@prisma/client": "^6.18.0",
