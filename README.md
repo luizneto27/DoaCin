@@ -9,6 +9,7 @@ Sistema completo de incentivo à doação de sangue com gamificação, rastreame
 ## Como Rodar o Projeto
 
 ### Pré-requisitos
+
 - Node.js 18+
 - Docker Desktop
 - PostgreSQL (via Docker)
@@ -46,11 +47,15 @@ npm run dev
 
 ---
 
-## Testes de Integração
+## Testes
 
-O projeto possui **67 testes de integração** cobrindo 100% dos endpoints da API.
+O projeto possui **98 testes** divididos em duas categorias:
 
-### Executar Testes
+### Testes de Integração (67 testes)
+
+Testam o fluxo completo da aplicação com banco de dados real.
+
+**Executar Testes:**
 
 ```bash
 # Setup completo (Docker + Migrations + Testes)
@@ -69,9 +74,36 @@ npm run test:ui
 npm run test:coverage
 ```
 
+**Requisitos:** Docker Desktop rodando (banco PostgreSQL)
+
+### Testes Unitários (31 testes)
+
+Testam funções isoladas dos controllers usando mocks.
+
+**Executar Testes:**
+
+```bash
+# Executar todos os testes unitários
+npm run test:unit
+
+# Modo watch (re-executa ao salvar)
+npm run test:unit:watch
+
+# Cobertura de código
+npm run test:unit:coverage
+```
+
+**Requisitos:** Nenhum (não precisa de banco de dados)
+
+### Executar Todos os Testes
+
+```bash
+npm run test:unit && npm test
+```
+
 ### Documentação de Testes
 
-- [Resumo Completo](docs/TESTS-SUMMARY.md) - Visão geral dos 67 testes
+- [Resumo Completo](docs/TESTS-SUMMARY.md) - Visão geral dos testes de integração
 - [Início Rápido](docs/QUICK-START-TESTS.md) - Comandos essenciais
 - [Guia Docker](docs/DOCKER-TESTS.md) - Configuração detalhada
 - [Troubleshooting](docs/TROUBLESHOOTING-TESTS.md) - Resolução de problemas
@@ -92,7 +124,9 @@ DoaCin/
 │   ├── donations.js       # Gestão de doações
 │   ├── campaigns.js       # Locais de campanha
 │   └── user.js            # Perfil do usuário
-├── tests/integration/      # Testes de integração (67 testes)
+├── tests/
+│   ├── integration/       # Testes de integração (67 testes)
+│   └── unit/              # Testes unitários (31 testes)
 ├── prisma/                 # Schema e migrations
 └── docs/                   # Documentação completa
 ```
@@ -102,17 +136,20 @@ DoaCin/
 ## Tecnologias
 
 ### Backend
+
 - Node.js + Express
 - PostgreSQL + Prisma ORM
 - JWT Authentication
 - Bcrypt
 
 ### Frontend
+
 - React + Vite
 - React Router
 - Context API
 
 ### Testes
+
 - Vitest (67 testes)
 - Supertest
 - Docker PostgreSQL

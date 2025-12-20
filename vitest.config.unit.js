@@ -13,5 +13,4 @@ export default defineConfig({
     },
     testTimeout: 5000, // 5 segundos para testes de unidade
   },
-});</content>
-<parameter name="filePath">c:\Users\Luan Silva\Documents\GitHub\DoaCin\vitest.config.unit.js
+});

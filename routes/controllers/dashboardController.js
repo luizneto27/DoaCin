@@ -1,21 +1,21 @@
-import prisma from '../../config/database.js';
+import prisma from "../../config/database.js";
 
 export const getDashboardStats = async (req, res) => {
-  const userId = req.user.userId; 
+  const userId = req.user.userId;
 
   try {
     // 1. Buscar dados do usuário
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { 
-        genero: true, 
-        birthDate: true, 
+      select: {
+        genero: true,
+        birthDate: true,
         weight: true,
         nome: true,
         email: true,
-        phone: true,      
-        bloodType: true 
-      }
+        phone: true,
+        bloodType: true,
+      },
     });
 
     // 2. Checar se o usuário existe
@@ -26,15 +26,15 @@ export const getDashboardStats = async (req, res) => {
     // 3. Buscar dados de agregação de doação (pontos)
     const { _sum } = await prisma.donation.aggregate({
       _sum: { pointsEarned: true },
-      where: { userId: userId, status: 'confirmed' },
+      where: { userId: userId, status: "confirmed" },
     });
 
     const capibasBalance = _sum.pointsEarned || 0;
 
     // 4. Buscar última doação confirmada
     const lastDonation = await prisma.donation.findFirst({
-      where: { userId: userId, status: 'confirmed' },
-      orderBy: { donationDate: 'desc' },
+      where: { userId: userId, status: "confirmed" },
+      orderBy: { donationDate: "desc" },
     });
 
     // 5. Contar doações confirmadas no último ano
@@ -44,7 +44,7 @@ export const getDashboardStats = async (req, res) => {
     const donationCountLastYear = await prisma.donation.count({
       where: {
         userId: userId,
-        status: 'confirmed',
+        status: "confirmed",
         donationDate: {
           gte: oneYearAgo,
         },
@@ -54,14 +54,14 @@ export const getDashboardStats = async (req, res) => {
     const totalDonationCount = await prisma.donation.count({
       where: {
         userId,
-        status: 'confirmed',
+        status: "confirmed",
       },
     });
 
     const pendingCount = await prisma.donation.count({
       where: {
         userId,
-        status: 'pending',
+        status: "pending",
       },
     });
 
@@ -76,13 +76,16 @@ export const getDashboardStats = async (req, res) => {
       nome: user ? user.nome : null,
       email: user ? user.email : null,
       bloodType: user ? user.bloodType : null,
-      telefone: user ? user.phone : null, 
-      doacoes: totalDonations,
-      pendingDonations: pendingDonations
+      telefone: user ? user.phone : null,
+      doacoes: totalDonationCount,
+      pendingDonations: pendingCount,
     });
-    
   } catch (error) {
-    res.status(500).json({ message: "Erro ao buscar dados do dashboard", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Erro ao buscar dados do dashboard",
+        error: error.message,
+      });
   }
 };
-
