@@ -138,5 +138,4 @@ describe('AuthController Unit Tests', () => {
       });
     });
   });
-});</content>
-<parameter name="filePath">c:\Users\Luan Silva\Documents\GitHub\DoaCin\tests\unit\authController.test.js
+});

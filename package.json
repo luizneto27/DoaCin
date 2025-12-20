@@ -15,7 +15,7 @@
     "test:coverage": "cross-env DATABASE_URL=postgresql://test_user:test_pass@localhost:5433/doacin_test vitest run --coverage --config vitest.config.integration.js",
     "test:unit": "vitest run --config vitest.config.unit.js",
     "test:unit:watch": "vitest --config vitest.config.unit.js",
-    "test:unit:coverage": "vitest run --coverage --config vitest.config.unit.js",
+    "test:unit:coverage": "vitest run --coverage --config vitest.config.unit.js"
   },
   "dependencies": {
     "@prisma/client": "^6.18.0",
